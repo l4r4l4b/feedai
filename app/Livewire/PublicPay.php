@@ -10,11 +10,9 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Layout('components.layouts.pay')]
 #[Title('Pay')]
 class PublicPay extends Component
 {
@@ -110,6 +108,16 @@ class PublicPay extends Component
 
     public function render(): View
     {
-        return view('livewire.public-pay');
+        $vendorArray = [
+            'slug' => $this->vendor->slug,
+            'name' => $this->vendor->name,
+            'locale' => $this->vendor->locale,
+            'accent_color' => $this->vendor->accent_color,
+        ];
+
+        return view('livewire.public-pay')->layout('layouts.public', [
+            'vendor' => $vendorArray,
+            'page' => 'pay',
+        ]);
     }
 }

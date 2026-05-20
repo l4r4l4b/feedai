@@ -18,12 +18,17 @@
 >
     <a id="top" class="sr-only" tabindex="-1">{{ __('Top') }}</a>
 
-    <main class="mx-auto min-h-screen w-full max-w-md px-5 pb-28 pt-6 md:max-w-2xl md:px-8 md:pt-10">
+    @php($isBuilder = (bool) request('builder'))
+
+    <main class="mx-auto min-h-screen w-full max-w-md px-5 {{ $isBuilder ? 'pb-10' : 'pb-28' }} pt-6 md:max-w-2xl md:px-8 md:pt-10">
         {{ $slot }}
     </main>
 
     {{-- Floating tourist nav. Black pill, fixed bottom-center, always monochrome
-         (NOT accent — the nav stays neutral, accent is for vendor CTAs only). --}}
+         (NOT accent — the nav stays neutral, accent is for vendor CTAs only).
+         Hidden in builder mode (vendor edits the feed inside an iframe and the
+         nav would be confusing/clickable inside the parent edit UI). --}}
+    @unless ($isBuilder)
     <nav
         x-data="{
             showTop: false,
@@ -114,6 +119,7 @@
             @endif
         </ul>
     </nav>
+    @endunless
 
     @vite(['resources/js/app.js'])
 </body>
