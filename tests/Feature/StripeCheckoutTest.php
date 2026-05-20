@@ -71,12 +71,10 @@ it('creates a pending payment and stripe session for a fixed amount', function (
         ->and($captured->params['metadata']['payment_id'])->toBe((string) $result['payment']->id);
 });
 
-it('short-circuits to a paid demo payment when demo_mode is on', function () {
+it('skips transfer_data and uses the platform charge in demo mode', function () {
     config()->set('services.stripe.demo_mode', true);
 
-    $client = Mockery::mock(StripeClient::class);
-    // No Stripe API call expected at all in demo mode.
-
+    [$client, $captured] = mockStripeClient('cs_demo_1', 'https://checkout.stripe.com/cs_demo_1');
     $service = new StripeCheckout($client);
     $vendor = Vendor::factory()->withStripeConnect()->create();
 
@@ -89,11 +87,14 @@ it('short-circuits to a paid demo payment when demo_mode is on', function () {
         cancelUrl: 'https://feedai.test/pay',
     );
 
-    expect($result['payment']->status)->toBe('paid')
-        ->and($result['payment']->paid_at)->not->toBeNull()
-        ->and($result['payment']->provider_reference)->toStartWith('demo_')
-        ->and($result['session'])->toBeNull()
-        ->and($result['checkout_url'])->toBe('https://feedai.test/feed?demo_paid=50000');
+    // Real Stripe call goes out, but with NO transfer_data (so the demo
+    // vendor's fake account isn't required by Stripe) and a session_id
+    // placeholder appended to the success_url so the return can verify.
+    expect($captured->params['success_url'])->toBe('https://feedai.test/feed?session_id={CHECKOUT_SESSION_ID}')
+        ->and($captured->params['payment_intent_data'])->not->toHaveKey('transfer_data')
+        ->and($captured->params['metadata']['demo'])->toBe('1')
+        ->and($result['payment']->status)->toBe('pending')
+        ->and($result['checkout_url'])->toBe('https://checkout.stripe.com/cs_demo_1');
 });
 
 it('handles custom amounts the same way as fixed amounts', function () {

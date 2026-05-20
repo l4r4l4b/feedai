@@ -39,15 +39,17 @@
             <p class="mt-1 text-caption text-muted">{{ __('Get in touch directly from their feed.') }}</p>
         </div>
     @else
-        {{-- Tab bar — segmented control style, hides itself if only one method --}}
+        {{-- Tab bar — segmented control style, hides itself if only one method.
+             flex with flex-1 keeps the segments even-width regardless of count;
+             a dynamic `grid-cols-N` wouldn't survive Tailwind's JIT scan. --}}
         @if (count($methods) > 1)
-            <nav class="grid w-full grid-cols-{{ count($methods) }} gap-1 rounded-full border border-line bg-surface p-1">
+            <nav class="flex w-full gap-1 rounded-full border border-line bg-surface p-1">
                 @foreach ($methods as $method)
                     <button
                         type="button"
                         wire:click="setTab('{{ $method }}')"
                         @class([
-                            'flex items-center justify-center gap-1.5 rounded-full px-3 py-2 text-label transition',
+                            'flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-label transition',
                             'bg-ink text-canvas shadow-sm' => $activeTab === $method,
                             'text-text hover:bg-canvas' => $activeTab !== $method,
                         ])

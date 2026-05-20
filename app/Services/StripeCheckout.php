@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\Vendor;
-use Illuminate\Support\Str;
 use RuntimeException;
 use Stripe\Checkout\Session;
 use Stripe\StripeClient;
@@ -40,10 +39,14 @@ class StripeCheckout
         $this->ensureVendorAcceptsCards($vendor);
 
         $payment = $this->createPendingPayment($vendor, $amountCents, $currency, $description);
+        $demo = $this->isDemoMode($vendor);
 
-        if ($this->isDemoMode($vendor)) {
-            return $this->simulateCheckout($payment, $successUrl);
-        }
+        // Demo: append session_id placeholder so the success page can verify
+        // the payment without a webhook. Real Stripe checkout still happens,
+        // we just skip `transfer_data` (the demo vendor account isn't real).
+        $effectiveSuccessUrl = $demo
+            ? $successUrl.(str_contains($successUrl, '?') ? '&' : '?').'session_id={CHECKOUT_SESSION_ID}'
+            : $successUrl;
 
         $session = $this->stripe->checkout->sessions->create($this->buildSessionParams(
             vendor: $vendor,
@@ -58,8 +61,9 @@ class StripeCheckout
                     'product_data' => ['name' => $description],
                 ],
             ]],
-            successUrl: $successUrl,
+            successUrl: $effectiveSuccessUrl,
             cancelUrl: $cancelUrl,
+            demo: $demo,
         ));
 
         return $this->finalize($payment, $session);
@@ -100,10 +104,11 @@ class StripeCheckout
         $payment = $this->createPendingPayment($vendor, $total, $currency, $description, [
             'items' => $items,
         ]);
+        $demo = $this->isDemoMode($vendor);
 
-        if ($this->isDemoMode($vendor)) {
-            return $this->simulateCheckout($payment, $successUrl);
-        }
+        $effectiveSuccessUrl = $demo
+            ? $successUrl.(str_contains($successUrl, '?') ? '&' : '?').'session_id={CHECKOUT_SESSION_ID}'
+            : $successUrl;
 
         $lineItems = array_map(fn ($item) => [
             'quantity' => $item['quantity'] ?? 1,
@@ -120,8 +125,9 @@ class StripeCheckout
             currency: $currency,
             totalCents: $total,
             lineItems: $lineItems,
-            successUrl: $successUrl,
+            successUrl: $effectiveSuccessUrl,
             cancelUrl: $cancelUrl,
+            demo: $demo,
         ));
 
         return $this->finalize($payment, $session);
@@ -148,8 +154,28 @@ class StripeCheckout
         array $lineItems,
         string $successUrl,
         string $cancelUrl,
+        bool $demo = false,
     ): array {
         $metadata = $this->sessionMetadata($payment);
+        if ($demo) {
+            $metadata['demo'] = '1';
+        }
+
+        // In demo mode the vendor's stripe_account_id is fake (acct_demo_…),
+        // so we omit transfer_data + application_fee. The charge lands on
+        // FeedAI's own test account — perfect for showing the real Stripe
+        // checkout page in the hackathon demo.
+        $paymentIntentData = ['metadata' => $metadata];
+
+        if (! $demo) {
+            $fee = $this->platformFeeFor($totalCents);
+            if ($fee !== null) {
+                $paymentIntentData['application_fee_amount'] = $fee;
+            }
+            $paymentIntentData['transfer_data'] = [
+                'destination' => $vendor->stripe_account_id,
+            ];
+        }
 
         return [
             'mode' => 'payment',
@@ -157,13 +183,7 @@ class StripeCheckout
             'success_url' => $successUrl,
             'cancel_url' => $cancelUrl,
             'metadata' => $metadata,
-            'payment_intent_data' => array_filter([
-                'metadata' => $metadata,
-                'application_fee_amount' => $this->platformFeeFor($totalCents),
-                'transfer_data' => [
-                    'destination' => $vendor->stripe_account_id,
-                ],
-            ], fn ($v) => $v !== null && $v !== []),
+            'payment_intent_data' => $paymentIntentData,
         ];
     }
 
@@ -212,36 +232,10 @@ class StripeCheckout
     }
 
     /**
-     * Demo mode short-circuit. Marks the pending payment as paid and returns
-     * a checkout_url that points straight back to the vendor's success page
-     * with a `demo_paid` query flag, so the pay page can render a receipt
-     * card instead of letting the tourist hit Stripe with a fake account.
-     *
-     * @return array{payment: Payment, session: null, checkout_url: string}
-     */
-    protected function simulateCheckout(Payment $payment, string $successUrl): array
-    {
-        $payment->update([
-            'status' => 'paid',
-            'provider_reference' => 'demo_'.Str::lower(Str::random(20)),
-            'metadata' => array_merge($payment->metadata ?? [], ['demo' => true]),
-            'paid_at' => now(),
-        ]);
-
-        $sep = str_contains($successUrl, '?') ? '&' : '?';
-        $url = $successUrl.$sep.'demo_paid='.$payment->amount_cents;
-
-        return [
-            'payment' => $payment->fresh(),
-            'session' => null,
-            'checkout_url' => $url,
-        ];
-    }
-
-    /**
      * Demo when the platform flag is on OR when the vendor row holds a
-     * demo Stripe account id (acct_demo_…) — both indicate the real Stripe
-     * API can't be called for this checkout.
+     * demo Stripe account id (acct_demo_…) — both indicate we can't route
+     * a Connect destination charge, so the demo charges the platform
+     * directly and skips transfer_data.
      */
     protected function isDemoMode(Vendor $vendor): bool
     {

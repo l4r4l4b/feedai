@@ -13,8 +13,11 @@ use App\Livewire\Onboarding\Page as OnboardingPage;
 use App\Livewire\Public\ContactPage;
 use App\Livewire\Public\ConversationView;
 use App\Livewire\PublicPay;
+use App\Models\Payment;
 use App\Services\ContentLoader;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Stripe\StripeClient;
 
 Route::view('/', 'welcome')->name('home');
 
@@ -68,12 +71,40 @@ Route::get('/{vendor}/pay', PublicPay::class)
     ->where('vendor', '[a-z0-9][a-z0-9-]*')
     ->name('public.pay');
 
-Route::get('/{vendor}/{page?}', function (ContentLoader $loader, string $vendor, string $page = 'home') {
+Route::get('/{vendor}/{page?}', function (ContentLoader $loader, Request $request, string $vendor, string $page = 'home') {
     try {
         $vendorData = $loader->loadVendor($vendor);
         $components = $loader->loadPageComponents($vendor, $page);
     } catch (RuntimeException) {
         abort(404);
+    }
+
+    // Stripe Checkout success return — `session_id=cs_test_…` in the URL.
+    // Verify the session via Stripe, mark our Payment row as paid, then
+    // redirect to a clean URL with `demo_paid` so the success banner shows.
+    if ($request->filled('session_id') && config('services.stripe.secret')) {
+        try {
+            $stripe = app(StripeClient::class);
+            $session = $stripe->checkout->sessions->retrieve($request->string('session_id')->toString());
+
+            if (($session->payment_status ?? null) === 'paid' && ! empty($session->metadata->payment_id)) {
+                Payment::whereKey($session->metadata->payment_id)->update([
+                    'status' => 'paid',
+                    'paid_at' => now(),
+                    'provider_reference' => $session->payment_intent ?? $session->id,
+                ]);
+
+                $amount = (int) ($session->amount_total ?? 0);
+
+                return redirect()->route('feed.show', ['vendor' => $vendor, 'page' => $page === 'home' ? null : $page])
+                    ->with('flash.demo_paid', $amount)
+                    ->setTargetUrl(
+                        route('feed.show', ['vendor' => $vendor, 'page' => $page === 'home' ? null : $page]).'?demo_paid='.$amount
+                    );
+            }
+        } catch (Throwable) {
+            // fall through — just render the feed without the receipt
+        }
     }
 
     return view('feed.show', [
