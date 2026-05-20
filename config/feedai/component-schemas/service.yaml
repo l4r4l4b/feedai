@@ -1,6 +1,17 @@
 type: service
 label: Service
-description: Einzelne Dienstleistung mit Bild (16:10), Titel, Meta-Row und Arrow-Button-CTA.
+description: A single flagship offering with visual prominence — large 16:10 photo, title, meta line, CTA button.
+agent:
+  purpose: For ONE highlighted offering. Bigger visual treatment than a menu item.
+  use_when:
+    - Vendor has a hero offering they want to spotlight (e.g. signature tour, premium package).
+    - Wants a clickable CTA to a booking page or sub-page.
+  avoid_when:
+    - Vendor has 2+ offerings — use `menu` instead. This component has no `items` array.
+    - For lists, never duplicate `service` — that violates "one component per type".
+  examples:
+    - "our signature is the sunrise temple tour → title=\"Sunrise at Wat Arun\", meta=\"3 hours · 4am pickup\", price=\"from 2,500 THB\", cta_url=\"#book\""
+    - "we run one massage package — 90 min full body → title=\"Ninety-Minute Royal Thai\", meta=\"With herbal compress\", price=\"900 THB\", cta_url=\"#contact\""
 fields:
   image:
     type: image
@@ -14,12 +25,12 @@ fields:
     type: string
     required: false
     max: 80
-    description: Zusatzinfo wie Dauer, Treffpunkt
+    description: Secondary info — duration, meeting point, what's included
   rating:
     type: string
     required: false
     max: 32
-    description: Static-Bewertung, z.B. "4.96"
+    description: Static rating, e.g. "4.96"
   price:
     type: string
     required: true
@@ -27,4 +38,4 @@ fields:
   cta_url:
     type: string
     required: true
-    description: Link-Target für den Arrow-Button
+    description: Link target for the arrow button

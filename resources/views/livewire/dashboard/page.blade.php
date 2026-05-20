@@ -1,8 +1,13 @@
-<div class="flex h-[calc(100vh-4rem)] flex-col">
-    {{-- Manual YAML editor — only visible when openEditor was called.
-         Lives above the split view so the chat + preview stay accessible. --}}
-    @if ($editingType)
-        <flux:card class="mx-4 mt-4 mb-2">
+<div>
+{{-- Global form drawer — opens via postMessage from iframe skeletons or
+     from the components list button below. --}}
+<livewire:feed.component-drawer />
+
+{{-- Manual YAML editor — overlay above the split when $editingType is set.
+     The chat handles 99% of edits; this is a power-user escape hatch. --}}
+@if ($editingType)
+    <div class="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/40 px-4 py-10">
+        <flux:card class="w-full max-w-3xl">
             <div class="flex items-baseline justify-between gap-4">
                 <flux:heading size="lg">{{ $editingType }} — {{ __('manual edit') }}</flux:heading>
                 <flux:button wire:click="closeEditor" variant="ghost" size="sm">
@@ -40,90 +45,96 @@
                 {{ __('Save') }}
             </flux:button>
         </flux:card>
-    @endif
+    </div>
+@endif
 
-    {{-- Split view: live preview left, edit chat right. --}}
-    <div class="flex min-h-0 flex-1 flex-col gap-4 px-4 py-4 lg:flex-row">
-        {{-- Preview pane --}}
-        <section
-            class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-line bg-surface lg:basis-3/5"
-            x-data="{ refresh() { $refs.frame?.contentWindow?.location.reload(); } }"
-            x-on:feed-updated.window="refresh()"
-        >
-            <header class="flex items-center justify-between gap-3 border-b border-line bg-canvas px-4 py-2">
-                <div class="flex items-baseline gap-3">
-                    <flux:heading size="sm">{{ __('Live preview') }}</flux:heading>
-                    <flux:text size="xs" class="text-muted">/{{ $vendorSlug }}</flux:text>
-                </div>
-                <div class="flex items-center gap-2">
-                    <flux:button
-                        x-on:click="refresh()"
-                        size="xs"
-                        variant="ghost"
-                        icon="arrow-path"
-                    >
-                        {{ __('Reload') }}
-                    </flux:button>
-                    <flux:button
-                        :href="url('/'.$vendorSlug)"
-                        target="_blank"
-                        size="xs"
-                        variant="ghost"
-                        icon="arrow-top-right-on-square"
-                    >
-                        {{ __('Open') }}
-                    </flux:button>
-                </div>
-            </header>
+{{-- Split view — same optics as the onboarding page (iframe left, chat right).
+     Negative margins cancel the Flux `[grid-area:main]` padding so the split
+     reaches the viewport edges. Height subtracts the 56px mobile header
+     (Flux only shows it below lg); on lg+ we get the full viewport. --}}
+<div class="-m-6 flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden md:flex-row lg:-m-8 lg:h-screen">
+    <section
+        class="relative flex h-1/2 w-full flex-col border-b border-line bg-surface md:h-full md:w-3/5 md:border-b-0 md:border-r"
+        x-data="{ refresh() { $refs.frame.contentWindow?.location.reload(); } }"
+        x-on:feed-updated.window="refresh()"
+    >
+        <header class="flex items-center justify-between border-b border-line bg-canvas px-4 py-3">
+            <p class="text-caption uppercase tracking-wide text-muted">Live preview</p>
+            <div class="flex items-center gap-4">
+                <button
+                    type="button"
+                    x-on:click="refresh()"
+                    class="text-label text-text underline"
+                >
+                    Reload
+                </button>
+                <a
+                    href="{{ url('/'.$vendorSlug) }}"
+                    target="_blank"
+                    class="text-label text-text underline"
+                >
+                    Open
+                </a>
+            </div>
+        </header>
 
-            <iframe
-                x-ref="frame"
-                src="{{ url('/'.$vendorSlug) }}"
-                title="Feed preview"
-                class="min-h-0 w-full flex-1 bg-canvas"
-            ></iframe>
+        <iframe
+            x-ref="frame"
+            src="{{ url('/'.$vendorSlug.'?builder=1') }}"
+            title="Feed preview"
+            class="h-full w-full flex-1 bg-canvas"
+        ></iframe>
 
-            {{-- Components list — keeps manual editing reachable for power users.
-                 Tests assert component types render here. --}}
-            <details class="border-t border-line bg-canvas px-4 py-2">
-                <summary class="cursor-pointer text-caption text-muted">
-                    {{ __('Components') }} ({{ count($components) }})
-                </summary>
-                @if (empty($components))
-                    <p class="mt-2 text-caption text-muted">
-                        {{ __('No components yet — ask the chat to add something.') }}
-                    </p>
-                @else
-                    <ul class="mt-2 divide-y divide-line">
-                        @foreach ($components as $component)
-                            <li>
+        {{-- Components list footer — power-user shortcut into the YAML editor.
+             Stays collapsible so it doesn't clutter the optics. --}}
+        <details class="border-t border-line bg-canvas px-4 py-2">
+            <summary class="cursor-pointer text-caption text-muted">
+                Components ({{ count($components) }})
+            </summary>
+            @if (empty($components))
+                <p class="mt-2 text-caption text-muted">
+                    No components yet — ask the chat to add something.
+                </p>
+            @else
+                <ul class="mt-2 divide-y divide-line">
+                    @foreach ($components as $component)
+                        <li class="flex items-center justify-between gap-3 py-2 text-caption">
+                            <span class="font-mono">{{ $component['type'] }}</span>
+                            <div class="flex items-center gap-3">
+                                <button
+                                    type="button"
+                                    x-on:click="$dispatch('open-component-drawer', { type: '{{ $component['type'] }}' })"
+                                    class="inline-flex items-center gap-1 text-text transition hover:opacity-70"
+                                    title="Edit with form"
+                                >
+                                    <flux:icon name="pencil-square" class="size-4" />
+                                    Edit
+                                </button>
                                 <button
                                     type="button"
                                     wire:click="openEditor('{{ $component['type'] }}')"
-                                    class="flex w-full items-center justify-between gap-3 py-2 text-left text-caption transition hover:opacity-70"
+                                    class="text-muted underline transition hover:text-text"
+                                    title="Raw YAML"
                                 >
-                                    <span class="font-mono">{{ $component['type'] }}</span>
-                                    <flux:icon name="pencil-square" class="size-4 text-muted" />
+                                    Raw
                                 </button>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </details>
-        </section>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </details>
+    </section>
 
-        {{-- Chat pane --}}
-        <aside class="flex min-h-0 flex-col overflow-hidden rounded-lg border border-line bg-canvas lg:basis-2/5">
-            <header class="border-b border-line bg-surface px-4 py-2">
-                <flux:heading size="sm">{{ __('Edit assistant') }}</flux:heading>
-                <flux:text size="xs" class="text-muted">
-                    {{ __('Describe what to change — I update the feed live.') }}
-                </flux:text>
-            </header>
+    <aside class="flex h-1/2 w-full flex-col bg-canvas md:h-full md:w-2/5">
+        <header class="border-b border-line px-4 py-3">
+            <p class="text-caption uppercase tracking-wide text-muted">Edit assistant</p>
+            <p class="mt-1 text-caption text-soft-muted">
+                Describe what to change — I update the feed live.
+            </p>
+        </header>
 
-            <div class="min-h-0 flex-1">
-                <livewire:dashboard.feed-chat />
-            </div>
-        </aside>
-    </div>
+        <livewire:dashboard.feed-chat />
+    </aside>
+</div>
 </div>

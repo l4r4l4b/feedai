@@ -1,12 +1,22 @@
 type: pay_now_trigger
 label: Pay Now Trigger
-description: Verlinkt zur Payment-Seite des Vendors.
+description: Prominent link to the vendor's payment page.
+agent:
+  purpose: One-tap link to the pay flow ($vendor/pay) — Stripe + PromptPay + crypto.
+  use_when:
+    - Vendor has at least one active payment method.
+    - Walk-up businesses where guests pay on the spot (food stalls, taxis, market vendors).
+  avoid_when:
+    - Vendor has no payment methods set up — guests would land on an empty pay page.
+    - Booking flow is the primary path → use `cta` pointing to the contact form instead.
+  examples:
+    - "I want a big pay button → title=\"Pay right here at the stall\", label=\"PAY\", url stays default"
 fields:
   label:
     type: string
     required: false
     max: 32
-    default: BEZAHLEN
+    default: PAY
   title:
     type: string
     required: true
@@ -14,4 +24,4 @@ fields:
   url:
     type: string
     required: false
-    description: Default ist /{vendor-slug}/pay
+    description: Defaults to /{vendor-slug}/pay

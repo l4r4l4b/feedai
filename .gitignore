@@ -27,3 +27,5 @@ yarn-error.log
 /diagnose-*.png
 /fix-*.png
 /verify-*.png
+/dashboard-*.png
+/drawer-*.png

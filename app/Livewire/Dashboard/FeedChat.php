@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Ai\Agents\EditAgent;
+use App\Jobs\AnalyzeImage;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\VendorImageIngestor;
@@ -50,6 +51,16 @@ class FeedChat extends Component
     #[Locked]
     public string $queuedPrompt = '';
 
+    /**
+     * Media IDs to analyze + inject into the prompt in runAgent. submitPrompt
+     * persists images but skips vision analysis so the user bubble appears
+     * instantly; runAgent then analyzes each and builds the prompt blocks.
+     *
+     * @var array<int, int>
+     */
+    #[Locked]
+    public array $queuedMediaIds = [];
+
     public function mount(): void
     {
         /** @var User $user */
@@ -61,8 +72,9 @@ class FeedChat extends Component
     }
 
     /**
-     * Step 1 — fast. Ingest photos, set pending state, clear input.
-     * Triggers the second request for the AI call via JS.
+     * Step 1 — fast. Persists photos WITHOUT vision analysis, sets pending
+     * state with their URLs, clears input. The vendor sees their message +
+     * thumbnails immediately. Vision analysis runs in step 2 (runAgent).
      */
     public function submitPrompt(VendorImageIngestor $ingestor): void
     {
@@ -73,8 +85,8 @@ class FeedChat extends Component
             return;
         }
 
-        $imageBlocks = [];
         $imageUrls = [];
+        $mediaIds = [];
 
         if ($photos !== []) {
             $vendor = Vendor::findOrFail($this->vendorId);
@@ -85,18 +97,17 @@ class FeedChat extends Component
                     upload: $photo,
                     intent: null,
                     source: 'dashboard-edit-chat',
-                    analyzeSync: true,
+                    analyzeSync: false,
                 );
-                $imageBlocks[] = $this->buildImageBlock($media);
                 $imageUrls[] = $media->getUrl();
+                $mediaIds[] = (int) $media->id;
             }
         }
 
         $this->pendingText = $text;
         $this->pendingImageUrls = $imageUrls;
-        $this->queuedPrompt = $imageBlocks === []
-            ? $text
-            : trim($text."\n\n".implode("\n\n", $imageBlocks));
+        $this->queuedPrompt = $text;
+        $this->queuedMediaIds = $mediaIds;
 
         $this->reset('draft', 'photos');
 
@@ -110,12 +121,36 @@ class FeedChat extends Component
      */
     public function runAgent(): void
     {
-        if ($this->queuedPrompt === '') {
+        if ($this->queuedPrompt === '' && $this->queuedMediaIds === []) {
             return;
         }
 
-        $prompt = $this->queuedPrompt;
+        $text = $this->queuedPrompt;
+        $mediaIds = $this->queuedMediaIds;
         $this->queuedPrompt = '';
+        $this->queuedMediaIds = [];
+
+        // Vision analysis runs here (not in submitPrompt) so the user bubble
+        // already appeared in the previous render. Sync handle() blocks the
+        // request but the UI shows the typing indicator while we wait.
+        $imageBlocks = [];
+        foreach ($mediaIds as $id) {
+            $media = Media::find($id);
+            if ($media === null) {
+                continue;
+            }
+
+            if ((string) $media->getCustomProperty('description', '') === '') {
+                (new AnalyzeImage($id))->handle();
+                $media = $media->fresh() ?? $media;
+            }
+
+            $imageBlocks[] = $this->buildImageBlock($media);
+        }
+
+        $prompt = $imageBlocks === []
+            ? $text
+            : trim($text."\n\n".implode("\n\n", $imageBlocks));
 
         $this->promptAgent($prompt);
 

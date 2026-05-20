@@ -1,6 +1,16 @@
 type: contact_form
 label: Contact Form
-description: Kontakt-Formular für Tourist→Vendor mit unsichtbarer AI-Translation-Bridge.
+description: Tourist→vendor message form with invisible AI translation bridge in both directions.
+agent:
+  purpose: A way for guests to start a conversation that the vendor reads in their own language.
+  use_when:
+    - Vendor wants written inquiries (longer questions, custom booking requests).
+    - Higher-value services (tour planning, custom catering, multi-day bookings).
+  avoid_when:
+    - Simple "call me" use cases — `contact_buttons` is faster.
+    - Vendor already covers contact via WhatsApp — don't add a form unless explicitly wanted.
+  examples:
+    - "I want guests to send me detailed inquiries about custom tours → title=\"Tell me about your trip\", intro=\"Custom tours start with a chat. Tell me what you're after and I'll come back within a day.\""
 fields:
   section_label:
     type: string
@@ -10,7 +20,7 @@ fields:
     type: string
     required: false
     max: 80
-    default: Kontakt
+    default: Contact
   intro:
     type: string
     required: false
@@ -19,4 +29,4 @@ fields:
     type: string
     required: false
     max: 32
-    default: Senden
+    default: Send

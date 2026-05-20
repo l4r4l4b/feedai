@@ -1,6 +1,16 @@
 type: faq
 label: FAQ
-description: Frage-Antwort-Liste, Antworten klappbar (nativ details/summary).
+description: Question/answer list with collapsible answers (native details/summary).
+agent:
+  purpose: Address common guest questions upfront so they don't have to message.
+  use_when:
+    - Vendor mentions repeated questions ("everyone asks if we have vegetarian options").
+    - Higher-trust services (tours, massage, classes) where guests want clarity before booking.
+  avoid_when:
+    - Vendor has no specific recurring questions — boilerplate FAQ reads as filler.
+    - The answer is one line — put it in `about` or `highlight_card` instead.
+  examples:
+    - "people always ask if we have vegetarian options → items=[{question:\"Do you have vegetarian options?\", answer:\"Yes — Pad Thai Pak (vegetable) and Tom Yum Hed (mushroom) are made fresh on request.\"}]"
 fields:
   section_label:
     type: string

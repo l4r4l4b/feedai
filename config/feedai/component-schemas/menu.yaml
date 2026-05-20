@@ -1,11 +1,24 @@
 type: menu
 label: Menu
-description: Liste von Items mit Bild (1:1), Name und Preis.
+description: Universal list of offerings — dishes, drinks, tours, massage packages, anything sold or booked.
+agent:
+  purpose: The catalog of what the guest can buy. Every offering with name + price + optional photo + short description.
+  use_when:
+    - Vendor lists multiple items, services, tours, or packages (3+).
+    - Any food or drink vendor.
+    - Any service vendor with multiple offerings (tour types, massage packages, consulting sessions, etc.).
+  avoid_when:
+    - Single flagship offering with rich visual treatment → use `service` instead.
+    - One-off promotion or seasonal special → use `highlight_card` or `cta`.
+  examples:
+    - "we have pad thai 80thb, pad see ew 90, tom yum 120 → items=[{name:\"Pad Thai Goong\", price:\"80 THB\", description:\"Wok-fired with prawns & tamarind\"}, ...]"
+    - "half-day temple tour 2500, full-day 4800, airport transfer 1500 → items=[{name:\"Half-day Temples\", price:\"2,500 THB\", description:\"Wat Pho, Wat Arun, riverside lanes\"}, ...]"
 fields:
   section_label:
     type: string
     required: false
     max: 40
+    description: Fits the vendor — "Menu", "Dishes", "Tours", "Services"
   items:
     type: array
     required: true
@@ -13,4 +26,4 @@ fields:
       - name (string, required)
       - price (string, optional)
       - image (image, 1:1, optional)
-      - description (string, optional)
+      - description (string, optional) — one magazine sentence, max 12 words

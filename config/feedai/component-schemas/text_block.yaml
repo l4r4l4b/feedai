@@ -1,6 +1,16 @@
 type: text_block
 label: Text Block
-description: Nur Text mit optionaler Headline. Generischer Fallback.
+description: Optional headline + Markdown body. Pure text fallback when no visual fits.
+agent:
+  purpose: A piece of writing that doesn't need an image — a notice, philosophy, fine print.
+  use_when:
+    - Vendor wants to say something specific that doesn't fit `about` (already used) or any other component.
+    - Disclaimer, policy, philosophy statement, sourcing note.
+  avoid_when:
+    - The content fits `about` and `about` is empty — fill `about` instead.
+    - There's a photo to pair it with → use `image_with_text`.
+  examples:
+    - "I want to thank guests for visiting → headline=\"One small ask\", body=\"If you enjoyed the meal, a photo on Instagram tagged @maesom helps more than you know.\""
 fields:
   headline:
     type: string
@@ -8,4 +18,4 @@ fields:
     max: 80
 body:
   required: true
-  description: Body-Text, Markdown unterstützt
+  description: Body text, Markdown supported

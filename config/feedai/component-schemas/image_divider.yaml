@@ -1,6 +1,16 @@
 type: image_divider
 label: Image Divider
-description: Bild volle Breite (21:9) mit optionalem Overlay-Text. Atmosphärischer Trenner.
+description: Full-width 21:9 photo with optional overlay text. Atmospheric break between sections.
+agent:
+  purpose: A visual pause — a wide photo that shifts mood between content sections.
+  use_when:
+    - Long feeds with multiple topical sections; the divider gives the eye a rest.
+    - Vendor has a strong atmospheric photo (street at sunset, candle-lit interior).
+  avoid_when:
+    - Short feeds — too many photos compete with the hero.
+    - The photo is the subject (single offering) — use `service` or `image_with_text` instead.
+  examples:
+    - "I have a great sunset photo of Khao San Road → image=\"...\", headline=\"Khao San Road after sunset\", sub=\"When the street comes alive\""
 fields:
   image:
     type: image

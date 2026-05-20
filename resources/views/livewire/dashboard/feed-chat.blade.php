@@ -17,15 +17,13 @@
         role="log"
         aria-live="polite"
     >
-        {{-- Static intro card when no messages yet --}}
-        @if ($chatMessages->isEmpty())
-            <li class="flex justify-start" wire:key="intro">
-                <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
-                    <p>{{ __('What should we change?') }}</p>
-                    <p>{{ __('Tell me what to tweak — opening hours, a new menu item, swap the hero image. I can also suggest what to add.') }}</p>
-                </div>
-            </li>
-        @endif
+        {{-- Static greeting card — always visible (mirrors onboarding) --}}
+        <li class="flex justify-start" wire:key="greeting">
+            <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
+                <p>What should we change?</p>
+                <p>Tell me what to tweak — opening hours, a new menu item, swap the hero image. I can also suggest what to add.</p>
+            </div>
+        </li>
 
         {{-- Persisted DB messages --}}
         @foreach ($chatMessages as $message)
@@ -60,9 +58,7 @@
                             'whitespace-pre-wrap rounded-md px-4 py-3 text-body',
                             'rounded-br-sm bg-accent text-canvas' => $message['role'] === 'user',
                             'rounded-bl-sm bg-surface text-text' => $message['role'] === 'assistant',
-                        ])>
-                            {{ $message['text'] }}
-                        </div>
+                        ])>{{ $message['text'] }}</div>
                     @endif
 
                     @if ($message['tool_summary'] !== null)
@@ -72,7 +68,7 @@
             </li>
         @endforeach
 
-        {{-- Optimistic user bubble --}}
+        {{-- Optimistic user bubble: shown between submitPrompt and runAgent --}}
         @if ($pendingText !== '' || ! empty($pendingImageUrls))
             <li class="flex justify-end" wire:key="pending">
                 <div class="max-w-[85%] flex flex-col items-end gap-2">
@@ -90,15 +86,13 @@
                     @endif
 
                     @if ($pendingText !== '')
-                        <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">
-                            {{ $pendingText }}
-                        </div>
+                        <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">{{ $pendingText }}</div>
                     @endif
                 </div>
             </li>
         @endif
 
-        {{-- Typing indicator --}}
+        {{-- Typing indicator: visible while submitPrompt OR runAgent is running --}}
         <li
             wire:loading.flex
             wire:target="submitPrompt,runAgent,photos"
@@ -115,7 +109,7 @@
         </li>
     </ol>
 
-    {{-- Photo preview strip --}}
+    {{-- Photo preview strip before send --}}
     @if (! empty($photos))
         <div class="flex items-center gap-2 overflow-x-auto border-t border-line bg-surface px-4 py-2">
             @foreach ($photos as $i => $photo)
@@ -129,7 +123,7 @@
                         type="button"
                         wire:click="removePhoto({{ $i }})"
                         class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-canvas text-[10px]"
-                        aria-label="{{ __('Remove') }}"
+                        aria-label="Remove"
                     >
                         ×
                     </button>
@@ -156,7 +150,7 @@
         <textarea
             wire:model="draft"
             rows="1"
-            placeholder="{{ __('Ask for a tweak…') }}"
+            placeholder="Ask for a tweak…"
             class="flex-1 resize-none rounded-full border-[1.5px] border-line bg-canvas px-4 py-2.5 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
             x-on:keydown.enter.prevent="$el.form.requestSubmit()"
             wire:loading.attr="disabled"
@@ -168,7 +162,7 @@
             wire:loading.attr="disabled"
             wire:target="submitPrompt,runAgent,photos"
             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-canvas transition hover:opacity-90 disabled:opacity-50"
-            aria-label="{{ __('Send') }}"
+            aria-label="Send"
         >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
                 <path d="M5 12h14M13 5l7 7-7 7"/>

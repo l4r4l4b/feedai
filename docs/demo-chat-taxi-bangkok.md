@@ -24,14 +24,6 @@ Hallo! Ich bin Somchai, Taxifahrer in Bangkok seit 18 Jahren. Ich mache normale 
 Hauptsächlich Bangkok — Sukhumvit, Silom, Chinatown, alle großen Hotels, und natürlich Suvarnabhumi Airport. Touren gehen auch raus nach Ayutthaya und zum Floating Market.
 ```
 
-## Turn 3 — Sprache
-
-```
-Bitte auf Deutsch — die meisten meiner Gäste sind Deutsche und Schweizer.
-```
-
-_(Optional — falls AI fragt. Sonst überspringen.)_
-
 ## Turn 4 — Preise / Touren
 
 ```
@@ -46,7 +38,7 @@ Drei Touren biete ich an:
 ```
 WhatsApp: +66 81 234 5678
 LINE: somchai-taxi
-Anruf: +66 81 234 5678
+Call: +66 81 234 5678
 ```
 
 ## Turn 6 — Öffnungszeiten

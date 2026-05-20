@@ -1,6 +1,16 @@
 type: gallery
 label: Gallery
-description: Bilder-Galerie als Grid. Aspect ratio konsistent pro Gallery.
+description: Grid of photos with consistent aspect ratio. Pure visual storytelling.
+agent:
+  purpose: Show the place / food / vibe through multiple photos at once.
+  use_when:
+    - Vendor uploads 3+ images that aren't tied to specific menu items.
+    - Atmospheric food vendors, tour guides with action shots, massage studios with interior photos.
+  avoid_when:
+    - Just 1-2 photos — use `image_divider` or attach to hero/menu items.
+    - Photos belong to specific menu items — put them there instead.
+  examples:
+    - "here are 5 photos of my stall at different times of day → images=[{src:\"...\", alt:\"Morning prep\"}, {src:\"...\", alt:\"Lunch rush\"}, ...]"
 fields:
   section_label:
     type: string
@@ -15,4 +25,4 @@ fields:
     required: true
     item_fields:
       - src (image, required)
-      - alt (string, optional)
+      - alt (string, optional) — short caption / accessibility text

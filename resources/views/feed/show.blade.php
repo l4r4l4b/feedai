@@ -1,3 +1,10 @@
+@php
+    $builder = (bool) request('builder');
+    $requiredTypes = ['hero', 'about', 'menu', 'opening_hours', 'contact_buttons'];
+    $activeTypes = array_column($components, 'type');
+    $missingRequired = $builder ? array_values(array_diff($requiredTypes, $activeTypes)) : [];
+@endphp
+
 <x-layouts::public :vendor="$vendor">
     <div class="flex flex-col gap-7">
         @foreach ($components as $component)
@@ -143,6 +150,29 @@
                         :title="$fields['title']"
                         :url="$fields['url'] ?? '#pay'"
                     />
+                @break
+            @endswitch
+        @endforeach
+
+        {{-- Builder mode — render skeletons for required components that
+             aren't active yet. They click-postMessage the parent (dashboard
+             or onboarding) so a form drawer can open. --}}
+        @foreach ($missingRequired as $type)
+            @switch($type)
+                @case('hero')
+                    <x-feed.hero-skeleton type="hero" />
+                @break
+                @case('about')
+                    <x-feed.about-skeleton type="about" />
+                @break
+                @case('menu')
+                    <x-feed.menu-skeleton type="menu" />
+                @break
+                @case('opening_hours')
+                    <x-feed.opening-hours-skeleton type="opening_hours" />
+                @break
+                @case('contact_buttons')
+                    <x-feed.contact-buttons-skeleton type="contact_buttons" />
                 @break
             @endswitch
         @endforeach

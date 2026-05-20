@@ -1,6 +1,16 @@
 type: testimonial
 label: Testimonial
-description: Zitat eines Kunden mit Name und optional Rolle.
+description: One customer quote with author name and optional role/trip context.
+agent:
+  purpose: Social proof through a single, well-chosen guest voice.
+  use_when:
+    - Vendor mentions specific positive feedback from a named guest.
+    - High-trust services (tours, classes, premium dining).
+  avoid_when:
+    - Vendor doesn't have a real quote — never fabricate testimonials.
+    - Multiple voices wanted — pick the best ONE; this component holds a single quote.
+  examples:
+    - "Lena from Germany said our cooking class was the best part of her trip → quote=\"The cooking class was the best part of our trip.\", author=\"Lena & Tom\", role=\"Berlin, Germany\""
 fields:
   quote:
     type: string
@@ -14,4 +24,4 @@ fields:
     type: string
     required: false
     max: 80
-    description: Rolle / Reise / Land
+    description: Role / trip / country

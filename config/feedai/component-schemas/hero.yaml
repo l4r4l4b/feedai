@@ -1,24 +1,34 @@
 type: hero
 label: Hero
-description: Vendor-Aufmacher — großes 3:4 Foto mit Text-Overlay (Location, Name, Rating).
+description: Top-of-feed showcase — large 3:4 photo with overlay (name, location, optional rating).
+agent:
+  purpose: The first impression. Tells a guest what the place is and where, in one image.
+  use_when:
+    - Always — every vendor has a hero. The only truly required component.
+    - The vendor mentions their name, location, or what they're called.
+  avoid_when:
+    - Never deactivate. Always updateComponent for changes.
+  examples:
+    - "we make pad thai on khao san road → title=\"Mae Som Pad Thai\", location=\"Khao San Road · Bangkok\""
+    - "I'm Charlie, tuk-tuk driver, 12 years → title=\"Tuk-Tuk with Charlie\", location=\"Bangkok\""
 fields:
   image:
     type: image
     required: true
     ratio: "3:4"
-    description: Großes Vendor-Foto, 3:4 Hochformat, Overlay liegt drauf
+    description: Vendor photo, 3:4 portrait, overlay sits on top
   title:
     type: string
     required: true
     max: 80
-    description: Vendor-Name (display-prominent im Overlay)
+    description: Vendor display name, prominent in the overlay
   location:
     type: string
     required: false
     max: 80
-    description: Standort-Zeile mit Pin, z.B. "Khao San Road · Bangkok"
+    description: Single location line with pin, e.g. "Khao San Road · Bangkok"
   rating:
     type: string
     required: false
     max: 32
-    description: Display-Bewertung als Static-String, z.B. "4.95 (203)"
+    description: Display rating as a static string, e.g. "4.95 (203)"

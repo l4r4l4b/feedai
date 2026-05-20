@@ -1,12 +1,22 @@
 type: highlight_card
 label: Highlight Card
-description: Icon/Emoji + Headline + Body. Für kurze Hinweise, Hervorhebungen.
+description: Compact attention block with icon/emoji, headline and short body.
+agent:
+  purpose: A single fact or notice you want guests to see clearly — practical info, not marketing prose.
+  use_when:
+    - Practical info that doesn't fit elsewhere — "cash only", "vegetarian friendly", "no shoes inside".
+    - Seasonal notice or temporary update.
+  avoid_when:
+    - Information that fits the structured fields of another component (hours → opening_hours, contact → contact_buttons).
+  examples:
+    - "tell guests we're cash only → icon=\"💵\", headline=\"Cash only\", body=\"No cards or apps at the stall — ATM is 50m away.\""
+    - "we close in august → icon=\"🌴\", headline=\"Closed for August\", body=\"Back to the stall on September 1st.\""
 fields:
   icon:
     type: string
     required: true
     max: 4
-    description: Emoji oder Symbol
+    description: Emoji or short symbol
   headline:
     type: string
     required: true

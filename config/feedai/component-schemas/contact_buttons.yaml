@@ -1,6 +1,16 @@
 type: contact_buttons
 label: Contact Buttons
-description: 2-spaltiges Grid mit Direct-Contact-Channels.
+description: 2-column grid of direct-contact channels — WhatsApp, LINE, phone, Facebook.
+agent:
+  purpose: One-tap channels for guests to reach the vendor immediately.
+  use_when:
+    - Vendor gives a phone number, WhatsApp, LINE handle, or Facebook page.
+    - Required for every published feed — at least one channel.
+  avoid_when:
+    - For booking flows with custom questions — use `contact_form` instead.
+  examples:
+    - "whatsapp 0812345678 and line @maesom → buttons=[{channel:\"whatsapp\", value:\"+66812345678\"}, {channel:\"line\", value:\"@maesom\"}]"
+    - "just call me 0991234567 → buttons=[{channel:\"call\", value:\"+66991234567\", label:\"Call Charlie\"}]"
 fields:
   section_label:
     type: string
@@ -11,5 +21,5 @@ fields:
     required: true
     item_fields:
       - channel (enum: whatsapp|line|facebook|call, required)
-      - value (string, required) — Nummer / URL / Username
+      - value (string, required) — number / URL / username
       - label (string, optional)

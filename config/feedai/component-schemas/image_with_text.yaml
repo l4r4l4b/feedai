@@ -1,6 +1,16 @@
 type: image_with_text
 label: Image with Text
-description: Bild (16:9) oben, Textblock unten. Generischer Fallback.
+description: 16:9 image stacked above a text block — generic editorial fallback.
+agent:
+  purpose: A photo + paragraph that doesn't fit any more specific component.
+  use_when:
+    - Vendor has an editorial story tied to a photo (origin story, behind the scenes, ingredient sourcing).
+  avoid_when:
+    - Story belongs in `about` — that's the canonical narrative block.
+    - Photo is the whole point → use `image_divider`.
+    - There's a specific offering attached → use `service` or `menu` item.
+  examples:
+    - "I want to explain why my pad thai uses tamarind paste from my grandmother's village → image=\"...\", headline=\"Why our Pad Thai tastes different\", body=\"Tamarind from Ratchaburi, hand-pressed by my grandmother's neighbours...\""
 fields:
   image:
     type: image
@@ -12,4 +22,4 @@ fields:
     max: 80
 body:
   required: true
-  description: Body-Text, Markdown unterstützt
+  description: Body text, Markdown supported

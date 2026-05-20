@@ -59,9 +59,7 @@
                             'whitespace-pre-wrap rounded-md px-4 py-3 text-body',
                             'rounded-br-sm bg-accent text-canvas' => $message['role'] === 'user',
                             'rounded-bl-sm bg-surface text-text' => $message['role'] === 'assistant',
-                        ])>
-                            {{ $message['text'] }}
-                        </div>
+                        ])>{{ $message['text'] }}</div>
                     @endif
 
                     @if ($message['tool_summary'] !== null)
@@ -89,9 +87,7 @@
                     @endif
 
                     @if ($pendingText !== '')
-                        <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">
-                            {{ $pendingText }}
-                        </div>
+                        <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">{{ $pendingText }}</div>
                     @endif
                 </div>
             </li>

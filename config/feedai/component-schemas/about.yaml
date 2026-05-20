@@ -1,12 +1,23 @@
 type: about
 label: About
-description: Längerer Beschreibungs-Text mit optionalem Section-Label. Body als Markdown.
+description: Warm, sensory paragraph that tells the vendor's story. Body is Markdown.
+agent:
+  purpose: The "why this place is special" paragraph — atmosphere, history, personality.
+  use_when:
+    - Vendor describes how long they've done this, what makes them unique, family/training story.
+    - Required for every published feed.
+  avoid_when:
+    - For menu items or service lists — those go in `menu`.
+    - Don't dump bullet lists — magazine prose only.
+  examples:
+    - "30 years, same family recipe → body=\"Three generations behind one wok. The recipe hasn't changed since 1995...\""
+    - "I'm a licensed Royal Thai Massage therapist → body=\"Fifteen years of trained hands. Every session begins with a quiet breath...\""
 fields:
   section_label:
     type: string
     required: false
     max: 40
-    description: Mono-Label oben (z.B. "ÜBER UNS")
+    description: Mono label above, e.g. "ABOUT US"
 body:
   required: true
-  description: Hauptbeschreibung, Markdown unterstützt
+  description: Main description, 2-5 sentences, Markdown supported

@@ -1,6 +1,16 @@
 type: cta
 label: Call to Action
-description: Aufmerksamkeits-Block mit Titel und Button.
+description: Attention-grabbing block with title, optional body and a single button.
+agent:
+  purpose: A specific next step the vendor wants the guest to take.
+  use_when:
+    - Vendor has a clear conversion goal (book a class, request a quote, join a list).
+    - One per page maximum — multiple CTAs dilute attention.
+  avoid_when:
+    - The CTA is "contact me" → `contact_buttons` handles that better.
+    - The CTA is "pay" → use `pay_now_trigger`.
+  examples:
+    - "I want people to book my cooking class → title=\"Want to learn to cook it yourself?\", body=\"Saturdays 10am. Three dishes, all the secrets.\", button_label=\"Request the class\", button_url=\"#contact-form\""
 fields:
   title:
     type: string

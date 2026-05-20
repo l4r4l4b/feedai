@@ -24,7 +24,6 @@ use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Promptable;
 use Stringable;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * In-dashboard edit assistant for a live vendor feed.
@@ -142,11 +141,17 @@ class EditAgent implements Agent, Conversational, HasTools
 
         # Critical: One Component Per Type
 
-        Each component type exists at most once per page. Arrays of items
-        live inside one component:
+        Each component type exists at most once per page. Lists live as
+        arrays inside one component:
 
-        - `menu` → one `items` array (all dishes)
-        - `service` → one `items` array (all services)
+        - `menu` → one `items` array. **Holds ALL offerings**: dishes,
+          drinks, tours, massages, packages — anything sold or booked.
+          When the vendor asks to "add another tour" or "add a dish",
+          `updateComponent('menu', ...)` with the existing items + the new
+          one is the answer.
+        - `service` → a SINGLE service component (image, title, price,
+          meta, cta_url). No items array. Use only for ONE flagship
+          offering; otherwise use `menu`.
         - `gallery` → one `images` array
         - `contact_buttons` → one `buttons` array
         - `opening_hours` → one `hours`/`items` array
@@ -273,30 +278,6 @@ class EditAgent implements Agent, Conversational, HasTools
 
     private function buildComponentReference(): string
     {
-        $schemaDir = config_path('feedai/component-schemas');
-        $files = glob($schemaDir.'/*.yaml') ?: [];
-        sort($files);
-
-        $blocks = [];
-
-        foreach ($files as $path) {
-            /** @var array{type:string, label:string, description?:string, fields?:array<string, array<string, mixed>>} $schema */
-            $schema = Yaml::parseFile($path);
-
-            $fieldsList = [];
-            foreach ($schema['fields'] ?? [] as $name => $definition) {
-                $required = ($definition['required'] ?? false) ? ' [required]' : '';
-                $type = $definition['type'] ?? 'string';
-                $desc = ! empty($definition['description']) ? ' — '.$definition['description'] : '';
-                $fieldsList[] = "  - `{$name}` ({$type}){$required}{$desc}";
-            }
-
-            $fields = $fieldsList === [] ? '  (no fields)' : implode("\n", $fieldsList);
-            $desc = $schema['description'] ?? '';
-
-            $blocks[] = "### `{$schema['type']}` — {$schema['label']}\n{$desc}\n{$fields}";
-        }
-
-        return implode("\n\n", $blocks);
+        return buildAgentComponentReference();
     }
 }

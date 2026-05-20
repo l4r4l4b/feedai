@@ -1,6 +1,16 @@
 type: location
 label: Location
-description: Adresse + optional eingebettete Karte.
+description: Address line with optional Google Maps link and embedded map preview.
+agent:
+  purpose: Physical address so guests can navigate or screenshot directions.
+  use_when:
+    - Vendor has a fixed location guests visit (stall, studio, restaurant).
+    - Vendor gives a maps URL or detailed address.
+  avoid_when:
+    - Mobile services (taxi, delivery, home visits) without a fixed address.
+    - Hero already says "Khao San Road · Bangkok" and that's all guests need.
+  examples:
+    - "we're opposite 7-Eleven on Khao San Road → address=\"Khao San Road, opposite 7-Eleven\", map_url=\"https://maps.google.com/?q=...\""
 fields:
   section_label:
     type: string
@@ -13,8 +23,8 @@ fields:
   map_url:
     type: string
     required: false
-    description: Google-Maps-URL für Klick-zu-öffnen
+    description: Google Maps URL for click-to-open
   embed_url:
     type: string
     required: false
-    description: Optional iframe-Embed
+    description: Optional iframe embed URL

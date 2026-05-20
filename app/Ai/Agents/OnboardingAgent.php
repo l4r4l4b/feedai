@@ -26,7 +26,6 @@ use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Promptable;
 use Stringable;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Walks a vendor through onboarding via chat.
@@ -116,8 +115,10 @@ class OnboardingAgent implements Agent, Conversational, HasTools
 
         1. **hero** — title, short subtitle, hero image (or stock fallback)
         2. **about** — 2–4 sentences of warm, sensory storytelling
-        3. **Offerings** — *either* `menu` (for food/drinks) *or*
-           `service` (for tours, massage, consulting). Never both, never neither.
+        3. **Offerings** — `menu` with an `items[]` array. ALWAYS use `menu`
+           for ANY list of offerings: dishes, drinks, tours, massages,
+           consulting packages. The `service` component is for highlighting
+           ONE flagship offering — do not use it for a list.
         4. **opening_hours** — structured times per weekday(-group)
         5. **contact_buttons** — at least 1 channel (WhatsApp, LINE, Phone,
            Facebook)
@@ -155,14 +156,24 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         (3–5 sentences, you condense and elevate).
         Transition: continue to Phase 3.
 
-        **Phase 3 — Offerings (1–3 turns):**
-        Pick ONE path based on the category from Phase 0:
-        - **Food/Drinks** → `menu` with items[]. Question: "What are your 3–5 top dishes with prices?"
-        - **Service/Tours** → `service` with items[]. Question: "Which services/tours do you offer? With price range and rough duration."
-        Expect: list of at least 3 items.
-        Action: ONE `fillComponent` call with the full items[] array
-        (magazine descriptions, never verbatim).
+        **Phase 3 — Offerings (1 turn, possibly 2 if details missing):**
+        ALWAYS use `menu` (it's the only component with an items[] array
+        suitable for lists — food, drinks, tours, massages, all of it).
+        Ask in ONE question for EVERYTHING you need so the vendor can answer
+        once: "What are your 3–5 main offerings? Please tell me the name,
+        the price (or rough range), and roughly how long each takes / what
+        comes with it — all in one message is fine."
+        Expect: list of 3+ items with name + price + duration/description.
+        Action: ONE `fillComponent('menu', {section_label: ..., items: [...]})`
+        call with the FULL array. Each item has `name`, `price`, and
+        `description` (which holds duration + magazine flavor — e.g.
+        "Half-day · Old Town temples, riverside lanes, hidden coffee").
+        Section label fits the vendor: "Menu", "Dishes", "Tours", "Services".
         Transition: continue to Phase 4.
+
+        **Do not split offerings across multiple turns** asking for price
+        first then duration. Take all the info in one turn; only ask a
+        follow-up if the vendor's first message was truly missing core data.
 
         **Phase 4 — Opening Hours (1 turn):**
         Question: "When are you open?"
@@ -250,12 +261,14 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         # Critical: One Component Per Type
 
         Each component type exists **at most once per page**. You do NOT have
-        multiple `service` components or multiple `menu` components. Instead,
-        many components hold **arrays of items**:
+        multiple `menu` components or multiple `gallery` components. Lists
+        live as arrays inside one component:
 
-        - `menu` → one `items` array with all dishes
-        - `service` → one `items` array with all services. For detailed
-          per-service sub-pages, use `createSubpage`.
+        - `menu` → one `items` array. **Holds ALL offerings**: dishes,
+          drinks, tours, massages, packages — anything sold or booked.
+        - `service` → a SINGLE service component (image, title, price,
+          meta, cta_url). No items array. Only use for ONE flagship
+          offering you want to highlight visually; otherwise use `menu`.
         - `gallery` → one `images` array
         - `contact_buttons` → one `buttons` array
         - `opening_hours` → one `hours`/`items` array
@@ -390,30 +403,6 @@ class OnboardingAgent implements Agent, Conversational, HasTools
      */
     private function buildComponentReference(): string
     {
-        $schemaDir = config_path('feedai/component-schemas');
-        $files = glob($schemaDir.'/*.yaml') ?: [];
-        sort($files);
-
-        $blocks = [];
-
-        foreach ($files as $path) {
-            /** @var array{type:string, label:string, description?:string, fields?:array<string, array<string, mixed>>} $schema */
-            $schema = Yaml::parseFile($path);
-
-            $fieldsList = [];
-            foreach ($schema['fields'] ?? [] as $name => $definition) {
-                $required = ($definition['required'] ?? false) ? ' [required]' : '';
-                $type = $definition['type'] ?? 'string';
-                $desc = ! empty($definition['description']) ? ' — '.$definition['description'] : '';
-                $fieldsList[] = "  - `{$name}` ({$type}){$required}{$desc}";
-            }
-
-            $fields = $fieldsList === [] ? '  (no fields)' : implode("\n", $fieldsList);
-            $desc = $schema['description'] ?? '';
-
-            $blocks[] = "### `{$schema['type']}` — {$schema['label']}\n{$desc}\n{$fields}";
-        }
-
-        return implode("\n\n", $blocks);
+        return buildAgentComponentReference();
     }
 }
