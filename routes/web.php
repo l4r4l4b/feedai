@@ -15,13 +15,52 @@ use App\Livewire\Public\ContactPage;
 use App\Livewire\Public\ConversationView;
 use App\Livewire\PublicPay;
 use App\Models\Payment;
+use App\Models\Vendor;
 use App\Services\ContentLoader;
 use App\Support\Locale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stripe\StripeClient;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function (ContentLoader $loader) {
+    // Cards for the "live now" showcase on the marketing page — pulls every
+    // live vendor's hero image + location once per request. Limited to 12
+    // so the section stays a snapshot, not a directory.
+    $liveVendors = Vendor::where('status', 'live')
+        ->orderByDesc('updated_at')
+        ->limit(12)
+        ->get()
+        ->map(function (Vendor $vendor) use ($loader): ?array {
+            try {
+                $components = $loader->loadPageComponents($vendor->slug, 'home');
+            } catch (Throwable) {
+                return null;
+            }
+
+            foreach ($components as $component) {
+                if (($component['type'] ?? null) === 'hero') {
+                    $image = $component['fields']['image'] ?? null;
+                    if (! $image) {
+                        return null;
+                    }
+
+                    return [
+                        'slug' => $vendor->slug,
+                        'name' => $vendor->name,
+                        'locale' => $vendor->locale,
+                        'image' => $image,
+                        'location' => $component['fields']['location'] ?? null,
+                    ];
+                }
+            }
+
+            return null;
+        })
+        ->filter()
+        ->values();
+
+    return view('welcome', ['liveVendors' => $liveVendors]);
+})->name('home');
 
 Route::get('/locale/{locale}', SetLocaleController::class)
     ->where('locale', '[a-z]{2}')

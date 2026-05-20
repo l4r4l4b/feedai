@@ -256,6 +256,52 @@
             </div>
         </section>
 
+        {{-- =========================== Live vendors =========================== --}}
+        @if (! empty($liveVendors) && count($liveVendors) > 0)
+            <section class="pt-24 md:pt-32">
+                <div class="mb-10 flex items-end justify-between gap-6">
+                    <div class="flex flex-col gap-3">
+                        <span class="inline-flex w-fit items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-caption uppercase tracking-wide text-muted">
+                            <span class="inline-block h-1.5 w-1.5 rounded-full bg-live"></span>
+                            Live now · {{ count($liveVendors) }}
+                        </span>
+                        <h2 class="max-w-2xl text-section text-ink">
+                            Real vendors who built their feed.
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($liveVendors as $vendor)
+                        <a
+                            href="{{ url('/'.$vendor['slug']) }}"
+                            class="group flex flex-col overflow-hidden rounded-lg border border-line bg-canvas transition hover:border-ink hover:shadow-[0_12px_32px_rgba(15,23,42,0.08)]"
+                        >
+                            <div class="aspect-[3/4] w-full overflow-hidden bg-surface">
+                                <img
+                                    src="{{ $vendor['image'] }}"
+                                    alt="{{ $vendor['name'] }}"
+                                    loading="lazy"
+                                    class="h-full w-full object-cover transition group-hover:scale-[1.02]"
+                                />
+                            </div>
+                            <div class="flex flex-1 flex-col gap-1 p-4">
+                                <div class="flex items-baseline justify-between gap-2">
+                                    <p class="truncate text-label text-ink">{{ $vendor['name'] }}</p>
+                                    <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">
+                                        {{ strtoupper($vendor['locale']) }}
+                                    </span>
+                                </div>
+                                @if (! empty($vendor['location']))
+                                    <p class="truncate text-caption text-muted">{{ $vendor['location'] }}</p>
+                                @endif
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
         {{-- =========================== How it works =========================== --}}
         <section class="pt-24 md:pt-32">
             <div class="mb-10 flex flex-col gap-3">
