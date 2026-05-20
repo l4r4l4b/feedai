@@ -16,18 +16,39 @@
     @vite(['resources/css/app.css'])
 </head>
 <body
-    class="bg-canvas text-text antialiased"
+    class="bg-canvas text-text antialiased lg:bg-surface"
     @if (! empty($vendor['accent_color'])) style="--accent: {{ $vendor['accent_color'] }};" @endif
 >
     <a id="top" class="sr-only" tabindex="-1">{{ __('Top') }}</a>
+
+    {{-- Desktop decoration: soft accent-tinted radial behind the feed column,
+         oversized vendor name as a watermark. Pointer-none, hidden below lg
+         where the phone-sized layout already feels native. --}}
+    @unless ($isBuilder)
+        <div class="pointer-events-none fixed inset-0 -z-10 hidden overflow-hidden lg:block" aria-hidden="true">
+            <div
+                class="absolute inset-0 opacity-70"
+                style="background:
+                    radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+                    radial-gradient(80% 40% at 50% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%);"
+            ></div>
+            @if (! empty($vendor['name']))
+                <span
+                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-black text-[18vw] uppercase tracking-tight text-ink/[0.025] leading-none"
+                >
+                    {{ $vendor['name'] }}
+                </span>
+            @endif
+        </div>
+    @endunless
 
     {{-- Top navbar with the locale switcher. Pure server-rendered links
          hitting /locale/{code} which sets a 180-day cookie and bounces
          back — no JavaScript needed, no Alpine. Hidden in builder
          iframes (the vendor edits in their own language). --}}
     @unless ($isBuilder)
-        <header class="sticky top-0 z-30 border-b border-line bg-canvas/95 backdrop-blur-sm">
-            <div class="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-5 py-2 md:max-w-2xl md:px-8">
+        <header class="sticky top-0 z-30 border-b border-line bg-canvas/95 backdrop-blur-sm lg:bg-transparent lg:border-transparent">
+            <div class="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-5 py-2 md:max-w-2xl md:px-8 lg:rounded-b-2xl lg:border-x lg:border-b lg:border-line lg:bg-canvas/90 lg:shadow-[0_4px_24px_rgba(0,0,0,0.04)] lg:backdrop-blur-md">
                 @if (! empty($vendor['slug']))
                     <a
                         href="{{ url('/'.$vendor['slug']) }}"
@@ -58,7 +79,16 @@
         </header>
     @endunless
 
-    <main class="mx-auto min-h-screen w-full max-w-md px-5 {{ $isBuilder ? 'pb-10' : 'pb-28' }} {{ $isBuilder ? 'pt-6' : 'pt-4' }} md:max-w-2xl md:px-8 {{ $isBuilder ? 'md:pt-10' : 'md:pt-6' }}">
+    <main
+        @class([
+            'mx-auto w-full max-w-md px-5 md:max-w-2xl md:px-8',
+            'min-h-screen' => $isBuilder,
+            'pb-10 pt-6 md:pt-10' => $isBuilder,
+            // Phone-sized column on mobile, card-on-canvas on lg+
+            'pb-28 pt-4 md:pt-6' => ! $isBuilder,
+            'lg:my-8 lg:rounded-2xl lg:border lg:border-line lg:bg-canvas lg:px-10 lg:py-10 lg:shadow-[0_24px_48px_-12px_rgba(15,23,42,0.12)]' => ! $isBuilder,
+        ])
+    >
         {{ $slot }}
     </main>
 
