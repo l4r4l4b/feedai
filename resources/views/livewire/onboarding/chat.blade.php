@@ -64,11 +64,13 @@
                     @endif
 
                     @if ($message['text'] !== '')
-                        <div @class([
-                            'whitespace-pre-wrap rounded-md px-4 py-3 text-body',
-                            'rounded-br-sm bg-accent text-canvas' => $message['role'] === 'user',
-                            'rounded-bl-sm bg-surface text-text' => $message['role'] === 'assistant',
-                        ])>{{ $message['text'] }}</div>
+                        @if ($message['role'] === 'assistant')
+                            <div class="prose prose-sm max-w-none rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-strong:text-text prose-strong:font-semibold prose-headings:text-text">
+                                {!! \Illuminate\Support\Str::markdown($message['text'], ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}
+                            </div>
+                        @else
+                            <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">{{ $message['text'] }}</div>
+                        @endif
                     @endif
 
                     @if ($message['tool_summary'] !== null)

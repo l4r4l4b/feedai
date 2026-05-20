@@ -6,14 +6,28 @@
     <body class="min-h-screen bg-canvas text-text antialiased">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-line bg-surface">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <a
+                    href="{{ route('dashboard') }}"
+                    wire:navigate
+                    class="flex items-center gap-2 rounded-md px-1 py-2 transition hover:opacity-80"
+                >
+                    <span class="flex aspect-square size-8 items-center justify-center rounded-md bg-ink text-canvas">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="size-5" aria-hidden="true">
+                            <path d="M5 7h11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M5 12h8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M5 17h5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <circle cx="18" cy="17" r="2.2" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <span class="text-label font-bold text-ink">FeedAI</span>
+                </a>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ __('Feed') }}
                     </flux:sidebar.item>
                     @if (auth()->user()?->isVendor())
                         @php
@@ -29,7 +43,7 @@
                             @endif
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="paint-brush" :href="route('dashboard.accent')" :current="request()->routeIs('dashboard.accent')" wire:navigate>
-                            {{ __('Accent color') }}
+                            {{ __('Brand') }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="credit-card" :href="route('dashboard.payments.settings')" :current="request()->routeIs('dashboard.payments.*')" wire:navigate>
                             {{ __('Payment methods') }}
