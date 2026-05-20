@@ -52,6 +52,7 @@
                 @if (! empty($vendor['slug']))
                     <a
                         href="{{ url('/'.$vendor['slug']) }}"
+                        wire:navigate
                         class="truncate text-caption uppercase tracking-wide text-muted transition hover:text-ink"
                     >
                         {{ $vendor['name'] ?? 'FeedAI' }}
@@ -98,41 +99,15 @@
          nav would be confusing/clickable inside the parent edit UI). --}}
     @unless ($isBuilder)
     <nav
-        x-data="{
-            showTop: false,
-            init() {
-                this.update();
-                window.addEventListener('scroll', () => this.update(), { passive: true });
-            },
-            update() {
-                this.showTop = window.scrollY > 240;
-            },
-            scrollTop() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            },
-        }"
         class="pointer-events-none fixed inset-x-0 bottom-5 z-50 flex justify-center px-4"
         aria-label="{{ __('Quick navigation') }}"
     >
         <ul class="pointer-events-auto flex items-center gap-1 rounded-full bg-ink px-2 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
-            {{-- Top — only after some scroll --}}
-            <li x-show="showTop" x-cloak x-transition.opacity>
-                <button
-                    type="button"
-                    x-on:click="scrollTop()"
-                    class="flex h-12 w-12 items-center justify-center rounded-full text-canvas/50 transition hover:text-canvas"
-                    aria-label="{{ __('Back to top') }}"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-                        <path d="M12 19V5M5 12l7-7 7 7"/>
-                    </svg>
-                </button>
-            </li>
-
             {{-- Feed home --}}
             <li>
                 <a
                     href="{{ url('/'.($vendor['slug'] ?? '')) }}"
+                    wire:navigate
                     @class([
                         'flex h-12 w-12 items-center justify-center rounded-full transition',
                         'bg-canvas text-ink' => ($page ?? 'home') === 'home',
@@ -152,6 +127,7 @@
                 <li>
                     <a
                         href="{{ url('/'.$vendor['slug'].'/pay') }}"
+                        wire:navigate
                         @class([
                             'flex h-12 w-12 items-center justify-center rounded-full transition',
                             'bg-canvas text-ink' => ($page ?? '') === 'pay',
@@ -172,6 +148,7 @@
                 <li>
                     <a
                         href="{{ route('public.contact', ['vendor' => $vendor['slug']]) }}"
+                        wire:navigate
                         @class([
                             'flex h-12 w-12 items-center justify-center rounded-full transition',
                             'bg-canvas text-ink' => ($page ?? '') === 'contact',
@@ -190,5 +167,6 @@
     @endunless
 
     @vite(['resources/js/app.js'])
+    @fluxScripts
 </body>
 </html>

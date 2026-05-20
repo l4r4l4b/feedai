@@ -26,9 +26,9 @@
         <a href="{{ url('/'.$vendor->slug) }}" class="inline-flex items-center gap-1 text-caption uppercase tracking-wide text-muted transition hover:text-ink">
             ← {{ $vendor->name }}
         </a>
-        <h1 class="text-hero leading-tight text-ink">Pay {{ $vendor->name }}</h1>
+        <h1 class="text-hero leading-tight text-ink">{{ __('Pay :name', ['name' => $vendor->name]) }}</h1>
         <p class="text-body text-muted">
-            FeedAI never holds your money — every payment goes straight to the vendor. Pick the method that works for you.
+            {{ __('FeedAI never holds your money — every payment goes straight to the vendor. Pick the method that works for you.') }}
         </p>
     </header>
 
