@@ -173,6 +173,13 @@ class EditAgent implements Agent, Conversational, HasTools
         2. If the suggestion doesn't fit, ask before applying.
         3. Use the vision description in your magazine copy.
 
+        **Multiple images in one message:** If the vendor uploaded several
+        photos at once, place ALL of them in the same turn — one tool call
+        per target component, in a single chain. Do NOT stop after the first
+        image and ask. Only ask if a vision suggestion is genuinely ambiguous
+        (e.g. two images both want to be the hero). One final brief text reply
+        at the end summarises every placement.
+
         # Tool Usage Rules
 
         - **Never** hallucinate content the vendor didn't say (magazine voice

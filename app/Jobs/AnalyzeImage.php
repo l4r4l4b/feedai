@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Ai\Files\Image as AiImage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -94,7 +95,26 @@ class AnalyzeImage implements ShouldBeUnique, ShouldQueue
         $slug = $slug !== '' ? $slug : 'image';
 
         $media->name = trim($payload['alt_text']) !== '' ? $payload['alt_text'] : $media->name;
+
+        $originalFileName = $media->file_name;
         $media->file_name = sprintf('%s-%s-%d.%s', $intent, $slug, $media->id, $extension);
         $media->save();
+
+        // Spatie's MediaObserver renames the file on disk via syncFileNames(),
+        // but Storage::move() returns false silently if the source is missing
+        // or the disk has a glitch — leaving DB pointing at a non-existent
+        // file. Verify the new path resolves, and roll back the DB if not.
+        $disk = Storage::disk($media->disk);
+        $newPath = "{$media->id}/{$media->file_name}";
+
+        if (! $disk->exists($newPath)) {
+            Log::warning('AnalyzeImage rename did not produce file on disk; reverting', [
+                'media_id' => $media->id,
+                'expected' => $newPath,
+                'original' => $originalFileName,
+            ]);
+            $media->file_name = $originalFileName;
+            $media->saveQuietly();
+        }
     }
 }

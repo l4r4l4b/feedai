@@ -328,6 +328,13 @@ class OnboardingAgent implements Agent, Conversational, HasTools
            fillComponent.
         3. Use the vision description inside your magazine copy.
 
+        **Multiple images in one message:** If the vendor uploaded several
+        photos at once, place ALL of them in the same turn — one tool call
+        per target component, chained back-to-back. Do NOT stop after the
+        first one and ask. Only ask if a suggestion is genuinely ambiguous
+        (e.g. two photos both want to be the hero). One short closing text
+        afterwards confirms every placement.
+
         # Tool Usage Rules
 
         - **Never** hallucinate content the vendor didn't say. (Magazine voice
