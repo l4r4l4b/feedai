@@ -54,11 +54,11 @@
      (Flux only shows it below lg); on lg+ we get the full viewport. --}}
 <div class="-m-6 flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden md:flex-row lg:-m-8 lg:h-screen">
     <section
-        class="relative flex h-1/2 w-full flex-col border-b border-line bg-surface md:h-full md:w-3/5 md:border-b-0 md:border-r"
+        class="relative flex h-1/2 w-full min-h-0 flex-col border-b border-line bg-surface md:h-full md:w-3/5 md:border-b-0 md:border-r"
         x-data="{ refresh() { $refs.frame.contentWindow?.location.reload(); } }"
         x-on:feed-updated.window="refresh()"
     >
-        <header class="flex items-center justify-between border-b border-line bg-canvas px-4 py-3">
+        <header class="shrink-0 flex items-center justify-between border-b border-line bg-canvas px-4 py-3">
             <p class="text-caption uppercase tracking-wide text-muted">Live preview</p>
             <div class="flex items-center gap-4">
                 <button
@@ -82,15 +82,17 @@
             x-ref="frame"
             src="{{ url('/'.$vendorSlug.'?builder=1') }}"
             title="Feed preview"
-            class="h-full w-full flex-1 bg-canvas"
+            class="min-h-0 w-full flex-1 bg-canvas"
         ></iframe>
 
         {{-- Components list footer — power-user shortcut into the YAML editor.
-             Stays collapsible so it doesn't clutter the optics. --}}
-        <details class="border-t border-line bg-canvas px-4 py-2">
+             Stays collapsible so it doesn't clutter the optics. Capped height
+             + scroll prevents long lists from pushing the iframe out. --}}
+        <details class="shrink-0 border-t border-line bg-canvas px-4 py-2">
             <summary class="cursor-pointer text-caption text-muted">
                 Components ({{ count($components) }})
             </summary>
+            <div class="max-h-60 overflow-y-auto">
             @if (empty($components))
                 <p class="mt-2 text-caption text-muted">
                     No components yet — ask the chat to add something.
@@ -123,18 +125,23 @@
                     @endforeach
                 </ul>
             @endif
+            </div>
         </details>
+
+        {{-- iframe section also needs the shrink class on its header so flex math works --}}
     </section>
 
-    <aside class="flex h-1/2 w-full flex-col bg-canvas md:h-full md:w-2/5">
-        <header class="border-b border-line px-4 py-3">
+    <aside class="flex h-1/2 w-full min-h-0 flex-col bg-canvas md:h-full md:w-2/5">
+        <header class="shrink-0 border-b border-line px-4 py-3">
             <p class="text-caption uppercase tracking-wide text-muted">Edit assistant</p>
             <p class="mt-1 text-caption text-soft-muted">
                 Describe what to change — I update the feed live.
             </p>
         </header>
 
-        <livewire:dashboard.feed-chat />
+        <div class="flex-1 min-h-0 overflow-hidden">
+            <livewire:dashboard.feed-chat />
+        </div>
     </aside>
 </div>
 </div>

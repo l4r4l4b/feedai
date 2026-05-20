@@ -1,13 +1,13 @@
 <div>
     <livewire:feed.component-drawer />
 
-    <div class="flex h-screen flex-col md:flex-row">
+    <div class="flex h-screen flex-col overflow-hidden md:flex-row">
         <section
-            class="relative flex h-1/2 w-full flex-col border-b border-line bg-surface md:h-full md:w-3/5 md:border-b-0 md:border-r"
+            class="relative flex h-1/2 w-full min-h-0 flex-col border-b border-line bg-surface md:h-full md:w-3/5 md:border-b-0 md:border-r"
             x-data="{ refresh() { $refs.frame.contentWindow?.location.reload(); } }"
             x-on:feed-updated.window="refresh()"
         >
-            <header class="flex items-center justify-between border-b border-line bg-canvas px-4 py-3">
+            <header class="shrink-0 flex items-center justify-between border-b border-line bg-canvas px-4 py-3">
                 <p class="text-caption uppercase tracking-wide text-muted">Live Preview</p>
                 <button
                     type="button"
@@ -22,19 +22,21 @@
                 x-ref="frame"
                 src="{{ url('/'.$vendorSlug.'?builder=1') }}"
                 title="Feed Preview"
-                class="h-full w-full flex-1 bg-canvas"
+                class="min-h-0 w-full flex-1 bg-canvas"
             ></iframe>
         </section>
 
-        <aside class="flex h-1/2 w-full flex-col bg-canvas md:h-full md:w-2/5">
-            <header class="border-b border-line px-4 py-3">
+        <aside class="flex h-1/2 w-full min-h-0 flex-col bg-canvas md:h-full md:w-2/5">
+            <header class="shrink-0 border-b border-line px-4 py-3">
                 <p class="text-caption uppercase tracking-wide text-muted">FeedAI Onboarding</p>
                 <p class="mt-1 text-caption text-soft-muted">
                     Tell me about your business — I'll build the feed live as we go.
                 </p>
             </header>
 
-            <livewire:onboarding.chat />
+            <div class="flex-1 min-h-0 overflow-hidden">
+                <livewire:onboarding.chat />
+            </div>
         </aside>
     </div>
 </div>
