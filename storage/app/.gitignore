@@ -2,3 +2,11 @@
 !private/
 !public/
 !.gitignore
+
+# Demo vendor content is the seed source — ship it with the repo so
+# `migrate:fresh --seed` works on a clean server. DemoVendorSeeder only
+# creates the DB row; the actual feed content lives here as static files.
+!vendors/
+vendors/*
+!vendors/demo/
+!vendors/demo/**

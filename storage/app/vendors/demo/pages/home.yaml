@@ -1,0 +1,36 @@
+slug: home
+components:
+  - type: hero
+    file: 01-hero.md
+  - type: about
+    file: 02-about.md
+  - type: image_divider
+    file: 03-image-divider.md
+  - type: service
+    file: 04-service.md
+  - type: menu
+    file: 05-menu.md
+  - type: gallery
+    file: 06-gallery.md
+  - type: opening_hours
+    file: 07-opening-hours.md
+  - type: location
+    file: 08-location.md
+  - type: contact_buttons
+    file: 09-contact-buttons.md
+  - type: highlight_card
+    file: 10-highlight-card.md
+  - type: testimonial
+    file: 11-testimonial.md
+  - type: faq
+    file: 12-faq.md
+  - type: image_with_text
+    file: 13-image-with-text.md
+  - type: text_block
+    file: 14-text-block.md
+  - type: cta
+    file: 15-cta.md
+  - type: pay_now_trigger
+    file: 16-pay-now-trigger.md
+  - type: contact_form
+    file: 17-contact-form.md
