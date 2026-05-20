@@ -1,6 +1,12 @@
 @php
     $vendorInitial = mb_strtoupper(mb_substr($conversation->vendor->name ?: 'V', 0, 1));
     $touristInitial = mb_strtoupper(mb_substr($conversation->tourist_name ?: 'You', 0, 1));
+    $localeNames = ['en' => __('English'), 'de' => __('Deutsch'), 'th' => __('ไทย')];
+    $vendorLocale = $conversation->vendor->locale ?? 'th';
+    $touristLocale = $conversation->tourist_locale;
+    $vendorLangLabel = $localeNames[$vendorLocale] ?? strtoupper($vendorLocale);
+    $touristLangLabel = $localeNames[$touristLocale] ?? strtoupper($touristLocale);
+    $sameLocale = $vendorLocale === $touristLocale;
 @endphp
 
 <div class="flex flex-col gap-3">
@@ -14,9 +20,19 @@
                 <p class="truncate text-title text-ink">{{ $conversation->vendor->name }}</p>
             </div>
         </div>
-        <p class="text-caption text-soft-muted">
-            {{ __('Replies arrive in :locale — we translate both ways.', ['locale' => strtoupper($conversation->tourist_locale)]) }}
-        </p>
+        @if ($sameLocale)
+            <p class="text-caption text-soft-muted">
+                {{ __('You both speak :lang.', ['lang' => $vendorLangLabel]) }}
+            </p>
+        @else
+            <p class="text-caption text-soft-muted">
+                {{ __('You write in :tourist · :name reads in :vendor — we translate both ways.', [
+                    'tourist' => $touristLangLabel,
+                    'vendor' => $vendorLangLabel,
+                    'name' => $conversation->vendor->name,
+                ]) }}
+            </p>
+        @endif
     </header>
 
     <section class="flex flex-col overflow-hidden rounded-lg border border-line bg-canvas">

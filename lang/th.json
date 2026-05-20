@@ -34,6 +34,17 @@
     "This vendor hasn't set up any payment methods yet.": "ผู้ขายรายนี้ยังไม่ได้ตั้งค่าวิธีชำระเงิน",
     "Top": "บน",
     "We translate both ways. Write in your language — we deliver it in :locale.": "เราแปลให้ทั้งสองทิศทาง เขียนในภาษาของคุณ — เราส่งให้ผู้ขายเป็น :locale",
+    "English": "อังกฤษ",
+    "Deutsch": "เยอรมัน",
+    "ไทย": "ไทย",
+    "You write in :you · :name reads in :them — we translate both ways automatically.": "คุณเขียนเป็น :you · :name อ่านเป็น :them — เราแปลให้ทั้งสองทิศทางอัตโนมัติ",
+    "You both speak :lang — no translation needed.": "คุณทั้งคู่พูด :lang — ไม่ต้องแปล",
+    "You both speak :lang.": "คุณทั้งคู่พูด :lang",
+    "the vendor": "ผู้ขาย",
+    "Guest writes in :tourist — we translate to your :vendor.": "ผู้เข้าชมเขียนเป็น :tourist — เราแปลให้คุณเป็น :vendor",
+    "Reply in :lang…": "ตอบกลับเป็น :lang…",
+    "You write in :vendor — guest reads in :tourist.": "คุณเขียนเป็น :vendor — ผู้เข้าชมอ่านเป็น :tourist",
+    "You write in :tourist · :name reads in :vendor — we translate both ways.": "คุณเขียนเป็น :tourist · :name อ่านเป็น :vendor — เราแปลให้ทั้งสองทิศทาง",
     "Your message…": "ข้อความของคุณ…",
     "translating…": "กำลังแปล…"
 }

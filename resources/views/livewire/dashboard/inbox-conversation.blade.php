@@ -1,6 +1,12 @@
 @php
     $touristInitial = mb_strtoupper(mb_substr($conversation->tourist_name ?: 'T', 0, 1));
     $vendorInitial = mb_strtoupper(mb_substr($conversation->vendor->name ?: 'V', 0, 1));
+    $localeNames = ['en' => __('English'), 'de' => __('Deutsch'), 'th' => __('ไทย')];
+    $vendorLocale = $conversation->vendor->locale ?? 'th';
+    $touristLocale = $conversation->tourist_locale;
+    $vendorLangLabel = $localeNames[$vendorLocale] ?? strtoupper($vendorLocale);
+    $touristLangLabel = $localeNames[$touristLocale] ?? strtoupper($touristLocale);
+    $sameLocale = $vendorLocale === $touristLocale;
 @endphp
 
 <div class="-m-6 flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden lg:-m-8 lg:h-screen">
@@ -24,7 +30,14 @@
                     @if ($conversation->tourist_email)
                         {{ $conversation->tourist_email }} ·
                     @endif
-                    {{ __('your replies are auto-translated') }}
+                    @if ($sameLocale)
+                        {{ __('You both speak :lang.', ['lang' => $vendorLangLabel]) }}
+                    @else
+                        {{ __('Guest writes in :tourist — we translate to your :vendor.', [
+                            'tourist' => $touristLangLabel,
+                            'vendor' => $vendorLangLabel,
+                        ]) }}
+                    @endif
                 </p>
             </div>
         </div>
@@ -94,7 +107,7 @@
             <flux:textarea
                 wire:model="draft"
                 rows="1"
-                :placeholder="__('Reply in :loc…', ['loc' => strtoupper($conversation->vendor->locale ?? 'TH')])"
+                :placeholder="__('Reply in :lang…', ['lang' => $vendorLangLabel])"
                 class="flex-1"
                 x-on:keydown.enter.prevent="$el.form.requestSubmit()"
             />
@@ -108,8 +121,13 @@
                 {{ __('Send') }}
             </flux:button>
         </div>
-        <p class="mt-2 text-caption text-muted">
-            {{ __('You write in :vendor — guest reads in :tourist.', ['vendor' => strtoupper($conversation->vendor->locale ?? 'TH'), 'tourist' => strtoupper($conversation->tourist_locale)]) }}
-        </p>
+        @unless ($sameLocale)
+            <p class="mt-2 text-caption text-muted">
+                {{ __('You write in :vendor — guest reads in :tourist.', [
+                    'vendor' => $vendorLangLabel,
+                    'tourist' => $touristLangLabel,
+                ]) }}
+            </p>
+        @endunless
     </form>
 </div>

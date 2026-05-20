@@ -1,14 +1,29 @@
+@php
+    $localeNames = ['en' => __('English'), 'de' => __('Deutsch'), 'th' => __('ไทย')];
+    $youSpeak = app()->getLocale();
+    $vendorSpeaks = $vendor['locale'] ?? 'th';
+    $sameLocale = $youSpeak === $vendorSpeaks;
+@endphp
+
 <div class="space-y-8">
     <header class="space-y-2">
         <p class="text-caption uppercase tracking-wide text-muted">{{ __('Contact') }}</p>
         <h1 class="text-display text-text">
             {{ __('Message :name', ['name' => $vendor['name'] ?? 'us']) }}
         </h1>
-        <p class="text-body text-muted">
-            {{ __('We translate both ways. Write in your language — we deliver it in :locale.', [
-                'locale' => strtoupper($vendor['locale'] ?? 'th'),
-            ]) }}
-        </p>
+        @if ($sameLocale)
+            <p class="text-body text-muted">
+                {{ __('You both speak :lang — no translation needed.', ['lang' => $localeNames[$youSpeak] ?? strtoupper($youSpeak)]) }}
+            </p>
+        @else
+            <p class="text-body text-muted">
+                {{ __('You write in :you · :name reads in :them — we translate both ways automatically.', [
+                    'you' => $localeNames[$youSpeak] ?? strtoupper($youSpeak),
+                    'them' => $localeNames[$vendorSpeaks] ?? strtoupper($vendorSpeaks),
+                    'name' => $vendor['name'] ?? __('the vendor'),
+                ]) }}
+            </p>
+        @endif
     </header>
 
     <section class="rounded-lg bg-surface p-6">
