@@ -106,6 +106,37 @@ class PublicPay extends Component
         ))->build()->getString();
     }
 
+    /**
+     * QR for the vendor's crypto wallet. Encodes a chain-specific payment URI
+     * when available (ethereum:/bitcoin:/solana:) so a wallet app can pre-fill
+     * the address; falls back to the raw address for chains without a
+     * standardised URI scheme.
+     */
+    #[Computed]
+    public function cryptoQrSvg(): ?string
+    {
+        if (! $this->vendor->acceptsStablecoin()) {
+            return null;
+        }
+
+        $address = (string) $this->vendor->stablecoin_address;
+        $chain = (string) $this->vendor->stablecoin_chain;
+
+        $payload = match ($chain) {
+            'ETH', 'POL' => 'ethereum:'.$address,
+            'BTC' => 'bitcoin:'.$address,
+            'SOL' => 'solana:'.$address,
+            default => $address,
+        };
+
+        return (new Builder(
+            writer: new SvgWriter,
+            data: $payload,
+            size: 220,
+            margin: 6,
+        ))->build()->getString();
+    }
+
     public function render(): View
     {
         $vendorArray = [

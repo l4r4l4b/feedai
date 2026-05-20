@@ -141,16 +141,20 @@
                     }
                 }"
             >
-                <div class="rounded-lg border border-line bg-canvas p-5">
-                    <div class="flex items-center justify-between gap-3">
-                        <p class="text-caption uppercase tracking-wide text-muted">{{ __('Wallet address') }}</p>
+                <div class="flex flex-col items-center gap-4 rounded-lg border border-line bg-canvas p-6">
+                    <div class="flex w-full items-center justify-between gap-3">
+                        <p class="text-caption uppercase tracking-wide text-muted">{{ __('Scan or copy') }}</p>
                         <flux:badge color="zinc" size="sm" inset="top bottom">
                             {{ $chainLabel[$vendor->stablecoin_chain] ?? $vendor->stablecoin_chain }}
                         </flux:badge>
                     </div>
 
+                    <div class="rounded-md border border-line bg-surface p-3" data-test="crypto-qr">
+                        {!! $this->cryptoQrSvg !!}
+                    </div>
+
                     <code
-                        class="mt-3 block break-all rounded-md border border-line bg-surface px-3 py-3 font-mono text-[12px] text-ink"
+                        class="block w-full break-all rounded-md border border-line bg-surface px-3 py-3 text-center font-mono text-[12px] text-ink"
                         data-test="crypto-address"
                     >
                         {{ $vendor->stablecoin_address }}
@@ -160,7 +164,7 @@
                         type="button"
                         x-on:click="copy()"
                         data-test="crypto-copy"
-                        class="mt-3 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-label text-canvas transition hover:opacity-90"
+                        class="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-label text-canvas transition hover:opacity-90"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
                             <rect x="9" y="9" width="13" height="13" rx="2"/>
