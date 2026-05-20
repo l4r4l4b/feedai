@@ -6,16 +6,16 @@
 
 <section {{ $attributes->class(['w-full']) }}>
     @if ($sectionLabel)
-        <p class="mb-3 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-3 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
 
-    <dl class="divide-y divide-line rounded-card border border-line bg-card">
+    <dl class="divide-y divide-line rounded-md border border-line bg-canvas">
         @foreach ($hours as $row)
             <div class="flex items-center justify-between px-4 py-3">
-                <dt class="text-body text-ink">{{ $row['days'] ?? '' }}</dt>
-                <dd class="font-mono text-mono-label uppercase text-muted">{{ $row['time'] ?? '' }}</dd>
+                <dt class="text-body text-text">{{ $row['days'] ?? '' }}</dt>
+                <dd class="text-label text-muted">{{ $row['time'] ?? '' }}</dd>
             </div>
         @endforeach
     </dl>

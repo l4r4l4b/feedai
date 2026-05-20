@@ -33,13 +33,14 @@ class ContentWriter
     {
         $slug = $vendor->slug;
 
-        // Metadaten immer aktualisieren — AI darf Name/Locale später ändern.
+        // Metadaten immer aktualisieren — AI darf Name/Locale/Accent später ändern.
         $this->writeYaml("{$slug}/vendor.yaml", [
             'slug' => $vendor->slug,
             'name' => $vendor->name,
             'template' => $template,
             'locale' => $vendor->locale,
             'status' => $vendor->status,
+            'accent_color' => $vendor->accent_color,
         ]);
 
         // Home-Page nur anlegen falls noch nicht da — sonst würden bereits

@@ -8,26 +8,34 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\Services\VendorImageIngestor;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Ai\Models\Conversation as AiConversation;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Onboarding-Chat. Sendet User-Messages an den OnboardingAgent und rendert
- * Agent-Responses + Tool-Call-Bestätigungen. Persistiert Conversation-State
- * via OnboardingAgent's RemembersConversations-Trait.
+ * Onboarding-Chat — Two-Step Send + Multi-Image + DB-backed History.
  *
- * Bild-Uploads laufen durch den VendorImageIngestor — Single Source of Truth
- * für alle Vendor-Bilder-Eingänge. Das ingestor-Output (URL + AI-Description)
- * wird in die Chat-Nachricht eingebettet, damit der OnboardingAgent versteht
- * was hochgeladen wurde, ohne dass er das Bild selbst sehen muss.
+ * Send-Flow:
+ *  1. submitPrompt() — schnell. Ingestiert alle Photos, baut Prompt-Block,
+ *     setzt $pendingText/$pendingImageUrls für die optimistische User-Bubble,
+ *     leert Draft + Photos, triggert via $this->js() den zweiten Request.
+ *  2. runAgent() — langsam. Ruft den AI-Agent. RememberConversations-Middleware
+ *     schreibt user + assistant in agent_conversation_messages. Pending wird
+ *     geleert, feed-updated dispatched.
  *
- * Nach jedem Agent-Turn wird ein Browser-Event "feed-updated" dispatched,
- * der die eingebettete Live-Preview neu lädt.
+ * UI-Effekt: Browser sieht Re-Render von Schritt 1 (Input leer, Pending-Bubble
+ * sichtbar, Loading-Dots) BEVOR der Agent-Call startet. Typischer Chat-UX.
+ *
+ * Multi-Image: $photos ist ein Array. Jedes Bild durch VendorImageIngestor
+ * sync analyzed, jedes als eigener [IMAGE_UPLOADED]-Block im Prompt.
+ *
+ * History reload-fest: gerendert wird aus DB via loadMessages() in render().
  */
 #[Title('Onboarding')]
 class Chat extends Component
@@ -35,116 +43,197 @@ class Chat extends Component
     use WithFileUploads;
 
     #[Locked]
-    public int $vendorId;
+    public int $vendorId = 0;
 
     #[Locked]
-    public ?string $conversationId = null;
-
-    /** @var array<int, array{role:string, text:string}> */
-    public array $messages = [];
+    public string $vendorName = '';
 
     public string $draft = '';
 
-    public ?TemporaryUploadedFile $photo = null;
+    /** @var array<int, mixed> */
+    #[Validate(['photos.*' => 'image|mimes:jpeg,png,webp|max:10240'])]
+    public $photos = [];
+
+    /** Optimistic state — shown between submitPrompt and runAgent. */
+    public string $pendingText = '';
+
+    /** @var array<int, string> */
+    public $pendingImageUrls = [];
+
+    /** Full prompt incl. [IMAGE_UPLOADED]-blocks, used by runAgent. */
+    #[Locked]
+    public string $queuedPrompt = '';
 
     public function mount(): void
     {
         /** @var User $user */
         $user = Auth::user();
-
         $vendor = $user->vendor;
         abort_unless($vendor instanceof Vendor, 404);
 
         $this->vendorId = $vendor->id;
-        $this->conversationId = $this->resolveConversationId($vendor);
-
-        if ($this->messages === []) {
-            $this->sendInitialGreeting();
-        }
+        $this->vendorName = (string) $vendor->name;
     }
 
-    public function sendMessage(VendorImageIngestor $ingestor): void
+    /**
+     * Step 1 — Schnell. Photos ingesten, Pending-State setzen, Input leeren.
+     * Triggert via JS den zweiten Request für den AI-Call.
+     */
+    public function submitPrompt(VendorImageIngestor $ingestor): void
     {
         $text = trim($this->draft);
-        $photo = $this->photo;
+        $photos = array_filter(is_array($this->photos) ? $this->photos : []);
 
-        if ($text === '' && $photo === null) {
+        if ($text === '' && $photos === []) {
             return;
         }
 
-        $userMessage = $text;
-        $agentPrompt = $text;
+        $imageBlocks = [];
+        $imageUrls = [];
 
-        if ($photo !== null) {
-            $media = $this->ingestPhoto($ingestor, $photo);
-            $this->photo = null;
+        if ($photos !== []) {
+            $vendor = Vendor::findOrFail($this->vendorId);
 
-            $userMessage = $this->buildUserMessageWithPhoto($text, $media);
-            $agentPrompt = $this->buildAgentPromptWithPhoto($text, $media);
+            foreach ($photos as $photo) {
+                $media = $ingestor->fromUpload(
+                    vendor: $vendor,
+                    upload: $photo,
+                    intent: null,
+                    source: 'onboarding-chat',
+                    analyzeSync: true,
+                );
+                $imageBlocks[] = $this->buildImageBlock($media);
+                $imageUrls[] = $media->getUrl();
+            }
         }
 
-        $this->draft = '';
-        $this->messages[] = ['role' => 'user', 'text' => $userMessage];
+        $this->pendingText = $text;
+        $this->pendingImageUrls = $imageUrls;
+        $this->queuedPrompt = $imageBlocks === []
+            ? $text
+            : trim($text."\n\n".implode("\n\n", $imageBlocks));
 
-        $response = $this->promptAgent($agentPrompt);
+        $this->reset('draft', 'photos');
 
-        $this->messages[] = ['role' => 'assistant', 'text' => $response];
+        $this->dispatch('chat-scroll');
+        $this->js('$wire.runAgent()');
+    }
+
+    /**
+     * Step 2 — Langsam. Ruft den AI-Agent. RememberConversations persistiert.
+     *
+     * Wenn der Agent in diesem Turn FinalizeOnboarding aufgerufen hat (Vendor
+     * Status → live), leiten wir direkt zum Dashboard weiter. Die Page-Component
+     * redirected ebenfalls bei live, hier ist es nur die schnellere UX-Reaktion.
+     */
+    public function runAgent(): mixed
+    {
+        if ($this->queuedPrompt === '') {
+            return null;
+        }
+
+        $prompt = $this->queuedPrompt;
+        $this->queuedPrompt = '';
+
+        $this->promptAgent($prompt);
+
+        $this->pendingText = '';
+        $this->pendingImageUrls = [];
 
         $this->dispatch('feed-updated');
+        $this->dispatch('chat-scroll');
+
+        $vendor = Vendor::find($this->vendorId);
+        if ($vendor !== null && $vendor->status === 'live') {
+            return $this->redirectRoute('dashboard', navigate: true);
+        }
+
+        return null;
+    }
+
+    public function removePhoto(int $index): void
+    {
+        if (! is_array($this->photos)) {
+            return;
+        }
+
+        unset($this->photos[$index]);
+        $this->photos = array_values($this->photos);
     }
 
     public function render(): View
     {
-        return view('livewire.onboarding.chat');
+        return view('livewire.onboarding.chat', [
+            'chatMessages' => $this->loadMessages(),
+        ]);
     }
 
-    private function resolveConversationId(Vendor $vendor): ?string
+    /**
+     * @return Collection<int, array{id:string, role:string, text:string, image_urls:array<int, string>, tool_summary:?string}>
+     */
+    private function loadMessages(): Collection
     {
-        return OnboardingSession::where('vendor_id', $vendor->id)
+        $conversationId = $this->resolveConversationId();
+
+        if ($conversationId === null) {
+            return collect();
+        }
+
+        $conversation = AiConversation::find($conversationId);
+
+        if ($conversation === null) {
+            return collect();
+        }
+
+        return $conversation->messages()
+            ->orderBy('created_at')
+            ->whereIn('role', ['user', 'assistant'])
+            ->get()
+            ->map(fn ($msg) => [
+                'id' => (string) $msg->id,
+                'role' => (string) $msg->role,
+                'text' => $this->stripImageBlocks((string) $msg->content),
+                'image_urls' => $this->extractImageUrls((string) $msg->content),
+                'tool_summary' => $this->summarizeToolCalls($msg->tool_calls ?? []),
+            ])
+            ->reject(
+                fn (array $entry): bool => $entry['text'] === ''
+                    && $entry['image_urls'] === []
+                    && $entry['tool_summary'] === null
+            )
+            ->values();
+    }
+
+    private function resolveConversationId(): ?string
+    {
+        return OnboardingSession::where('vendor_id', $this->vendorId)
             ->where('status', 'in_progress')
             ->latest()
             ->value('conversation_id');
     }
 
-    private function sendInitialGreeting(): void
+    private function promptAgent(string $message): void
     {
         $vendor = Vendor::findOrFail($this->vendorId);
-        $greeting = "Hi {$vendor->name}! Schön, dass Du da bist. "
-            .'Erzähl mir kurz: Was machst Du und wo bist Du?';
+        /** @var User $user */
+        $user = Auth::user();
 
-        $this->messages[] = ['role' => 'assistant', 'text' => $greeting];
-        $this->dispatch('feed-updated');
+        $existing = $this->resolveConversationId();
+
+        $agent = $existing !== null
+            ? (new OnboardingAgent($vendor))->continue($existing, as: $user)
+            : (new OnboardingAgent($vendor))->forUser($user);
+
+        $response = $agent->prompt($message);
+
+        if ($existing === null && property_exists($response, 'conversationId') && $response->conversationId !== null) {
+            OnboardingSession::where('vendor_id', $this->vendorId)
+                ->where('status', 'in_progress')
+                ->update(['conversation_id' => $response->conversationId]);
+        }
     }
 
-    private function ingestPhoto(VendorImageIngestor $ingestor, TemporaryUploadedFile $photo): Media
-    {
-        $vendor = Vendor::findOrFail($this->vendorId);
-
-        return $ingestor->fromUpload(
-            vendor: $vendor,
-            upload: $photo,
-            intent: null,
-            source: 'onboarding-chat',
-            analyzeSync: true,
-        );
-    }
-
-    /**
-     * User-sichtbare Repräsentation der eigenen Nachricht inkl. Bild-Vorschau-Info.
-     */
-    private function buildUserMessageWithPhoto(string $text, Media $media): string
-    {
-        $description = (string) $media->getCustomProperty('description', '');
-        $caption = $description !== '' ? "📷 {$description}" : '📷 Bild gesendet';
-
-        return $text === '' ? $caption : $text."\n".$caption;
-    }
-
-    /**
-     * Agent-Prompt mit struktureller Bild-Info, damit der Agent fundiert
-     * weiterarbeiten kann ohne das Bild selbst sehen zu müssen.
-     */
-    private function buildAgentPromptWithPhoto(string $text, Media $media): string
+    private function buildImageBlock(Media $media): string
     {
         $url = $media->getUrl();
         $description = (string) $media->getCustomProperty('description', '');
@@ -153,41 +242,44 @@ class Chat extends Component
         $tags = (array) $media->getCustomProperty('tags', []);
         $tagsLine = $tags === [] ? '' : ' tags='.implode(',', $tags);
 
-        $block = "[IMAGE_UPLOADED url={$url} suggested_intent={$suggestedIntent}{$tagsLine}]"
+        return "[IMAGE_UPLOADED url={$url} suggested_intent={$suggestedIntent}{$tagsLine}]"
             ."\nVision-Beschreibung: {$description}"
             ."\nAlt-Text: {$altText}";
-
-        return $text === '' ? $block : $text."\n\n".$block;
     }
 
-    private function promptAgent(string $message): string
+    private function stripImageBlocks(string $content): string
     {
-        $vendor = Vendor::findOrFail($this->vendorId);
-        /** @var User $user */
-        $user = Auth::user();
+        $clean = preg_replace('/\[IMAGE_UPLOADED[^\n]*\n[^\n]*\n[^\n]*/', '', $content) ?? $content;
 
-        $agent = $this->conversationId
-            ? (new OnboardingAgent($vendor))->continue($this->conversationId, as: $user)
-            : (new OnboardingAgent($vendor))->forUser($user);
-
-        $response = $agent->prompt($message);
-
-        if (! $this->conversationId && property_exists($response, 'conversationId')) {
-            $this->conversationId = $response->conversationId;
-            $this->persistConversationId();
-        }
-
-        return (string) $response;
+        return trim($clean);
     }
 
-    private function persistConversationId(): void
+    /**
+     * @return array<int, string>
+     */
+    private function extractImageUrls(string $content): array
     {
-        if ($this->conversationId === null) {
-            return;
+        if (preg_match_all('/\[IMAGE_UPLOADED url=(\S+)/', $content, $matches)) {
+            return $matches[1];
         }
 
-        OnboardingSession::where('vendor_id', $this->vendorId)
-            ->where('status', 'in_progress')
-            ->update(['conversation_id' => $this->conversationId]);
+        return [];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $toolCalls
+     */
+    private function summarizeToolCalls(array $toolCalls): ?string
+    {
+        if ($toolCalls === []) {
+            return null;
+        }
+
+        $names = array_filter(array_map(
+            fn (array $call): ?string => isset($call['name']) ? (string) $call['name'] : null,
+            $toolCalls,
+        ));
+
+        return $names === [] ? null : '✓ '.implode(', ', $names);
     }
 }

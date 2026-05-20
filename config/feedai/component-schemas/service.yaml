@@ -1,11 +1,11 @@
 type: service
 label: Service
-description: Einzelne Dienstleistung mit Bild, Titel, Preis und CTA.
+description: Einzelne Dienstleistung mit Bild (16:10), Titel, Meta-Row und Arrow-Button-CTA.
 fields:
   image:
     type: image
     required: true
-    ratio: "16:9"
+    ratio: "16:10"
   title:
     type: string
     required: true
@@ -15,19 +15,16 @@ fields:
     required: false
     max: 80
     description: Zusatzinfo wie Dauer, Treffpunkt
+  rating:
+    type: string
+    required: false
+    max: 32
+    description: Static-Bewertung, z.B. "4.96"
   price:
     type: string
-    required: false
+    required: true
     max: 32
-  description:
-    type: string
-    required: false
-    max: 240
-  cta_label:
-    type: string
-    required: false
-    max: 32
-    default: Buchen
   cta_url:
     type: string
-    required: false
+    required: true
+    description: Link-Target für den Arrow-Button

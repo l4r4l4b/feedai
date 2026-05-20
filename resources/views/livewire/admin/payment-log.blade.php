@@ -16,7 +16,7 @@
     <header>
         <flux:heading size="xl">Payment Log</flux:heading>
         <flux:text class="mt-1 text-muted">
-            Read-only Übersicht. Webhooks von Stripe aktualisieren den Status automatisch.
+            Read-only ledger. Stripe webhooks update each row's status automatically.
         </flux:text>
     </header>
 

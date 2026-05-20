@@ -2,7 +2,7 @@
     <header>
         <flux:heading size="xl">Conversations</flux:heading>
         <flux:text class="mt-1 text-muted">
-            Read-only Moderation. Original-Sprache + Übersetzung sind pro Message gespeichert.
+            Read-only moderation view. Each message stores both the original language and the translation.
         </flux:text>
     </header>
 
@@ -10,7 +10,7 @@
         <flux:table.columns>
             <flux:table.column>Vendor</flux:table.column>
             <flux:table.column>Tourist</flux:table.column>
-            <flux:table.column>Sprache</flux:table.column>
+            <flux:table.column>Language</flux:table.column>
             <flux:table.column>Messages</flux:table.column>
             <flux:table.column>Letzte Aktivität</flux:table.column>
             <flux:table.column>Token</flux:table.column>

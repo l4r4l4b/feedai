@@ -8,79 +8,83 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* --- Vendor Accent CSS-Variable -------------------------------------- */
+/* Default = ink. Public-Feed-Layouts setzen --accent inline auf
+   vendor->accent_color (oder fallen auf ink zurück). Tailwind-Token
+   bg-accent/text-accent/border-accent picken --accent zur Render-Zeit. */
+:root {
+    --accent: #0A0A0B;
+}
+
 @theme {
     /* --- Fonts ---------------------------------------------------------- */
-    --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Thai', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-sans: 'Plus Jakarta Sans', 'Anuphan', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* --- Color Tokens: Backgrounds ------------------------------------- */
-    --color-canvas: #FAFAF7;
-    --color-card: #FFFFFF;
-    --color-soft: #F2F0EA;
-    --color-soft-2: #E8E5DD;
+    /* --- Color Tokens: Core (monochrome) ------------------------------- */
+    --color-canvas: #FFFFFF;
+    --color-surface: #F6F6F7;
+    --color-ink: #0A0A0B;
+    --color-ink-soft: #1A1A1D;
+    --color-text: #18181B;
+    --color-muted: #71717A;
+    --color-soft-muted: #A1A1AA;
+    --color-line: #ECECEE;
+    --color-line-soft: #F2F2F4;
 
-    /* --- Color Tokens: Text -------------------------------------------- */
-    --color-ink: #1A1A17;
-    --color-muted: #6B6963;
-    --color-soft-ink: #A8A59E;
+    /* --- Status (einzige feste Farbe) ---------------------------------- */
+    --color-live: #22C55E;
 
-    /* --- Color Tokens: Accent ------------------------------------------ */
-    --color-accent: #2E2B26;
-    --color-warm: #C5705D;
+    /* --- Vendor-Akzent (CSS-Variable, default = ink) ------------------- */
+    --color-accent: var(--accent, #0A0A0B);
 
-    /* --- Color Tokens: Functional -------------------------------------- */
-    --color-success: #5B7D5F;
-    --color-warning: #C99650;
-    --color-error: #B5564D;
-
-    /* --- Color Tokens: Lines ------------------------------------------- */
-    --color-line: #EAE7DF;
-
-    /* --- Flux compatibility (accent contrast text) --------------------- */
+    /* --- Flux compatibility ------------------------------------------- */
     --color-accent-content: var(--color-accent);
-    --color-accent-foreground: var(--color-card);
+    --color-accent-foreground: var(--color-canvas);
 
     /* --- Radii --------------------------------------------------------- */
-    --radius-card: 16px;
-    --radius-image: 12px;
-    --radius-button: 12px;
-    --radius-input: 10px;
+    --radius-xl: 28px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
 
     /* --- Font Sizes ---------------------------------------------------- */
-    --text-hero: 30px;
-    --text-hero--line-height: 1.1;
-    --text-hero--letter-spacing: -0.02em;
-    --text-hero--font-weight: 600;
+    --text-display: 28px;
+    --text-display--line-height: 1.1;
+    --text-display--letter-spacing: -0.03em;
+    --text-display--font-weight: 800;
 
-    --text-hero-lg: 40px;
-    --text-hero-lg--line-height: 1.1;
-    --text-hero-lg--letter-spacing: -0.02em;
-    --text-hero-lg--font-weight: 600;
+    --text-display-lg: 40px;
+    --text-display-lg--line-height: 1.1;
+    --text-display-lg--letter-spacing: -0.03em;
+    --text-display-lg--font-weight: 800;
 
-    --text-section: 18px;
-    --text-section--line-height: 1.25;
-    --text-section--letter-spacing: -0.01em;
-    --text-section--font-weight: 500;
+    --text-section: 20px;
+    --text-section--line-height: 1.2;
+    --text-section--letter-spacing: -0.02em;
+    --text-section--font-weight: 800;
+
+    --text-title: 17px;
+    --text-title--line-height: 1.2;
+    --text-title--letter-spacing: -0.01em;
+    --text-title--font-weight: 800;
 
     --text-body: 15px;
-    --text-body--line-height: 1.65;
+    --text-body--line-height: 1.6;
 
-    --text-caption: 13px;
+    --text-label: 13px;
+    --text-label--line-height: 1.4;
+    --text-label--font-weight: 700;
+
+    --text-caption: 12px;
     --text-caption--line-height: 1.5;
-
-    --text-mono-label: 11px;
-    --text-mono-label--line-height: 1.4;
-    --text-mono-label--letter-spacing: 0.08em;
-    --text-mono-label--font-weight: 500;
+    --text-caption--letter-spacing: 0.02em;
+    --text-caption--font-weight: 600;
 }
 
-@layer theme {
-    .dark {
-        /* Dark Mode out of Scope im Hackathon — Tokens bleiben Light. */
-        --color-accent-content: var(--color-accent);
-        --color-accent-foreground: var(--color-card);
-    }
-}
+/* Design is always-light. The `@fluxAppearance` directive has been removed
+   from every layout and `partials/force-light.blade.php` strips any stale
+   `.dark` class on each page load — so `.dark` should never appear on
+   <html>. We therefore don't ship any `.dark` overrides here. */
 
 @layer base {
     *,
@@ -93,7 +97,8 @@
 
     body {
         background: var(--color-canvas);
-        color: var(--color-ink);
+        color: var(--color-text);
+        font-family: var(--font-sans);
     }
 }
 

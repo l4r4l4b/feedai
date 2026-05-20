@@ -12,6 +12,7 @@ use App\Ai\Tools\ReorderComponents;
 use App\Ai\Tools\UpdateComponent;
 use App\Ai\Tools\UploadImage;
 use App\Models\Vendor;
+use App\Services\ContentLoader;
 use Laravel\Ai\Attributes\MaxSteps;
 use Laravel\Ai\Attributes\MaxTokens;
 use Laravel\Ai\Attributes\Model;
@@ -38,7 +39,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 #[Provider(Lab::Anthropic)]
 #[Model('claude-sonnet-4-6')]
-#[MaxSteps(15)]
+#[MaxSteps(30)]
 #[MaxTokens(4096)]
 #[Temperature(0.4)]
 class OnboardingAgent implements Agent, Conversational, HasTools
@@ -74,6 +75,7 @@ class OnboardingAgent implements Agent, Conversational, HasTools
     {
         $componentReference = $this->buildComponentReference();
         $vendorContext = $this->buildVendorContext();
+        $currentPageState = $this->buildCurrentPageState();
 
         return <<<PROMPT
         # Role
@@ -103,6 +105,44 @@ class OnboardingAgent implements Agent, Conversational, HasTools
 
         {$vendorContext}
 
+        # Current Feed State
+
+        {$currentPageState}
+
+        # Critical: One Component Per Type
+
+        Jede Komponenten-Typ existiert **maximal einmal pro Page**. Du hast
+        NICHT mehrere `service`-Komponenten oder mehrere `menu`-Komponenten.
+        Stattdessen halten viele Komponenten **Arrays von Items**:
+
+        - `menu` → ein `items`-Array mit allen Speisen
+        - `service` → DIESE Komponente repräsentiert **EINEN Service**. Für
+          MEHRERE Touren/Dienste rufe `service` mehrfach mit fortlaufenden
+          Page-Slugs auf — d.h. lege Sub-Pages an (`createSubpage` →
+          `tour-temples`, `tour-ayutthaya`) und fülle dort jeweils einen
+          `service` UND/ODER nutze für Übersichts-Listen `menu` mit den Touren
+          als Items.
+        - `gallery` → ein `images`-Array
+        - `contact_buttons` → ein `buttons`-Array (alle Kanäle gemeinsam)
+        - `opening_hours` → ein `hours`-Array (alle Tage)
+        - `faq` → ein `items`-Array (alle Fragen)
+        - `testimonial` → ein einzelnes Zitat. Mehrere Stimmen → CTA oder
+          Image-with-Text mit zusammengefasstem Zitat.
+
+        **Beispiel falsch:** fillComponent('hero', ...) → fillComponent('hero', ...).
+        Beim zweiten Call überschreibst du den ersten! Stattdessen: einmal
+        fillComponent('hero', {...}) MIT ALLEN finalen Werten gleichzeitig.
+
+        **Beispiel richtig:** Vendor nennt drei Touren →
+        fillComponent('menu', {items: [{name: 'Tempel-Tour', price: '2500 THB'},
+        {name: 'Ayutthaya', price: '4800 THB'}, {name: 'Floating Market',
+        price: '3500 THB'}]}) — ALLE Items in EINEM Call.
+
+        Bevor du fillComponent für einen Typ rufst der bereits aktiv ist
+        ("Current Feed State" oben prüfen): nutze **updateComponent** mit dem
+        VOLLSTÄNDIGEN neuen Inhalt (inklusive der vorhandenen Items, falls
+        Array-basiert). updateComponent ersetzt — es merged NICHT.
+
         # Workflow
 
         1. **Begrüßung + erste Frage:** Wie heißt das Business und was machst du?
@@ -117,8 +157,19 @@ class OnboardingAgent implements Agent, Conversational, HasTools
            Dialog bereits klar ist. Was fehlt, frage explizit nach.
         5. **Eine Frage pro Turn.** Niemals "Wie ist deine Adresse UND deine
            Öffnungszeiten UND deine Telefonnummer?" — immer nur das Nächste.
-        6. **Bilder:** Wenn der Vendor ein Bild sendet, rufe `uploadImage`
-           auf und nutze die zurückgegebene URL als Bild-Feld.
+        6. **Bilder:** Bilder werden VOR dem Agent-Call persistiert + AI-analysiert.
+           Wenn die User-Nachricht einen `[IMAGE_UPLOADED url=… suggested_intent=…]`-
+           Block enthält, ist das Bild bereits gespeichert. Du musst KEIN
+           uploadImage-Tool aufrufen. Stattdessen:
+             1. Nutze die `url` direkt als `image`-Feld in `fillComponent` für
+                den `suggested_intent`-Komponenten-Typ (z.B. `hero`, `menu_item`,
+                `service`, `gallery`).
+             2. Falls die Komponente noch nicht aktiv ist → fillComponent aktiviert
+                sie automatisch.
+             3. Wenn der Vorschlag nicht passt (Vendor hat etwas anderes gemeint),
+                frage kurz nach, BEVOR du fillComponent aufrufst.
+             4. Nutze die Vision-Beschreibung in deiner Antwort an den Vendor —
+                so weiß er, dass du das Bild "gesehen" hast.
         7. **Finalisierung:** Wenn alle essentiellen Komponenten (hero,
            mindestens ein Kontakt-Channel) gefüllt sind und der Vendor zufrieden
            ist, rufe `finalizeOnboarding` auf.
@@ -134,8 +185,15 @@ class OnboardingAgent implements Agent, Conversational, HasTools
           Keys exakt im snake_case wie im Schema unten.
         - **Bestätige große Änderungen** bevor du sie ausführst (z.B. "Soll ich
           das Menü mit diesen 4 Items anlegen?").
-        - Nach jedem Tool-Call darfst du dem Vendor **eine kurze Bestätigung**
-          geben — sag was du gemacht hast, dann die nächste Frage.
+        - **PFLICHT-Regel:** Beende **niemals** einen Turn ausschließlich mit
+          Tool-Calls. Nach JEDEM Stack von Tool-Calls MUSST du eine kurze
+          Text-Antwort an den Vendor produzieren — minimal eine Bestätigung
+          ("Habe Hero und Menu angelegt.") plus eine **konkrete Folgefrage**
+          ("Wie sind deine Öffnungszeiten?"). Ein leerer Text-Response nach
+          Tool-Calls lässt den Vendor im Dunkeln sitzen — das passiert NICHT.
+        - Wenn mehrere Komponenten parallel gefüllt werden (z.B. 5 Service-Tours
+          aus einer Liste), gruppiere die Tool-Calls und liefere danach EINEN
+          zusammenfassenden Text mit der nächsten Frage.
 
         # Component Reference
 
@@ -154,6 +212,66 @@ class OnboardingAgent implements Agent, Conversational, HasTools
           ggf. einzelne Emojis sparsam wenn es zum Vendor-Stil passt.
         - **Keine Listen aufzählen** außer du fragst gezielt zwischen Optionen.
         PROMPT;
+    }
+
+    /**
+     * Listet die aktuell aktiven Komponenten + ihre Inhalte, damit der Agent
+     * weiß was schon da ist und ob er fillComponent (neu) oder updateComponent
+     * (existierend) verwenden muss.
+     */
+    private function buildCurrentPageState(): string
+    {
+        try {
+            $loader = app(ContentLoader::class);
+            $page = $loader->loadPage($this->vendor->slug, 'home');
+        } catch (\Throwable) {
+            return '(Kein Feed initialisiert — rufe `initializeVendorFeed` als ersten Tool-Call.)';
+        }
+
+        $components = $page['components'] ?? [];
+
+        if ($components === []) {
+            return '(Feed ist initialisiert, aber noch keine Komponenten aktiv.)';
+        }
+
+        $lines = ['Aktive Komponenten auf der `home`-Page:'];
+
+        foreach ($components as $component) {
+            $type = $component['type'] ?? 'unknown';
+            try {
+                $loaded = $loader->loadComponent($this->vendor->slug, 'home', $type, $component['file'] ?? '');
+                $summary = $this->summarizeFields($loaded['fields'] ?? []);
+                $lines[] = "- `{$type}`: {$summary}";
+            } catch (\Throwable) {
+                $lines[] = "- `{$type}`: (Inhalt nicht lesbar)";
+            }
+        }
+
+        $lines[] = '';
+        $lines[] = 'Wenn du einen dieser Typen ändern willst → `updateComponent` (NICHT fillComponent — das überschreibt).';
+        $lines[] = 'Für neue Inhalte: prüfe ob ein bestehender Typ schon das passende Array hat (z.B. menu.items), dann updateComponent mit dem erweiterten Array.';
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * @param  array<string, mixed>  $fields
+     */
+    private function summarizeFields(array $fields): string
+    {
+        $parts = [];
+
+        foreach ($fields as $key => $value) {
+            if (is_string($value)) {
+                $parts[] = "{$key}=".(mb_strlen($value) > 40 ? mb_substr($value, 0, 37).'…' : $value);
+            } elseif (is_array($value)) {
+                $parts[] = "{$key}=[".count($value).' items]';
+            } else {
+                $parts[] = $key;
+            }
+        }
+
+        return $parts === [] ? '(leer)' : implode(', ', $parts);
     }
 
     /**

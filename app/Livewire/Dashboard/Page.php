@@ -22,7 +22,7 @@ use Symfony\Component\Yaml\Yaml;
  * als YAML zum Bearbeiten frei. Damit kann der Vendor exakt dieselben Werte
  * editieren, die der AI-Agent über fillComponent setzt.
  */
-#[Layout('components.layouts.onboarding')]
+#[Layout('layouts.app')]
 #[Title('Dashboard')]
 class Page extends Component
 {
@@ -44,6 +44,10 @@ class Page extends Component
     {
         /** @var User $user */
         $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return $this->redirectRoute('admin.dashboard');
+        }
 
         $vendor = $user->vendor;
         abort_unless($vendor instanceof Vendor, 404);

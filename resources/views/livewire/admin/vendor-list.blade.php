@@ -19,10 +19,10 @@
             @foreach (['all' => 'Alle', 'live' => 'Live', 'draft' => 'Draft', 'disabled' => 'Disabled'] as $value => $label)
                 <button type="button"
                         wire:click="setStatusFilter('{{ $value }}')"
-                        class="rounded-button border px-3 py-1 text-caption transition
+                        class="rounded-full border px-3 py-1 text-caption transition
                                {{ $statusFilter === $value
-                                  ? 'border-ink bg-ink text-card'
-                                  : 'border-line bg-card text-ink hover:border-ink/30' }}">
+                                  ? 'border-ink bg-ink text-canvas'
+                                  : 'border-line bg-canvas text-ink hover:border-ink/30' }}">
                     {{ $label }}
                 </button>
             @endforeach
@@ -60,7 +60,7 @@
             @empty
                 <flux:table.row>
                     <flux:table.cell colspan="6">
-                        <span class="text-muted">Keine Vendors für diesen Filter.</span>
+                        <span class="text-muted">No vendors match this filter.</span>
                     </flux:table.cell>
                 </flux:table.row>
             @endforelse

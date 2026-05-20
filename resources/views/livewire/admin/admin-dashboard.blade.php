@@ -2,14 +2,14 @@
     <header>
         <flux:heading size="xl">Admin</flux:heading>
         <flux:text class="mt-1 text-muted">
-            Übersicht über alle Vendors, Payments und Conversations.
+            Overview of every vendor, payment, and conversation on the platform.
         </flux:text>
     </header>
 
     <div class="grid gap-4 md:grid-cols-3">
         <a href="{{ route('admin.vendors') }}" wire:navigate
-           class="block rounded-card border border-line bg-card p-5 transition hover:border-ink/30">
-            <div class="font-mono text-mono-label uppercase text-muted">Vendors</div>
+           class="block rounded-lg border border-line bg-canvas p-5 transition hover:border-ink/30">
+            <div class="text-caption uppercase tracking-wide text-muted">Vendors</div>
             <div class="mt-2 flex items-baseline gap-3">
                 <span class="text-hero font-semibold text-ink">{{ $this->stats['vendors_total'] }}</span>
                 <span class="text-caption text-muted">
@@ -19,8 +19,8 @@
         </a>
 
         <a href="{{ route('admin.payments') }}" wire:navigate
-           class="block rounded-card border border-line bg-card p-5 transition hover:border-ink/30">
-            <div class="font-mono text-mono-label uppercase text-muted">Payments</div>
+           class="block rounded-lg border border-line bg-canvas p-5 transition hover:border-ink/30">
+            <div class="text-caption uppercase tracking-wide text-muted">Payments</div>
             <div class="mt-2 flex items-baseline gap-3">
                 <span class="text-hero font-semibold text-ink">{{ $this->stats['payments_total'] }}</span>
                 <span class="text-caption text-muted">
@@ -30,8 +30,8 @@
         </a>
 
         <a href="{{ route('admin.conversations') }}" wire:navigate
-           class="block rounded-card border border-line bg-card p-5 transition hover:border-ink/30">
-            <div class="font-mono text-mono-label uppercase text-muted">Conversations</div>
+           class="block rounded-lg border border-line bg-canvas p-5 transition hover:border-ink/30">
+            <div class="text-caption uppercase tracking-wide text-muted">Conversations</div>
             <div class="mt-2 flex items-baseline gap-3">
                 <span class="text-hero font-semibold text-ink">{{ $this->stats['conversations_total'] }}</span>
             </div>

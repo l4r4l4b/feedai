@@ -1,50 +1,152 @@
-<div class="flex h-full flex-col">
-    <ol class="flex-1 space-y-3 overflow-y-auto px-4 py-4" role="log" aria-live="polite">
-        @foreach ($messages as $message)
-            <li @class([
-                'flex',
-                'justify-end' => $message['role'] === 'user',
-                'justify-start' => $message['role'] === 'assistant',
-            ])>
+<div
+    class="flex h-full flex-col"
+    x-data="{
+        scrollDown() {
+            this.$nextTick(() => {
+                const ol = this.$refs.messages;
+                if (ol) ol.scrollTop = ol.scrollHeight;
+            });
+        }
+    }"
+    x-init="scrollDown()"
+    x-on:chat-scroll.window="scrollDown()"
+>
+    <ol
+        x-ref="messages"
+        class="flex-1 space-y-3 overflow-y-auto px-4 py-4"
+        role="log"
+        aria-live="polite"
+    >
+        {{-- Static greeting card --}}
+        <li class="flex justify-start" wire:key="greeting">
+            <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
+                <p>Hi{{ $vendorName !== '' ? ' '.$vendorName : '' }}!</p>
+                <p>Schön, dass Du da bist. Erzähl mir kurz: Was machst Du und wo bist Du?</p>
+                <p>Bilder kannst Du direkt mitschicken — auch mehrere gleichzeitig.</p>
+            </div>
+        </li>
+
+        {{-- Persistierte DB-Messages --}}
+        @foreach ($chatMessages as $message)
+            <li
+                wire:key="msg-{{ $message['id'] }}"
+                @class([
+                    'flex',
+                    'justify-end' => $message['role'] === 'user',
+                    'justify-start' => $message['role'] === 'assistant',
+                ])
+            >
                 <div @class([
-                    'max-w-[85%] whitespace-pre-wrap rounded-card px-4 py-3 text-body',
-                    'bg-accent text-card' => $message['role'] === 'user',
-                    'border border-line bg-card text-ink' => $message['role'] === 'assistant',
+                    'max-w-[85%] flex flex-col gap-2',
+                    'items-end' => $message['role'] === 'user',
+                    'items-start' => $message['role'] === 'assistant',
                 ])>
-                    {{ $message['text'] }}
+                    @if (! empty($message['image_urls']))
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ($message['image_urls'] as $url)
+                                <img
+                                    src="{{ $url }}"
+                                    alt=""
+                                    loading="lazy"
+                                    class="max-h-40 max-w-full rounded-md object-cover"
+                                />
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if ($message['text'] !== '')
+                        <div @class([
+                            'whitespace-pre-wrap rounded-md px-4 py-3 text-body',
+                            'rounded-br-sm bg-accent text-canvas' => $message['role'] === 'user',
+                            'rounded-bl-sm bg-surface text-text' => $message['role'] === 'assistant',
+                        ])>
+                            {{ $message['text'] }}
+                        </div>
+                    @endif
+
+                    @if ($message['tool_summary'] !== null)
+                        <p class="text-caption text-muted">{{ $message['tool_summary'] }}</p>
+                    @endif
                 </div>
             </li>
         @endforeach
 
-        <li wire:loading wire:target="sendMessage,photo" class="flex justify-start">
-            <div class="rounded-card border border-line bg-card px-4 py-3 text-caption text-muted">
-                …
+        {{-- Optimistic User-Bubble: erscheint zwischen submitPrompt und runAgent --}}
+        @if ($pendingText !== '' || ! empty($pendingImageUrls))
+            <li class="flex justify-end" wire:key="pending">
+                <div class="max-w-[85%] flex flex-col items-end gap-2">
+                    @if (! empty($pendingImageUrls))
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ($pendingImageUrls as $url)
+                                <img
+                                    src="{{ $url }}"
+                                    alt=""
+                                    loading="lazy"
+                                    class="max-h-40 max-w-full rounded-md object-cover"
+                                />
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if ($pendingText !== '')
+                        <div class="whitespace-pre-wrap rounded-md rounded-br-sm bg-accent px-4 py-3 text-body text-canvas">
+                            {{ $pendingText }}
+                        </div>
+                    @endif
+                </div>
+            </li>
+        @endif
+
+        {{-- Typing-Indicator: zeigt sich solange submitPrompt ODER runAgent läuft --}}
+        <li
+            wire:loading.flex
+            wire:target="submitPrompt,runAgent,photos"
+            class="justify-start"
+            wire:key="loading"
+        >
+            <div class="rounded-md bg-surface px-4 py-3 text-caption text-muted">
+                <span class="inline-flex gap-1">
+                    <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-muted"></span>
+                    <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-muted [animation-delay:200ms]"></span>
+                    <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-muted [animation-delay:400ms]"></span>
+                </span>
             </div>
         </li>
     </ol>
 
-    @if ($photo)
-        <div class="flex items-center justify-between gap-3 border-t border-line bg-soft px-4 py-2 text-caption text-muted">
-            <span>📎 Bild bereit zum Senden — {{ $photo->getClientOriginalName() }}</span>
-            <button
-                type="button"
-                wire:click="$set('photo', null)"
-                class="font-mono text-mono-label uppercase text-warm transition hover:text-ink"
-            >
-                Entfernen
-            </button>
+    {{-- Photo-Preview-Strip vor Send --}}
+    @if (! empty($photos))
+        <div class="flex items-center gap-2 overflow-x-auto border-t border-line bg-surface px-4 py-2">
+            @foreach ($photos as $i => $photo)
+                <div class="relative shrink-0" wire:key="photo-{{ $i }}-{{ $photo->getFilename() }}">
+                    <img
+                        src="{{ $photo->temporaryUrl() }}"
+                        alt=""
+                        class="h-16 w-16 rounded-md object-cover"
+                    />
+                    <button
+                        type="button"
+                        wire:click="removePhoto({{ $i }})"
+                        class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-canvas text-[10px]"
+                        aria-label="Entfernen"
+                    >
+                        ×
+                    </button>
+                </div>
+            @endforeach
         </div>
     @endif
 
     <form
-        wire:submit="sendMessage"
-        class="flex items-end gap-2 border-t border-line bg-card px-4 py-3"
+        wire:submit="submitPrompt"
+        class="flex items-end gap-2 border-t border-line bg-canvas px-4 py-3"
     >
-        <label class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-button border border-line bg-canvas text-ink transition hover:bg-soft">
+        <label class="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-line bg-canvas text-text transition hover:border-ink">
             <input
                 type="file"
-                wire:model="photo"
+                wire:model="photos"
                 accept="image/jpeg,image/png,image/webp"
+                multiple
                 class="sr-only"
             />
             <span aria-hidden="true">📎</span>
@@ -53,18 +155,23 @@
         <textarea
             wire:model="draft"
             rows="1"
-            placeholder="Schreib einfach drauflos…"
-            class="flex-1 resize-none rounded-input border border-line bg-canvas px-3 py-2 text-body text-ink placeholder:text-soft-ink focus:outline-none focus:ring-2 focus:ring-accent/30"
+            placeholder="Just start typing…"
+            class="flex-1 resize-none rounded-full border-[1.5px] border-line bg-canvas px-4 py-2.5 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
             x-on:keydown.enter.prevent="$el.form.requestSubmit()"
+            wire:loading.attr="disabled"
+            wire:target="submitPrompt,runAgent"
         ></textarea>
 
         <button
             type="submit"
             wire:loading.attr="disabled"
-            wire:target="sendMessage"
-            class="rounded-button bg-accent px-4 py-2 text-caption font-medium text-card transition hover:opacity-90 disabled:opacity-50"
+            wire:target="submitPrompt,runAgent,photos"
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-canvas transition hover:opacity-90 disabled:opacity-50"
+            aria-label="Send"
         >
-            Senden
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
         </button>
     </form>
 </div>

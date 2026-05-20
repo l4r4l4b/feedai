@@ -29,6 +29,10 @@ class Page extends Component
         /** @var User $user */
         $user = Auth::user();
 
+        if ($user->isAdmin()) {
+            return $this->redirectRoute('admin.dashboard');
+        }
+
         $vendor = $user->vendor;
         abort_unless($vendor instanceof Vendor, 404);
 

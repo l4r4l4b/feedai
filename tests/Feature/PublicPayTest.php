@@ -71,5 +71,5 @@ it('falls back to a helpful message when no payment method is configured', funct
 
     $this->get("/{$vendor->slug}/pay")
         ->assertOk()
-        ->assertSee('keine Zahlungsmethoden');
+        ->assertSee("hasn't set up any payment methods", escape: false);
 });

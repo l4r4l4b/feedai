@@ -1,20 +1,20 @@
 @props([
     'vendorSlug',
     'sectionLabel' => null,
-    'title' => 'Kontakt',
+    'title' => 'Contact',
     'intro' => null,
-    'submitLabel' => 'Senden',
+    'submitLabel' => 'Send',
     'locale' => null,
 ])
 
-<section {{ $attributes->class(['rounded-card border border-line bg-soft p-6']) }} id="contact-form">
+<section {{ $attributes->class(['rounded-lg bg-surface p-6']) }} id="contact-form">
     @if ($sectionLabel)
-        <p class="mb-3 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-3 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
 
-    <h2 class="text-section text-ink">{{ $title }}</h2>
+    <h2 class="text-section text-text">{{ $title }}</h2>
 
     @if ($intro)
         <p class="mt-2 text-caption text-muted">{{ $intro }}</p>
@@ -33,36 +33,36 @@
             name="name"
             placeholder="Name (optional)"
             value="{{ old('name') }}"
-            class="rounded-input border border-line bg-card px-4 py-3 text-body text-ink placeholder:text-soft-ink"
+            class="rounded-sm border-[1.5px] border-line bg-canvas px-4 py-3 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
         />
         <input
             type="email"
             name="email"
-            placeholder="Email (optional, für Benachrichtigung)"
+            placeholder="Email (optional, for notifications)"
             value="{{ old('email') }}"
-            class="rounded-input border border-line bg-card px-4 py-3 text-body text-ink placeholder:text-soft-ink"
+            class="rounded-sm border-[1.5px] border-line bg-canvas px-4 py-3 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
         />
         <textarea
             name="message"
             rows="4"
             required
-            placeholder="Deine Nachricht…"
-            class="rounded-input border border-line bg-card px-4 py-3 text-body text-ink placeholder:text-soft-ink"
+            placeholder="Your message…"
+            class="rounded-sm border-[1.5px] border-line bg-canvas px-4 py-3 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
         >{{ old('message') }}</textarea>
 
         @error('message')
-            <p class="text-caption text-error">{{ $message }}</p>
+            <p class="text-caption text-[#B5564D]">{{ $message }}</p>
         @enderror
 
         <button
             type="submit"
-            class="mt-1 rounded-button bg-accent px-5 py-3 text-caption font-medium text-card transition hover:opacity-90"
+            class="mt-1 rounded-full bg-accent px-5 py-3 text-label text-canvas transition hover:opacity-90"
         >
             {{ $submitLabel }}
         </button>
 
-        <p class="mt-1 font-mono text-[10px] uppercase tracking-wider text-soft-ink">
-            Wird automatisch in die Sprache des Vendors übersetzt
+        <p class="mt-1 text-caption text-soft-muted">
+            Auto-translated both ways — the vendor writes in their language, you write in yours.
         </p>
     </form>
 </section>

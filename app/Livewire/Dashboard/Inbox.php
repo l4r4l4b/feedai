@@ -16,7 +16,7 @@ use Livewire\Component;
  * Vendor-Posteingang. Listet alle Conversations, neueste zuerst.
  * Zeigt Vorschau in Vendor-Sprache (translated_text bei Tourist-Messages).
  */
-#[Layout('components.layouts.onboarding')]
+#[Layout('layouts.app')]
 #[Title('Posteingang')]
 class Inbox extends Component
 {

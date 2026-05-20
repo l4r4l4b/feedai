@@ -10,14 +10,14 @@
 
 <section {{ $attributes->class(['w-full']) }}>
     @if ($sectionLabel)
-        <p class="mb-3 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-3 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
 
     <ul class="grid grid-cols-2 gap-2 md:grid-cols-3">
         @foreach ($images as $image)
-            <li class="overflow-hidden rounded-image">
+            <li class="overflow-hidden rounded-md">
                 <img
                     src="{{ $image['src'] ?? '' }}"
                     alt="{{ $image['alt'] ?? '' }}"

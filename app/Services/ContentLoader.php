@@ -24,7 +24,7 @@ class ContentLoader
     public function __construct(private readonly string $disk = 'vendors') {}
 
     /**
-     * @return array{slug:string, name:string, template:string, locale:string, status:string}
+     * @return array{slug:string, name:string, template:string, locale:string, status:string, accent_color:?string}
      */
     public function loadVendor(string $vendorSlug): array
     {
@@ -43,6 +43,7 @@ class ContentLoader
             'template' => $data['template'] ?? 'default',
             'locale' => $data['locale'] ?? 'th',
             'status' => $data['status'] ?? 'draft',
+            'accent_color' => $data['accent_color'] ?? null,
         ];
     }
 

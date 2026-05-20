@@ -8,8 +8,8 @@
     <meta name="robots" content="noindex" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ $title }} — FeedAI</title>
+    @include('partials.force-light')
     @vite(['resources/css/app.css'])
-    @fluxAppearance
     @livewireStyles
 </head>
 <body class="bg-canvas text-ink antialiased">

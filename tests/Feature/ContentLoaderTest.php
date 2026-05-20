@@ -24,8 +24,8 @@ YAML);
     Storage::disk('vendors')->put('acme/content/home/01-hero.md', <<<'MD'
 ---
 title: Acme Tours
-subtitle: Touren durch Bangkok
-badge_label: Bangkok
+location: Bangkok
+rating: 4.9 (12)
 image: https://example.test/hero.jpg
 ---
 
@@ -62,8 +62,8 @@ it('loads component with parsed frontmatter and body', function () {
 
     expect($hero['type'])->toBe('hero')
         ->and($hero['fields']['title'])->toBe('Acme Tours')
-        ->and($hero['fields']['subtitle'])->toBe('Touren durch Bangkok')
-        ->and($hero['fields']['badgeLabel'])->toBe('Bangkok')
+        ->and($hero['fields']['location'])->toBe('Bangkok')
+        ->and($hero['fields']['rating'])->toBe('4.9 (12)')
         ->and($hero['fields']['image'])->toBe('https://example.test/hero.jpg')
         ->and($hero['body'])->toBe('Optionaler Body-Text.');
 });

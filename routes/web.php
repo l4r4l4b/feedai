@@ -3,11 +3,13 @@
 use App\Http\Controllers\Dashboard\StripeReturnController;
 use App\Http\Controllers\Public\ContactSubmitController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Livewire\Dashboard\AccentSettings;
 use App\Livewire\Dashboard\Inbox;
 use App\Livewire\Dashboard\InboxConversation;
 use App\Livewire\Dashboard\Page as DashboardPage;
 use App\Livewire\Dashboard\Payments\Settings as PaymentSettings;
 use App\Livewire\Onboarding\Page as OnboardingPage;
+use App\Livewire\Public\ContactPage;
 use App\Livewire\Public\ConversationView;
 use App\Livewire\PublicPay;
 use App\Services\ContentLoader;
@@ -23,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->where('conversation', '[A-Za-z0-9]{48}')
         ->name('inbox.show');
 
+    Route::get('/dashboard/accent', AccentSettings::class)->name('dashboard.accent');
     Route::get('/dashboard/payments', PaymentSettings::class)->name('dashboard.payments.settings');
     Route::get('/dashboard/payments/stripe/return', [StripeReturnController::class, 'return'])
         ->name('dashboard.payments.stripe.return');
@@ -55,6 +58,10 @@ Route::post('/{vendor}/contact', ContactSubmitController::class)
     ->name('vendor.contact');
 
 // MUST be registered BEFORE the {vendor}/{page?} catch-all so it wins routing.
+Route::get('/{vendor}/contact', ContactPage::class)
+    ->where('vendor', '[a-z0-9][a-z0-9-]*')
+    ->name('public.contact');
+
 Route::get('/{vendor}/pay', PublicPay::class)
     ->where('vendor', '[a-z0-9][a-z0-9-]*')
     ->name('public.pay');

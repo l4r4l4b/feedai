@@ -7,13 +7,13 @@
 
 <section {{ $attributes->class(['w-full']) }}>
     @if ($sectionLabel)
-        <p class="mb-3 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-3 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
 
     @if ($embedUrl)
-        <div class="overflow-hidden rounded-image border border-line">
+        <div class="overflow-hidden rounded-md border border-line">
             <iframe
                 src="{{ $embedUrl }}"
                 loading="lazy"
@@ -23,16 +23,16 @@
         </div>
     @endif
 
-    <div class="mt-3 rounded-card border border-line bg-card px-4 py-3">
-        <p class="text-body text-ink">{{ $address }}</p>
+    <div class="mt-3 rounded-md border border-line bg-canvas px-4 py-3">
+        <p class="text-body text-text">{{ $address }}</p>
         @if ($mapUrl)
             <a
                 href="{{ $mapUrl }}"
                 target="_blank"
                 rel="noreferrer"
-                class="mt-2 inline-flex font-mono text-mono-label uppercase text-warm"
+                class="mt-2 inline-flex text-label text-text underline"
             >
-                In Maps öffnen ↗
+                Open in Maps ↗
             </a>
         @endif
     </div>

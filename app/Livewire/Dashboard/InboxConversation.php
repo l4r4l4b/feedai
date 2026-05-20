@@ -23,7 +23,7 @@ use Livewire\Component;
  * translated_text bei Tourist-Messages). Antworten werden in Vendor-Sprache
  * gespeichert und für den Touristen übersetzt.
  */
-#[Layout('components.layouts.onboarding')]
+#[Layout('layouts.app')]
 #[Title('Conversation')]
 class InboxConversation extends Component
 {

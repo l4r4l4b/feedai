@@ -15,23 +15,23 @@
     };
 
     $channelColor = [
-        'whatsapp' => 'text-[#25D366]',
-        'line' => 'text-[#06C755]',
-        'facebook' => 'text-[#1877F2]',
-        'call' => 'text-ink',
+        'whatsapp' => 'bg-[#25D366]',
+        'line' => 'bg-[#06C755]',
+        'facebook' => 'bg-[#1877F2]',
+        'call' => 'bg-ink',
     ];
 
     $channelDefaultLabel = [
         'whatsapp' => 'WhatsApp',
         'line' => 'LINE',
         'facebook' => 'Facebook',
-        'call' => 'Anrufen',
+        'call' => 'Call',
     ];
 @endphp
 
 <section {{ $attributes->class(['w-full']) }}>
     @if ($sectionLabel)
-        <p class="mb-3 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-3 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
@@ -46,10 +46,12 @@
             <li>
                 <a
                     href="{{ $channelHref($channel, $value) }}"
-                    class="flex items-center gap-3 rounded-card border border-line bg-card px-4 py-3 transition hover:bg-soft"
+                    class="flex items-center gap-3 rounded-md border-[1.5px] border-line bg-canvas px-4 py-3 transition hover:border-ink"
                 >
-                    <span class="{{ $channelColor[$channel] ?? 'text-ink' }} text-section">●</span>
-                    <span class="text-body text-ink">{{ $label }}</span>
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm text-canvas {{ $channelColor[$channel] ?? 'bg-ink' }}">
+                        <span aria-hidden="true" class="text-[11px] font-bold">●</span>
+                    </span>
+                    <span class="text-label text-text">{{ $label }}</span>
                 </a>
             </li>
         @endforeach

@@ -15,7 +15,7 @@ it('shows three sections for the authenticated vendor', function () {
 
     $this->actingAs($user)->get('/dashboard/payments')
         ->assertOk()
-        ->assertSee('Kreditkarte')
+        ->assertSee('Credit card')
         ->assertSee('PromptPay')
         ->assertSee('Crypto');
 });
@@ -27,7 +27,7 @@ it('marks PromptPay as active once a phone is saved', function () {
     Livewire::actingAs($user)
         ->test(Settings::class)
         ->assertSet('promptpayPhone', $vendor->promptpay_phone)
-        ->assertSee('Aktiv');
+        ->assertSee('Active');
 });
 
 it('saves direct payment fields and persists them on the vendor', function () {
@@ -64,5 +64,5 @@ it('shows the active badge for Stripe once charges are enabled', function () {
 
     $this->actingAs($user)->get('/dashboard/payments')
         ->assertOk()
-        ->assertSeeInOrder(['Kreditkarte', 'Aktiv']);
+        ->assertSeeInOrder(['Credit card', 'Active']);
 });

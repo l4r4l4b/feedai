@@ -9,8 +9,8 @@
                     <x-feed.hero
                         :image="$fields['image']"
                         :title="$fields['title']"
-                        :subtitle="$fields['subtitle'] ?? null"
-                        :badge-label="$fields['badgeLabel'] ?? null"
+                        :location="$fields['location'] ?? null"
+                        :rating="$fields['rating'] ?? null"
                     />
                 @break
 
@@ -26,9 +26,8 @@
                         :image="$fields['image']"
                         :title="$fields['title']"
                         :meta="$fields['meta'] ?? null"
-                        :price="$fields['price'] ?? null"
-                        :description="$fields['description'] ?? null"
-                        :cta-label="$fields['ctaLabel'] ?? 'Buchen'"
+                        :rating="$fields['rating'] ?? null"
+                        :price="$fields['price']"
                         :cta-url="$fields['ctaUrl'] ?? '#'"
                     />
                 @break

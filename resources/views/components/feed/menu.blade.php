@@ -5,7 +5,7 @@
 
 <section {{ $attributes->class(['w-full']) }}>
     @if ($sectionLabel)
-        <p class="mb-4 font-mono text-mono-label uppercase text-muted">
+        <p class="mb-4 text-caption uppercase tracking-wide text-muted">
             {{ $sectionLabel }}
         </p>
     @endif
@@ -14,7 +14,7 @@
         @foreach ($items as $item)
             <li class="flex flex-col">
                 @if (! empty($item['image']))
-                    <div class="overflow-hidden rounded-image">
+                    <div class="overflow-hidden rounded-md">
                         <img
                             src="{{ $item['image'] }}"
                             alt="{{ $item['name'] ?? '' }}"
@@ -25,9 +25,9 @@
                 @endif
 
                 <div class="mt-2 flex items-baseline justify-between gap-2">
-                    <span class="text-body text-ink">{{ $item['name'] ?? '' }}</span>
+                    <span class="text-title text-text">{{ $item['name'] ?? '' }}</span>
                     @if (! empty($item['price']))
-                        <span class="font-mono text-mono-label uppercase text-muted">{{ $item['price'] }}</span>
+                        <span class="text-label text-text">{{ $item['price'] }}</span>
                     @endif
                 </div>
 

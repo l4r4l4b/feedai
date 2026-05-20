@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <body class="min-h-screen bg-canvas text-text antialiased">
+        <flux:sidebar sticky collapsible="mobile" class="border-e border-line bg-surface">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
@@ -17,11 +17,19 @@
                     </flux:sidebar.item>
                     @if (auth()->user()?->isVendor())
                         <flux:sidebar.item icon="inbox" :href="route('inbox')" :current="request()->routeIs('inbox*')" wire:navigate>
-                            {{ __('Posteingang') }}
+                            {{ __('Inbox') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="paint-brush" :href="route('dashboard.accent')" :current="request()->routeIs('dashboard.accent')" wire:navigate>
+                            {{ __('Accent color') }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="credit-card" :href="route('dashboard.payments.settings')" :current="request()->routeIs('dashboard.payments.*')" wire:navigate>
-                            {{ __('Zahlungsmethoden') }}
+                            {{ __('Payment methods') }}
                         </flux:sidebar.item>
+                        @if (auth()->user()?->vendor)
+                            <flux:sidebar.item icon="arrow-top-right-on-square" :href="url('/'.auth()->user()->vendor->slug)" target="_blank">
+                                {{ __('Public feed') }}
+                            </flux:sidebar.item>
+                        @endif
                     @endif
                 </flux:sidebar.group>
 
@@ -46,12 +54,8 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
+                <flux:sidebar.item icon="globe-alt" :href="route('home')" wire:navigate>
+                    {{ __('Marketing site') }}
                 </flux:sidebar.item>
             </flux:sidebar.nav>
 

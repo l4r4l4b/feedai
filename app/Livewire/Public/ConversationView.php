@@ -8,7 +8,6 @@ use App\Models\Message;
 use App\Notifications\TouristMessageReceived;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Notification;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -19,8 +18,10 @@ use Livewire\Component;
  *
  * Zeigt alle Messages der Conversation in der Tourist-Sprache (translated_text
  * fallback auf original_text). Tourist kann weitere Nachrichten posten.
+ *
+ * Eingebettet im Public-Layout damit die Tourist-Bottom-Nav (Feed/Pay/Contact)
+ * verfügbar bleibt — der Contact-Tab markiert sich aktiv.
  */
-#[Layout('components.layouts.onboarding')]
 #[Title('Chat')]
 class ConversationView extends Component
 {
@@ -64,10 +65,22 @@ class ConversationView extends Component
     public function render(): View
     {
         $conversation = $this->conversation();
+        $vendor = $conversation->vendor;
+
+        $vendorArray = [
+            'slug' => $vendor->slug,
+            'name' => $vendor->name,
+            'locale' => $vendor->locale,
+            'accent_color' => $vendor->accent_color,
+        ];
 
         return view('livewire.public.conversation-view', [
             'conversation' => $conversation,
             'messages' => $conversation->messages()->orderBy('created_at')->get(),
+            'vendor' => $vendorArray,
+        ])->layout('layouts.public', [
+            'vendor' => $vendorArray,
+            'page' => 'contact',
         ]);
     }
 

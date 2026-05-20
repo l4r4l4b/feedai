@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\TranslateMessage;
+use App\Livewire\Public\ContactPage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Vendor;
 use App\Notifications\TouristMessageReceived;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
@@ -57,6 +59,15 @@ class ContactSubmitController extends Controller
         if ($vendorModel->user) {
             Notification::send($vendorModel->user, new TouristMessageReceived($conversation));
         }
+
+        // Cookie merkt sich die Conversation pro Vendor-Slug — beim erneuten
+        // Aufruf von /{slug}/contact landet der Tourist direkt im laufenden Chat.
+        // 90 Tage HttpOnly damit JS nicht hinkommt, encrypted via Laravel default.
+        Cookie::queue(
+            ContactPage::cookieName($vendor),
+            $conversation->token,
+            60 * 24 * 90,
+        );
 
         return redirect()->route('conversations.show', ['conversation' => $conversation->token]);
     }

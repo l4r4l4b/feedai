@@ -4,13 +4,13 @@
     'body' => null,
 ])
 
-<aside {{ $attributes->class(['flex items-start gap-4 rounded-card border border-line bg-card px-5 py-4']) }}>
-    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-soft text-section">
+<aside {{ $attributes->class(['flex items-start gap-4 rounded-lg bg-surface px-5 py-4']) }}>
+    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm bg-ink text-canvas">
         {{ $icon }}
     </span>
 
     <div>
-        <p class="text-body font-medium text-ink">{{ $headline }}</p>
+        <p class="text-label text-text">{{ $headline }}</p>
         @if ($body)
             <p class="mt-1 text-caption text-muted">{{ $body }}</p>
         @endif

@@ -1,24 +1,24 @@
 type: hero
 label: Hero
-description: Vendor-Aufmacher mit Bild (4:5), Titel und optionalem Subtitle/Badge.
+description: Vendor-Aufmacher — großes 3:4 Foto mit Text-Overlay (Location, Name, Rating).
 fields:
   image:
     type: image
     required: true
-    ratio: "4:5"
-    description: Großes Vendor-Bild, 4:5 Hochformat
+    ratio: "3:4"
+    description: Großes Vendor-Foto, 3:4 Hochformat, Overlay liegt drauf
   title:
     type: string
     required: true
     max: 80
-    description: Vendor-Name oder primärer Anker
-  subtitle:
+    description: Vendor-Name (display-prominent im Overlay)
+  location:
     type: string
     required: false
-    max: 160
-    description: Kurzer Beschreibungs-Satz unter dem Titel
-  badge_label:
+    max: 80
+    description: Standort-Zeile mit Pin, z.B. "Khao San Road · Bangkok"
+  rating:
     type: string
     required: false
-    max: 24
-    description: Optionales Mono-Label oben links auf dem Bild (z.B. Ort, Status)
+    max: 32
+    description: Display-Bewertung als Static-String, z.B. "4.95 (203)"

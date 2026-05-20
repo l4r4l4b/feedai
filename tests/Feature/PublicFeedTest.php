@@ -5,9 +5,9 @@ it('renders the demo vendor feed', function () {
 
     $response->assertOk()
         ->assertSee('Mae Som Pad Thai', escape: false)
-        ->assertSee('Seit 1987 frisch gebraten am Khao San Road', escape: false)
-        ->assertSee('Bangkok · Streetfood', escape: false)
-        ->assertSee('aspect-[4/5]', escape: false);
+        ->assertSee('Khao San Road · Bangkok', escape: false)
+        ->assertSee('4.95 (203)', escape: false)
+        ->assertSee('aspect-[3/4]', escape: false);
 });
 
 it('returns 404 for unknown vendor', function () {

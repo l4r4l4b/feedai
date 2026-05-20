@@ -1,101 +1,80 @@
-<div class="flex h-screen flex-col md:flex-row">
-    <section
-        class="relative flex h-1/2 w-full flex-col border-b border-line bg-soft md:h-full md:w-3/5 md:border-b-0 md:border-r"
-        x-data="{ refresh() { $refs.frame.contentWindow?.location.reload(); } }"
-        x-on:feed-updated.window="refresh()"
-    >
-        <header class="flex items-center justify-between border-b border-line bg-card px-4 py-3">
-            <p class="font-mono text-mono-label uppercase text-muted">Dein Feed — Live</p>
-            <a
-                href="{{ url('/'.$vendorSlug) }}"
-                target="_blank"
-                rel="noopener"
-                class="font-mono text-mono-label uppercase text-warm transition hover:text-ink"
-            >
-                Öffentlich ↗
-            </a>
-        </header>
+<div class="space-y-6">
+    <header class="flex flex-wrap items-baseline justify-between gap-4">
+        <div>
+            <flux:heading size="xl" level="1">{{ __('Your feed') }}</flux:heading>
+            <flux:text class="mt-1 text-muted">
+                {{ __('Click any component to edit it — changes go live instantly.') }}
+            </flux:text>
+        </div>
 
-        <iframe
-            x-ref="frame"
-            src="{{ url('/'.$vendorSlug) }}"
-            title="Vendor Feed Preview"
-            class="h-full w-full flex-1 bg-canvas"
-        ></iframe>
-    </section>
+        <div class="flex items-center gap-2">
+            <flux:button :href="url('/'.$vendorSlug)" target="_blank" icon="arrow-top-right-on-square" variant="ghost" size="sm">
+                {{ __('Open public view') }}
+            </flux:button>
+        </div>
+    </header>
 
-    <aside class="flex h-1/2 w-full flex-col bg-card md:h-full md:w-2/5">
-        <header class="border-b border-line px-4 py-3">
-            <p class="font-mono text-mono-label uppercase text-muted">Komponenten</p>
-            <p class="mt-0.5 text-caption text-soft-ink">
-                Klick auf eine Komponente, um sie zu bearbeiten.
-            </p>
-        </header>
+    @if ($editingType)
+        <flux:card>
+            <div class="flex items-baseline justify-between gap-4">
+                <flux:heading size="lg">{{ $editingType }}</flux:heading>
+                <flux:button wire:click="closeEditor" variant="ghost" size="sm">
+                    {{ __('Close') }}
+                </flux:button>
+            </div>
 
-        @if ($editingType)
-            <div class="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
-                <div class="flex items-baseline justify-between">
-                    <h2 class="text-section text-ink">{{ $editingType }}</h2>
-                    <button
-                        type="button"
-                        wire:click="closeEditor"
-                        class="font-mono text-mono-label uppercase text-warm transition hover:text-ink"
-                    >
-                        Schließen
-                    </button>
-                </div>
+            @if ($editError)
+                <flux:callout variant="danger" class="mt-4" icon="exclamation-triangle">
+                    {{ $editError }}
+                </flux:callout>
+            @endif
 
-                @if ($editError)
-                    <p class="rounded-input border border-error/40 bg-error/10 px-3 py-2 text-caption text-error">
-                        {{ $editError }}
-                    </p>
-                @endif
-
-                <label class="flex flex-col gap-1 text-caption text-muted">
-                    Felder (YAML)
-                    <textarea
+            <div class="mt-5 grid gap-4">
+                <flux:field>
+                    <flux:label>{{ __('Fields (YAML)') }}</flux:label>
+                    <flux:textarea
                         wire:model.live.debounce.400ms="editingYaml"
-                        rows="10"
-                        class="resize-y rounded-input border border-line bg-canvas px-3 py-2 font-mono text-[12px] text-ink focus:outline-none focus:ring-2 focus:ring-accent/30"
-                    >{{ $editingYaml }}</textarea>
-                </label>
+                        rows="12"
+                        class="!font-mono !text-[12px]"
+                    >{{ $editingYaml }}</flux:textarea>
+                </flux:field>
 
-                <label class="flex flex-col gap-1 text-caption text-muted">
-                    Body (Markdown, optional)
-                    <textarea
+                <flux:field>
+                    <flux:label>{{ __('Body (Markdown, optional)') }}</flux:label>
+                    <flux:textarea
                         wire:model="editingBody"
                         rows="6"
-                        class="resize-y rounded-input border border-line bg-canvas px-3 py-2 font-mono text-[12px] text-ink focus:outline-none focus:ring-2 focus:ring-accent/30"
-                    >{{ $editingBody }}</textarea>
-                </label>
+                        class="!font-mono !text-[12px]"
+                    >{{ $editingBody }}</flux:textarea>
+                </flux:field>
 
-                <button
-                    type="button"
-                    wire:click="saveEditor"
-                    class="self-start rounded-button bg-accent px-4 py-2 text-caption font-medium text-card transition hover:opacity-90"
-                >
-                    Speichern
-                </button>
+                <flux:button wire:click="saveEditor" variant="primary" class="self-start">
+                    {{ __('Save') }}
+                </flux:button>
             </div>
-        @else
-            <ul class="flex-1 divide-y divide-line overflow-y-auto">
-                @forelse ($components as $component)
-                    <li>
-                        <button
-                            type="button"
-                            wire:click="openEditor('{{ $component['type'] }}')"
-                            class="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-soft"
-                        >
-                            <span class="text-body text-ink">{{ $component['type'] }}</span>
-                            <span class="font-mono text-mono-label uppercase text-muted">Bearbeiten</span>
-                        </button>
-                    </li>
-                @empty
-                    <li class="px-4 py-6 text-caption text-muted">
-                        Noch keine Komponenten aktiv. Geh zurück zum Onboarding-Chat.
-                    </li>
-                @endforelse
-            </ul>
-        @endif
-    </aside>
+        </flux:card>
+    @else
+        <flux:card>
+            @if (empty($components))
+                <flux:callout variant="secondary" icon="information-circle">
+                    {{ __('No components active yet. Head back to the onboarding chat or use the AI assistant to add one.') }}
+                </flux:callout>
+            @else
+                <ul class="divide-y divide-zinc-200 dark:divide-zinc-700">
+                    @foreach ($components as $component)
+                        <li>
+                            <button
+                                type="button"
+                                wire:click="openEditor('{{ $component['type'] }}')"
+                                class="flex w-full items-center justify-between gap-3 py-3 text-left transition hover:opacity-70"
+                            >
+                                <span class="text-sm font-semibold">{{ $component['type'] }}</span>
+                                <flux:icon name="chevron-right" class="size-4 text-zinc-500" />
+                            </button>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </flux:card>
+    @endif
 </div>

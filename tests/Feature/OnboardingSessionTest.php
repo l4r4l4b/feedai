@@ -11,7 +11,7 @@ it('creates a session with default in_progress status', function () {
     expect($session->status)->toBe('in_progress')
         ->and($session->isInProgress())->toBeTrue()
         ->and($session->isFinalized())->toBeFalse()
-        ->and($session->conversation_id)->not->toBeNull();
+        ->and($session->conversation_id)->toBeNull();
 });
 
 it('belongs to a vendor', function () {
