@@ -1,0 +1,17 @@
+type: testimonial
+label: Testimonial
+description: Zitat eines Kunden mit Name und optional Rolle.
+fields:
+  quote:
+    type: string
+    required: true
+    max: 320
+  author:
+    type: string
+    required: true
+    max: 80
+  role:
+    type: string
+    required: false
+    max: 80
+    description: Rolle / Reise / Land

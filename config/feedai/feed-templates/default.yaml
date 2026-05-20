@@ -1,0 +1,21 @@
+name: default
+label: Default Vendor Feed
+description: Standard-Feed mit allen Komponenten. Vendor aktiviert was passt.
+components:
+  - hero
+  - about
+  - image_divider
+  - service
+  - menu
+  - gallery
+  - opening_hours
+  - location
+  - contact_buttons
+  - highlight_card
+  - testimonial
+  - faq
+  - image_with_text
+  - text_block
+  - cta
+  - pay_now_trigger
+  - contact_form

@@ -1,0 +1,19 @@
+type: cta
+label: Call to Action
+description: Aufmerksamkeits-Block mit Titel und Button.
+fields:
+  title:
+    type: string
+    required: true
+    max: 80
+  body:
+    type: string
+    required: false
+    max: 200
+  button_label:
+    type: string
+    required: true
+    max: 32
+  button_url:
+    type: string
+    required: true

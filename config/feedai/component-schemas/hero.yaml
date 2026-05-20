@@ -1,0 +1,24 @@
+type: hero
+label: Hero
+description: Vendor-Aufmacher mit Bild (4:5), Titel und optionalem Subtitle/Badge.
+fields:
+  image:
+    type: image
+    required: true
+    ratio: "4:5"
+    description: Großes Vendor-Bild, 4:5 Hochformat
+  title:
+    type: string
+    required: true
+    max: 80
+    description: Vendor-Name oder primärer Anker
+  subtitle:
+    type: string
+    required: false
+    max: 160
+    description: Kurzer Beschreibungs-Satz unter dem Titel
+  badge_label:
+    type: string
+    required: false
+    max: 24
+    description: Optionales Mono-Label oben links auf dem Bild (z.B. Ort, Status)

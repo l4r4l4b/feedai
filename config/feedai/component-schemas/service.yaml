@@ -1,0 +1,33 @@
+type: service
+label: Service
+description: Einzelne Dienstleistung mit Bild, Titel, Preis und CTA.
+fields:
+  image:
+    type: image
+    required: true
+    ratio: "16:9"
+  title:
+    type: string
+    required: true
+    max: 80
+  meta:
+    type: string
+    required: false
+    max: 80
+    description: Zusatzinfo wie Dauer, Treffpunkt
+  price:
+    type: string
+    required: false
+    max: 32
+  description:
+    type: string
+    required: false
+    max: 240
+  cta_label:
+    type: string
+    required: false
+    max: 32
+    default: Buchen
+  cta_url:
+    type: string
+    required: false

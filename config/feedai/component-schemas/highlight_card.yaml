@@ -1,0 +1,17 @@
+type: highlight_card
+label: Highlight Card
+description: Icon/Emoji + Headline + Body. Für kurze Hinweise, Hervorhebungen.
+fields:
+  icon:
+    type: string
+    required: true
+    max: 4
+    description: Emoji oder Symbol
+  headline:
+    type: string
+    required: true
+    max: 60
+  body:
+    type: string
+    required: false
+    max: 200

@@ -1,0 +1,20 @@
+type: location
+label: Location
+description: Adresse + optional eingebettete Karte.
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+  address:
+    type: string
+    required: true
+    max: 200
+  map_url:
+    type: string
+    required: false
+    description: Google-Maps-URL für Klick-zu-öffnen
+  embed_url:
+    type: string
+    required: false
+    description: Optional iframe-Embed

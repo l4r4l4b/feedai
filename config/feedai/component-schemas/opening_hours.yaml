@@ -1,0 +1,19 @@
+type: opening_hours
+label: Opening Hours
+description: Liste von Tagen/Tagesgruppen mit Uhrzeiten.
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+  hours:
+    type: array
+    required: true
+    item_fields:
+      - days (string, required) — z.B. "Mo–Fr" oder "Sa"
+      - time (string, required) — z.B. "17:00–23:00" oder "Geschlossen"
+  note:
+    type: string
+    required: false
+    max: 160
+    description: Hinweis unter den Zeiten, z.B. "Feiertage geschlossen"

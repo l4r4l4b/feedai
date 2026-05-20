@@ -1,0 +1,11 @@
+type: text_block
+label: Text Block
+description: Nur Text mit optionaler Headline. Generischer Fallback.
+fields:
+  headline:
+    type: string
+    required: false
+    max: 80
+body:
+  required: true
+  description: Body-Text, Markdown unterstützt

@@ -1,0 +1,14 @@
+type: faq
+label: FAQ
+description: Frage-Antwort-Liste, Antworten klappbar (nativ details/summary).
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+  items:
+    type: array
+    required: true
+    item_fields:
+      - question (string, required)
+      - answer (string, required)

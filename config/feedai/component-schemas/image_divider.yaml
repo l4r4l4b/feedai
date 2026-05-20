@@ -1,0 +1,16 @@
+type: image_divider
+label: Image Divider
+description: Bild volle Breite (21:9) mit optionalem Overlay-Text. Atmosphärischer Trenner.
+fields:
+  image:
+    type: image
+    required: true
+    ratio: "21:9"
+  headline:
+    type: string
+    required: false
+    max: 80
+  sub:
+    type: string
+    required: false
+    max: 120

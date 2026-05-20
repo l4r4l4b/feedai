@@ -15,7 +15,32 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    @if (auth()->user()?->isVendor())
+                        <flux:sidebar.item icon="inbox" :href="route('inbox')" :current="request()->routeIs('inbox*')" wire:navigate>
+                            {{ __('Posteingang') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="credit-card" :href="route('dashboard.payments.settings')" :current="request()->routeIs('dashboard.payments.*')" wire:navigate>
+                            {{ __('Zahlungsmethoden') }}
+                        </flux:sidebar.item>
+                    @endif
                 </flux:sidebar.group>
+
+                @if (auth()->user()?->isAdmin())
+                    <flux:sidebar.group :heading="__('Admin')" class="grid">
+                        <flux:sidebar.item icon="squares-2x2" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
+                            {{ __('Overview') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="users" :href="route('admin.vendors')" :current="request()->routeIs('admin.vendors')" wire:navigate>
+                            {{ __('Vendors') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="credit-card" :href="route('admin.payments')" :current="request()->routeIs('admin.payments')" wire:navigate>
+                            {{ __('Payments') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="chat-bubble-left-right" :href="route('admin.conversations')" :current="request()->routeIs('admin.conversations')" wire:navigate>
+                            {{ __('Conversations') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @endif
             </flux:sidebar.nav>
 
             <flux:spacer />

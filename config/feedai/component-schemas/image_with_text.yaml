@@ -1,0 +1,15 @@
+type: image_with_text
+label: Image with Text
+description: Bild (16:9) oben, Textblock unten. Generischer Fallback.
+fields:
+  image:
+    type: image
+    required: true
+    ratio: "16:9"
+  headline:
+    type: string
+    required: false
+    max: 80
+body:
+  required: true
+  description: Body-Text, Markdown unterstützt

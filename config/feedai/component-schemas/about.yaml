@@ -1,0 +1,12 @@
+type: about
+label: About
+description: Längerer Beschreibungs-Text mit optionalem Section-Label. Body als Markdown.
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+    description: Mono-Label oben (z.B. "ÜBER UNS")
+body:
+  required: true
+  description: Hauptbeschreibung, Markdown unterstützt

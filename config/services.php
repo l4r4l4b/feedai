@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        // Platform fee in basis points (100 = 1%). 0 = FeedAI takes nothing.
+        'platform_fee_bps' => (int) env('STRIPE_PLATFORM_FEE_BPS', 0),
+    ],
+
 ];

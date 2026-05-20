@@ -1,0 +1,16 @@
+type: menu
+label: Menu
+description: Liste von Items mit Bild (1:1), Name und Preis.
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+  items:
+    type: array
+    required: true
+    item_fields:
+      - name (string, required)
+      - price (string, optional)
+      - image (image, 1:1, optional)
+      - description (string, optional)

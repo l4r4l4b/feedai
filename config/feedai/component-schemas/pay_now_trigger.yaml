@@ -1,0 +1,17 @@
+type: pay_now_trigger
+label: Pay Now Trigger
+description: Verlinkt zur Payment-Seite des Vendors.
+fields:
+  label:
+    type: string
+    required: false
+    max: 32
+    default: BEZAHLEN
+  title:
+    type: string
+    required: true
+    max: 80
+  url:
+    type: string
+    required: false
+    description: Default ist /{vendor-slug}/pay

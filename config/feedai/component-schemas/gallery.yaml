@@ -1,0 +1,18 @@
+type: gallery
+label: Gallery
+description: Bilder-Galerie als Grid. Aspect ratio konsistent pro Gallery.
+fields:
+  section_label:
+    type: string
+    required: false
+    max: 40
+  ratio:
+    type: enum
+    options: ["1:1", "4:5"]
+    default: "1:1"
+  images:
+    type: array
+    required: true
+    item_fields:
+      - src (image, required)
+      - alt (string, optional)
