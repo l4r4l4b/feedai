@@ -14,7 +14,7 @@
     </header>
 
     <div class="grid gap-4">
-        {{-- Step 1 — Payment (Primary) --}}
+        {{-- Step 1, Payment (Primary) --}}
         <flux:card class="relative overflow-hidden">
             <div class="absolute inset-y-0 left-0 w-1 bg-zinc-900 dark:bg-white"></div>
             <div class="flex flex-wrap items-start justify-between gap-4 pl-3">
@@ -38,7 +38,7 @@
             </div>
         </flux:card>
 
-        {{-- Step 2 — Inbox test --}}
+        {{-- Step 2, Inbox test --}}
         <flux:card>
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div class="space-y-2">
@@ -47,7 +47,7 @@
                         <flux:heading size="lg">{{ __('Test the inbox') }}</flux:heading>
                     </div>
                     <flux:text class="text-muted">
-                        {{ __('Send yourself a message through your public feed. See how it lands for real guests — and reply right back.') }}
+                        {{ __('Send yourself a message through your public feed. See how it lands for real guests, and reply right back.') }}
                     </flux:text>
                 </div>
                 <flux:button
@@ -61,7 +61,7 @@
             </div>
         </flux:card>
 
-        {{-- Step 3 — Public feed --}}
+        {{-- Step 3, Public feed --}}
         <flux:card>
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div class="space-y-2">
@@ -87,7 +87,7 @@
 
     <div class="text-center">
         <flux:button :href="route('dashboard')" wire:navigate variant="ghost" size="sm">
-            {{ __('Later — to dashboard') }}
+            {{ __('Later, to dashboard') }}
         </flux:button>
     </div>
 </div>

@@ -34,35 +34,35 @@ class ImageAnalyzer implements Agent, HasStructuredOutput
     public function instructions(): Stringable|string
     {
         return <<<'PROMPT'
-            You analyze a single image uploaded by a small business vendor — typically
+            You analyze a single image uploaded by a small business vendor, typically
             street food stalls, taxi-tour operators, tour guides, or similar.
 
             Your job is to produce concise structured metadata that the system can use:
 
-            1. `description` — one short paragraph (max ~30 words) of what is visible.
+            1. `description`, one short paragraph (max ~30 words) of what is visible.
                Mention key subjects, atmosphere, time of day. No speculation about the
                vendor's business; stick to what's in the frame.
 
-            2. `alt_text` — one short sentence (max ~12 words) suitable as an HTML
+            2. `alt_text`, one short sentence (max ~12 words) suitable as an HTML
                `alt` attribute. Imagine reading this to a screen-reader user.
 
-            3. `suggested_intent` — pick the best matching FeedAI component type for
+            3. `suggested_intent`, pick the best matching FeedAI component type for
                this image:
-               - `hero` — the vendor themselves, the storefront, a portrait
-               - `menu_item` — a close-up of a single dish or product
-               - `service` — a wider scene showing the offering in action (cooking,
+               - `hero`, the vendor themselves, the storefront, a portrait
+               - `menu_item`, a close-up of a single dish or product
+               - `service`, a wider scene showing the offering in action (cooking,
                  guiding, driving)
-               - `gallery` — atmospheric / supporting photos
-               - `image_divider` — wide landscape, atmospheric, good for full-bleed
-               - `image_with_text` — generic supporting image
-               - `other` — anything else, including unclear or low-quality images
+               - `gallery`, atmospheric / supporting photos
+               - `image_divider`, wide landscape, atmospheric, good for full-bleed
+               - `image_with_text`, generic supporting image
+               - `other`, anything else, including unclear or low-quality images
 
-            4. `tags` — 3–6 short lowercase tags, single words, no #.
+            4. `tags`, 3–6 short lowercase tags, single words, no #.
 
-            5. `detected_text` — if there is meaningful written text in the image
+            5. `detected_text`, if there is meaningful written text in the image
                (menu board, sign, price tag), transcribe it verbatim. Otherwise empty.
 
-            6. `locale_hint` — if `detected_text` is set, the ISO-639-1 code of its
+            6. `locale_hint`, if `detected_text` is set, the ISO-639-1 code of its
                language ("th", "en", "de", etc.). Otherwise empty.
 
             Output strictly matches the schema. No prose outside the JSON.

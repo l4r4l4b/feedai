@@ -30,7 +30,7 @@ if (! function_exists('buildAgentComponentReference')) {
             $label = (string) ($schema['label'] ?? $type);
             $description = (string) ($schema['description'] ?? '');
 
-            $lines = ["### `{$type}` — {$label}"];
+            $lines = ["### `{$type}` · {$label}"];
 
             if ($description !== '') {
                 $lines[] = $description;
@@ -75,7 +75,7 @@ if (! function_exists('buildAgentComponentReference')) {
                 }
                 $required = ($definition['required'] ?? false) ? ' [required]' : '';
                 $fieldType = $definition['type'] ?? 'string';
-                $fieldDesc = ! empty($definition['description']) ? ' — '.$definition['description'] : '';
+                $fieldDesc = ! empty($definition['description']) ? ': '.$definition['description'] : '';
                 $fieldsList[] = "  - `{$name}` ({$fieldType}){$required}{$fieldDesc}";
             }
 

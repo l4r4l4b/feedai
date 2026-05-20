@@ -61,7 +61,7 @@
                 viewable
             />
 
-            {{-- Source language — the language the vendor will *write* their
+            {{-- Source language, the language the vendor will *write* their
                  feed in. Translations to the other two are generated
                  automatically. Defaulted from the browser; vendor can change. --}}
             <flux:field>

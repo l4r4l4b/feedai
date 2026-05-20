@@ -7,7 +7,7 @@
 
 <x-layouts::public :vendor="$vendor">
     <div class="flex flex-col gap-7">
-        {{-- Demo-mode payment receipt — shown on return from the simulated
+        {{-- Demo-mode payment receipt, shown on return from the simulated
              Stripe checkout (?demo_paid=AMOUNT_CENTS in the URL). Real Stripe
              success flows use the session_id flow handled elsewhere. --}}
         @if (request('demo_paid'))
@@ -16,7 +16,7 @@
                 <div class="flex-1">
                     <p class="text-label text-text">Payment received</p>
                     <p class="text-caption text-muted">
-                        {{ number_format(((int) request('demo_paid')) / 100, 0) }} THB to {{ $vendor['name'] ?? 'the vendor' }} —
+                        {{ number_format(((int) request('demo_paid')) / 100, 0) }} THB to {{ $vendor['name'] ?? 'the vendor' }} , 
                         demo mode, no real card was charged.
                     </p>
                 </div>
@@ -175,7 +175,7 @@
             </div>
         @endforeach
 
-        {{-- Builder mode — render skeletons for required components that
+        {{-- Builder mode, render skeletons for required components that
              aren't active yet. They click-postMessage the parent (dashboard
              or onboarding) so a form drawer can open. --}}
         @foreach ($missingRequired as $type)

@@ -14,7 +14,7 @@
             class="h-full w-full object-cover"
         />
 
-        {{-- Favoriten-Herz oben rechts — UI-Ornament, kein State --}}
+        {{-- Favoriten-Herz oben rechts, UI-Ornament, kein State --}}
         <button
             type="button"
             aria-label="Favorisieren"

@@ -154,7 +154,7 @@
                             </div>
                         @endforeach
 
-                        {{-- About-style markdown body — schemas without an explicit
+                        {{-- About-style markdown body, schemas without an explicit
                              body field still support it via the loader, so we expose
                              a textarea when the type traditionally uses one. --}}
                         @if (in_array($activeType, ['about', 'text_block', 'image_with_text'], true))

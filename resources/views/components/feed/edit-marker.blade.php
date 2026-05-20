@@ -1,8 +1,8 @@
 @props(['type'])
 
 {{-- Builder-only overlay on top of a filled component. Two actions:
-     ✎ Edit with form — postMessages parent to open ComponentDrawer
-     💬 Edit in chat — postMessages parent to prefill the chat textarea --}}
+     ✎ Edit with form, postMessages parent to open ComponentDrawer
+     💬 Edit in chat, postMessages parent to prefill the chat textarea --}}
 <div
     class="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-full bg-ink/85 px-1 py-1 shadow-md backdrop-blur-sm"
     role="toolbar"

@@ -2,7 +2,7 @@
     <header>
         <flux:heading size="xl" level="1">{{ __('Inbox') }}</flux:heading>
         <flux:text class="mt-1 text-muted">
-            {{ __('Tourist messages — automatically translated into your language.') }}
+            {{ __('Tourist messages, automatically translated into your language.') }}
         </flux:text>
     </header>
 
@@ -11,7 +11,7 @@
             @php($last = $conversation->messages->first())
             @php($preview = $last?->sender === 'tourist'
                 ? ($last->translated_text ?? $last->original_text)
-                : ($last?->original_text ?? '—'))
+                : ($last?->original_text ?? ', '))
             @php($unread = (int) ($conversation->unread_count ?? 0))
             @php($touristInitial = mb_strtoupper(mb_substr($conversation->tourist_name ?: 'T', 0, 1)))
             <a

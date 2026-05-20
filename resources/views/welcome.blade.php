@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('partials.head', ['title' => 'FeedAI — A mini AI-driven feed for micro-businesses'])
+    @include('partials.head', ['title' => 'FeedAI · A mini AI-driven feed for micro-businesses'])
 </head>
 <body class="bg-canvas text-text antialiased">
     {{-- ============================== Nav ============================== --}}
@@ -47,7 +47,7 @@
                 </span>
 
                 <h1 class="text-display md:text-display-lg text-ink">
-                    A polished feed for every street-corner business — built in a five-minute chat.
+                    A polished feed for every street-corner business, built in a five-minute chat.
                 </h1>
 
                 <p class="max-w-xl text-body text-muted">
@@ -178,7 +178,7 @@
                     Eight content blocks the AI assembles from one conversation.
                 </h2>
                 <p class="max-w-2xl text-body text-muted">
-                    Same building blocks, different vendor — every feed feels custom because the AI
+                    Same building blocks, different vendor, every feed feels custom because the AI
                     rewrites every line in magazine voice instead of pasting verbatim.
                 </p>
             </div>
@@ -299,7 +299,7 @@
                     <div class="flex flex-col gap-2 p-5">
                         <p class="text-caption uppercase tracking-wide text-muted">Wellness</p>
                         <h3 class="text-title text-ink">The massage studio with no Google listing.</h3>
-                        <p class="text-body text-muted">Service list, opening hours, testimonials, a contact form for appointment requests — translated both ways automatically.</p>
+                        <p class="text-body text-muted">Service list, opening hours, testimonials, a contact form for appointment requests, translated both ways automatically.</p>
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
                     <span class="text-caption uppercase tracking-wide text-muted">Step 02</span>
                     <h3 class="mt-3 text-title text-ink">A feed appears</h3>
                     <p class="mt-3 text-body text-muted">
-                        Hero, about, menu, hours, contact, CTA, pay button, contact form — assembled live at
+                        Hero, about, menu, hours, contact, CTA, pay button, contact form, assembled live at
                         <code class="font-mono text-caption">feedai/{slug}</code>.
                     </p>
                 </li>
@@ -357,7 +357,7 @@
                             Live
                         </span>
                         <h2 class="text-section text-ink">
-                            Meet Mae Som — Pad Thai on Khao San Road since 1987.
+                            Meet Mae Som, Pad Thai on Khao San Road since 1987.
                         </h2>
                         <p class="text-body text-muted">
                             A fully built example vendor with hero, menu, opening hours, a contact bridge, and three payment methods. Click around like a tourist would.
@@ -397,7 +397,7 @@
                     </div>
                     <div class="max-w-[80%] self-start rounded-lg bg-surface px-4 py-3">
                         <p class="mb-1 text-caption uppercase tracking-wide text-muted">Tourist sees</p>
-                        <p class="text-body text-ink">Yes — we can leave the peanuts out. Just tell us when ordering.</p>
+                        <p class="text-body text-ink">Yes, we can leave the peanuts out. Just tell us when ordering.</p>
                     </div>
                 </div>
             </div>

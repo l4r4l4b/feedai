@@ -9,7 +9,7 @@
     <flux:card>
         <flux:heading size="lg">{{ __('Language') }}</flux:heading>
         <flux:text class="mt-1 text-muted" size="sm">
-            {{ __('You write your feed in this language. We translate it to the other two automatically. Switching here re-translates every component — usually 30–60 seconds with a queue worker running.') }}
+            {{ __('You write your feed in this language. We translate it to the other two automatically. Switching here re-translates every component, usually 30–60 seconds with a queue worker running.') }}
         </flux:text>
 
         <form wire:submit="changeLocale" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -31,7 +31,7 @@
     <flux:card>
         <flux:heading size="lg">{{ __('Presets') }}</flux:heading>
         <flux:text class="mt-1 text-muted" size="sm">
-            {{ __('Quick pick — click to apply instantly.') }}
+            {{ __('Quick pick, click to apply instantly.') }}
         </flux:text>
 
         <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">

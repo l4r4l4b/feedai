@@ -26,7 +26,7 @@
                     </flux:table.cell>
                     <flux:table.cell>
                         <div class="leading-tight">
-                            <div>{{ $conversation->tourist_name ?? '—' }}</div>
+                            <div>{{ $conversation->tourist_name ?? ', ' }}</div>
                             <div class="text-caption text-muted">{{ $conversation->tourist_email ?? '' }}</div>
                         </div>
                     </flux:table.cell>
@@ -35,7 +35,7 @@
                     </flux:table.cell>
                     <flux:table.cell variant="strong">{{ $conversation->messages_count }}</flux:table.cell>
                     <flux:table.cell class="whitespace-nowrap text-caption text-muted">
-                        {{ $conversation->last_message_at?->diffForHumans() ?? '—' }}
+                        {{ $conversation->last_message_at?->diffForHumans() ?? ', ' }}
                     </flux:table.cell>
                     <flux:table.cell class="font-mono text-caption text-muted">
                         {{ \Illuminate\Support\Str::limit($conversation->token, 12, '…') }}

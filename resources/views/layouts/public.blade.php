@@ -9,6 +9,10 @@
     <meta name="robots" content="noindex" />
     <title>{{ $vendor['name'] ?? 'FeedAI' }}</title>
 
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -44,7 +48,7 @@
 
     {{-- Top navbar with the locale switcher. Pure server-rendered links
          hitting /locale/{code} which sets a 180-day cookie and bounces
-         back — no JavaScript needed, no Alpine. Hidden in builder
+         back, no JavaScript needed, no Alpine. Hidden in builder
          iframes (the vendor edits in their own language). --}}
     @unless ($isBuilder)
         <header class="sticky top-0 z-30 border-b border-line bg-canvas/95 backdrop-blur-sm lg:bg-transparent lg:border-transparent">
@@ -94,7 +98,7 @@
     </main>
 
     {{-- Floating tourist nav. Black pill, fixed bottom-center, always monochrome
-         (NOT accent — the nav stays neutral, accent is for vendor CTAs only).
+         (NOT accent, the nav stays neutral, accent is for vendor CTAs only).
          Hidden in builder mode (vendor edits the feed inside an iframe and the
          nav would be confusing/clickable inside the parent edit UI). --}}
     @unless ($isBuilder)
@@ -143,7 +147,7 @@
                 </li>
             @endif
 
-            {{-- Contact — dedicated chat page with cookie persistence --}}
+            {{-- Contact, dedicated chat page with cookie persistence --}}
             @if (! empty($vendor['slug']))
                 <li>
                     <a

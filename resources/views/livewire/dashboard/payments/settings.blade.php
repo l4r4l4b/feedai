@@ -7,7 +7,7 @@
     <header class="space-y-3">
         <flux:heading size="xl">Payment methods</flux:heading>
         <flux:text class="text-muted">
-            FeedAI never holds your money. Guests pay you directly through three independent rails — you pick which ones make sense for your business. Activate at least one to accept bookings.
+            FeedAI never holds your money. Guests pay you directly through three independent rails, you pick which ones make sense for your business. Activate at least one to accept bookings.
         </flux:text>
 
         <div class="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3">
@@ -16,18 +16,18 @@
             </flux:badge>
             <flux:text size="sm" class="text-muted">
                 @if ($activeCount === 0)
-                    No payment methods enabled yet — pick at least one below.
+                    No payment methods enabled yet, pick at least one below.
                 @elseif ($activeCount === 1)
                     Good start. Add another method to give guests more options.
                 @else
-                    You're set — guests will see all active methods at /{{ $vendor->slug }}/pay.
+                    You're set, guests will see all active methods at /{{ $vendor->slug }}/pay.
                 @endif
             </flux:text>
         </div>
     </header>
 
     {{-- ============================================================ --}}
-    {{-- Stripe (Card) — Platform-Processed via Connect Express        --}}
+    {{-- Stripe (Card), Platform-Processed via Connect Express        --}}
     {{-- ============================================================ --}}
     <section class="rounded-lg border border-line bg-canvas p-6">
         <div class="flex items-start justify-between gap-4">
@@ -45,7 +45,7 @@
                 </div>
 
                 <flux:text class="mt-2 text-muted">
-                    Best for international visitors. Stripe handles the card form, fraud checks and payout to your bank account — FeedAI never touches the money. You'll briefly leave to verify your identity at Stripe, then come back here.
+                    Best for international visitors. Stripe handles the card form, fraud checks and payout to your bank account, FeedAI never touches the money. You'll briefly leave to verify your identity at Stripe, then come back here.
                 </flux:text>
 
                 <ul class="mt-3 space-y-1 text-caption text-muted">
@@ -75,7 +75,7 @@
     </section>
 
     {{-- ============================================================ --}}
-    {{-- Direct Payments — PromptPay + Crypto                          --}}
+    {{-- Direct Payments, PromptPay + Crypto                          --}}
     {{-- ============================================================ --}}
     <form wire:submit="saveDirectPayments" class="flex flex-col gap-6">
         <section class="rounded-lg border border-line bg-canvas p-6">
@@ -90,7 +90,7 @@
             </div>
 
             <flux:text class="mt-2 text-muted">
-                Best for Thai guests. We render a PromptPay QR from your phone number — the guest scans it in their banking app and the money lands directly in your account. No fees, no platform in between.
+                Best for Thai guests. We render a PromptPay QR from your phone number, the guest scans it in their banking app and the money lands directly in your account. No fees, no platform in between.
             </flux:text>
 
             <ul class="mt-3 space-y-1 text-caption text-muted">
@@ -121,12 +121,12 @@
             </div>
 
             <flux:text class="mt-2 text-muted">
-                Optional. For digital-savvy travellers who'd rather send USDC, USDT or BTC than swipe a card. We just show your wallet address with a copy button and a network badge — no wallet-connect, no platform fees.
+                Optional. For digital-savvy travellers who'd rather send USDC, USDT or BTC than swipe a card. We just show your wallet address with a copy button and a network badge, no wallet-connect, no platform fees.
             </flux:text>
 
             <ul class="mt-3 space-y-1 text-caption text-muted">
                 <li>• Pick the chain you actually have a wallet on</li>
-                <li>• Address is displayed exactly as you enter it — double-check before saving</li>
+                <li>• Address is displayed exactly as you enter it, double-check before saving</li>
                 <li>• Leave blank to hide this option</li>
             </ul>
 
@@ -151,13 +151,13 @@
         </div>
     </form>
 
-    {{-- Completion CTA — returns to the dashboard --}}
+    {{-- Completion CTA, returns to the dashboard --}}
     <div class="mt-2 flex flex-col items-end gap-3 border-t border-line pt-6">
         <flux:text size="sm" class="text-muted">
             @if ($activeCount > 0)
                 Your active methods will show up at <span class="font-mono">/{{ $vendor->slug }}/pay</span>. You can come back any time to add more.
             @else
-                You can skip for now and set this up later — your feed stays live either way.
+                You can skip for now and set this up later, your feed stays live either way.
             @endif
         </flux:text>
 

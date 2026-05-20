@@ -26,7 +26,7 @@
             </p>
         @else
             <p class="text-caption text-soft-muted">
-                {{ __('You write in :tourist · :name reads in :vendor — we translate both ways.', [
+                {{ __('You write in :tourist · :name reads in :vendor, we translate both ways.', [
                     'tourist' => $touristLangLabel,
                     'vendor' => $vendorLangLabel,
                     'name' => $conversation->vendor->name,

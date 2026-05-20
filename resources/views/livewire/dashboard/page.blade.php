@@ -1,15 +1,15 @@
 <div>
-{{-- Global form drawer — opens via postMessage from iframe skeletons or
+{{-- Global form drawer, opens via postMessage from iframe skeletons or
      from the components list button below. --}}
 <livewire:feed.component-drawer />
 
-{{-- Manual YAML editor — overlay above the split when $editingType is set.
+{{-- Manual YAML editor, overlay above the split when $editingType is set.
      The chat handles 99% of edits; this is a power-user escape hatch. --}}
 @if ($editingType)
     <div class="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/40 px-4 py-10">
         <flux:card class="w-full max-w-3xl">
             <div class="flex items-baseline justify-between gap-4">
-                <flux:heading size="lg">{{ $editingType }} — {{ __('manual edit') }}</flux:heading>
+                <flux:heading size="lg">{{ $editingType }}, {{ __('manual edit') }}</flux:heading>
                 <flux:button wire:click="closeEditor" variant="ghost" size="sm">
                     {{ __('Close') }}
                 </flux:button>
@@ -48,7 +48,7 @@
     </div>
 @endif
 
-{{-- First-visit dashboard tip — floating toast bottom-left, dismissable
+{{-- First-visit dashboard tip, floating toast bottom-left, dismissable
      via localStorage. Doesn't affect the split-view layout below. --}}
 <div
     x-data="{ open: ! (typeof localStorage !== 'undefined' && localStorage.getItem('feedai_dash_tip') === 'dismissed') }"
@@ -63,7 +63,7 @@
         <div class="flex-1 text-caption text-text">
             <p class="text-label">{{ __('Welcome to your feed editor.') }}</p>
             <p class="mt-1 text-muted">
-                {{ __('Left: your public feed — guests see this exact thing. Right: chat with me to change anything. Or click any component\'s pencil icon (top-right) to open a form. Changes go live instantly.') }}
+                {{ __('Left: your public feed, guests see this exact thing. Right: chat with me to change anything. Or click any component\'s pencil icon (top-right) to open a form. Changes go live instantly.') }}
             </p>
         </div>
         <button
@@ -77,7 +77,7 @@
     </div>
 </div>
 
-{{-- Split view — same optics as the onboarding page (iframe left, chat right).
+{{-- Split view, same optics as the onboarding page (iframe left, chat right).
      Negative margins cancel the Flux `[grid-area:main]` padding so the split
      reaches the viewport edges. Height subtracts the 56px mobile header
      (Flux only shows it below lg); on lg+ we get the full viewport. --}}
@@ -120,7 +120,7 @@
         <header class="shrink-0 border-b border-line px-4 py-3">
             <p class="text-caption uppercase tracking-wide text-muted">Edit assistant</p>
             <p class="mt-1 text-caption text-soft-muted">
-                Describe what to change — I update the feed live.
+                Describe what to change, I update the feed live.
             </p>
         </header>
 

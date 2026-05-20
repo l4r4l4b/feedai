@@ -33,7 +33,7 @@ class CreateSubpage implements Tool
 
         $this->writer->createSubpage($this->vendor, $slug);
 
-        return "Sub-page '{$slug}' created. It has no components yet — use activateComponent + fillComponent to populate.";
+        return "Sub-page '{$slug}' created. It has no components yet; use activateComponent + fillComponent to populate.";
     }
 
     public function schema(JsonSchema $schema): array

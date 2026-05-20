@@ -44,14 +44,14 @@
                 <flux:table.row :key="$vendor->id">
                     <flux:table.cell variant="strong">{{ $vendor->name }}</flux:table.cell>
                     <flux:table.cell><span class="font-mono text-caption text-muted">{{ $vendor->slug }}</span></flux:table.cell>
-                    <flux:table.cell>{{ $vendor->user->email ?? '—' }}</flux:table.cell>
+                    <flux:table.cell>{{ $vendor->user->email ?? ', ' }}</flux:table.cell>
                     <flux:table.cell>
                         <flux:badge size="sm" :color="$statusColor[$vendor->status] ?? 'zinc'" inset="top bottom">
                             {{ $vendor->status }}
                         </flux:badge>
                     </flux:table.cell>
                     <flux:table.cell class="whitespace-nowrap text-caption text-muted">
-                        {{ $vendor->onboarding_completed_at?->diffForHumans() ?? '—' }}
+                        {{ $vendor->onboarding_completed_at?->diffForHumans() ?? ', ' }}
                     </flux:table.cell>
                     <flux:table.cell>
                         <flux:link :href="url('/'.$vendor->slug)" target="_blank">Open feed</flux:link>

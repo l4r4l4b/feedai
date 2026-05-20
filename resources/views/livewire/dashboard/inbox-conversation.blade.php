@@ -33,7 +33,7 @@
                     @if ($sameLocale)
                         {{ __('You both speak :lang.', ['lang' => $vendorLangLabel]) }}
                     @else
-                        {{ __('Guest writes in :tourist — we translate to your :vendor.', [
+                        {{ __('Guest writes in :tourist, we translate to your :vendor.', [
                             'tourist' => $touristLangLabel,
                             'vendor' => $vendorLangLabel,
                         ]) }}
@@ -43,7 +43,7 @@
         </div>
     </header>
 
-    {{-- Message log — flex-1 fills, internal scroll --}}
+    {{-- Message log, flex-1 fills, internal scroll --}}
     <div
         wire:poll.4s
         class="min-h-0 flex-1 overflow-y-auto bg-surface px-5 py-5"
@@ -123,7 +123,7 @@
         </div>
         @unless ($sameLocale)
             <p class="mt-2 text-caption text-muted">
-                {{ __('You write in :vendor — guest reads in :tourist.', [
+                {{ __('You write in :vendor, guest reads in :tourist.', [
                     'vendor' => $vendorLangLabel,
                     'tourist' => $touristLangLabel,
                 ]) }}

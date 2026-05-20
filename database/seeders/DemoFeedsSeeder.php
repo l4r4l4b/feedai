@@ -12,14 +12,14 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Five hand-curated example vendors that every fresh seed ships with.
  *
- * Each vendor is fully built — user row, vendor row, vendor.yaml,
+ * Each vendor is fully built, user row, vendor row, vendor.yaml,
  * pages/home.yaml and the eight standard-feed component files. The
  * vendors cover the FeedAI target audience: street-food, transport,
- * wellness, cultural tours, and water-based tourism — each with a
+ * wellness, cultural tours, and water-based tourism, each with a
  * distinct name, voice and price point so the marketing showcase
  * actually feels like a marketplace, not a copy-paste.
  *
- * Translations are NOT generated here — run
+ * Translations are NOT generated here, run
  *   `artisan feedai:backfill-translations` afterwards (or click in the
  *   dashboard) to populate translations/{de,th}/ folders.
  */
@@ -39,7 +39,7 @@ class DemoFeedsSeeder extends Seeder
     {
         return [
             // ------------------------------------------------------------
-            // 1. Khao San Coffee Lab — third-wave café, EN
+            // 1. Khao San Coffee Lab, third-wave café, EN
             // ------------------------------------------------------------
             [
                 'slug' => 'khao-san-coffee',
@@ -56,19 +56,19 @@ class DemoFeedsSeeder extends Seeder
                     'rating' => '4.9 (412)',
                     'body' => 'Slow-pulled espresso and 12-hour cold brew, two doors down from the chaos. Roasted at the back, served at the bar.',
                 ],
-                'about' => "Ploy and Nik opened the Lab in **2019** after roasting on Ploy's grandmother's gas stove for three frustrating years.\n\nEverything is from Thailand — beans from family farms in the Chiang Rai highlands, ceramic cups thrown in Lampang, oat milk from a cooperative outside Chiang Mai. We roast twice a week, never store-bought.\n\nIf you want espresso the way Italians drink it, sit at the bar. If you want it the way Thai locals drink it — sweet, iced, layered with coconut — Nik will make you one without judgement.",
+                'about' => "Ploy and Nik opened the Lab in **2019** after roasting on Ploy's grandmother's gas stove for three frustrating years.\n\nEverything is from Thailand, beans from family farms in the Chiang Rai highlands, ceramic cups thrown in Lampang, oat milk from a cooperative outside Chiang Mai. We roast twice a week, never store-bought.\n\nIf you want espresso the way Italians drink it, sit at the bar. If you want it the way Thai locals drink it, sweet, iced, layered with coconut, Nik will make you one without judgement.",
                 'menu' => [
                     'section_label' => 'COFFEE & DRINKS',
                     'items' => [
                         ['name' => 'Slow Cold Brew', 'price' => '120 THB', 'description' => '12-hour drip, Doi Chaang honey-process beans, served black.', 'image' => 'https://images.unsplash.com/photo-1549652127-2e5e59e86a7a?w=800&q=80'],
-                        ['name' => 'Coconut Iced Latte', 'price' => '110 THB', 'description' => 'Double espresso, ice, condensed coconut milk — local way.', 'image' => 'https://images.unsplash.com/photo-1595000453467-15d064f058c8?w=800&q=80'],
+                        ['name' => 'Coconut Iced Latte', 'price' => '110 THB', 'description' => 'Double espresso, ice, condensed coconut milk, local way.', 'image' => 'https://images.unsplash.com/photo-1595000453467-15d064f058c8?w=800&q=80'],
                         ['name' => 'Espresso Doppio', 'price' => '85 THB', 'description' => 'Two ristretto shots from our house Chiang Rai blend.', 'image' => 'https://images.unsplash.com/photo-1705952285570-113e76f63fb0?w=800&q=80'],
                         ['name' => 'Single-Origin Pour-Over', 'price' => '150 THB', 'description' => 'V60, rotating bean, 3-minute steep, ceramic dripper.', 'image' => 'https://images.unsplash.com/photo-1541469406036-71229832e06e?w=800&q=80'],
                         ['name' => 'Affogato', 'price' => '140 THB', 'description' => 'Espresso poured tableside over local vanilla bean ice cream.', 'image' => 'https://images.unsplash.com/photo-1638543284847-3a6bed3e1689?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
-                    'note' => 'Closed Mondays — that\'s when we roast.',
+                    'note' => 'Closed Mondays, that\'s when we roast.',
                     'hours' => [
                         ['days' => 'Tue–Sat', 'time' => '08:00–18:00'],
                         ['days' => 'Sun', 'time' => '09:00–16:00'],
@@ -82,18 +82,18 @@ class DemoFeedsSeeder extends Seeder
                 ],
                 'cta' => [
                     'title' => 'Want our beans at home?',
-                    'body' => 'Drop us a message — we pack 200g bags fresh on the morning you pick up.',
+                    'body' => 'Drop us a message, we pack 200g bags fresh on the morning you pick up.',
                     'button_label' => 'Reserve a bag',
                     'button_url' => '#contact-form',
                 ],
                 'contact_form' => [
                     'title' => 'Message the Lab',
-                    'intro' => 'Special order, bean question, opening-hours doubt — we read everything in English, Thai or German. Reply usually same day.',
+                    'intro' => 'Special order, bean question, opening-hours doubt, we read everything in English, Thai or German. Reply usually same day.',
                 ],
             ],
 
             // ------------------------------------------------------------
-            // 2. Niran's Tuk-Tuk Adventures — private tuk-tuk tours, EN
+            // 2. Niran's Tuk-Tuk Adventures, private tuk-tuk tours, EN
             // ------------------------------------------------------------
             [
                 'slug' => 'niran-tuktuk',
@@ -110,7 +110,7 @@ class DemoFeedsSeeder extends Seeder
                     'rating' => '4.97 (188)',
                     'body' => 'Eighteen years behind these handlebars. Hidden temples, back-street noodle stalls, sunset spots no tour bus reaches.',
                 ],
-                'about' => "Niran was born three streets from where his tuk-tuk parks today. He learned the city's shortcuts from his uncle, who learned them from his uncle.\n\nNo fixed route, no scripted commentary. Tell him what you're curious about — old amulet market, photography on the canals, the best dim sum in Yaowarat — and he'll bend the night to match.\n\n**English fluent, Thai native, German functional.** Always on time. Snacks for you in the side pocket.",
+                'about' => "Niran was born three streets from where his tuk-tuk parks today. He learned the city's shortcuts from his uncle, who learned them from his uncle.\n\nNo fixed route, no scripted commentary. Tell him what you're curious about, old amulet market, photography on the canals, the best dim sum in Yaowarat, and he'll bend the night to match.\n\n**English fluent, Thai native, German functional.** Always on time. Snacks for you in the side pocket.",
                 'menu' => [
                     'section_label' => 'TOURS & TRANSFERS',
                     'items' => [
@@ -121,7 +121,7 @@ class DemoFeedsSeeder extends Seeder
                     ],
                 ],
                 'opening_hours' => [
-                    'note' => 'Sundays I rest — emergencies, message me anyway.',
+                    'note' => 'Sundays I rest, emergencies, message me anyway.',
                     'hours' => [
                         ['days' => 'Mon–Sat', 'time' => '08:00–22:00'],
                         ['days' => 'Sun', 'time' => 'On request'],
@@ -134,18 +134,18 @@ class DemoFeedsSeeder extends Seeder
                 ],
                 'cta' => [
                     'title' => 'Plan your Bangkok day',
-                    'body' => 'Tell me where you\'re staying and what you\'re curious about — I send you a route + price by tomorrow morning.',
+                    'body' => 'Tell me where you\'re staying and what you\'re curious about, I send you a route + price by tomorrow morning.',
                     'button_label' => 'Plan a tour',
                     'button_url' => '#contact-form',
                 ],
                 'contact_form' => [
                     'title' => 'Message Niran',
-                    'intro' => 'Write in any language — we translate both ways. Mention your dates and where you\'re staying.',
+                    'intro' => 'Write in any language, we translate both ways. Mention your dates and where you\'re staying.',
                 ],
             ],
 
             // ------------------------------------------------------------
-            // 3. Pranee Thai Massage — wellness studio, TH source
+            // 3. Pranee Thai Massage, wellness studio, TH source
             // ------------------------------------------------------------
             [
                 'slug' => 'pranee-thai-massage',
@@ -162,7 +162,7 @@ class DemoFeedsSeeder extends Seeder
                     'rating' => '4.93 (276)',
                     'body' => 'นวดแผนไทยโบราณ โดยครูประณีต ผู้สำเร็จการศึกษาจากวัดโพธิ์ พร้อมประสบการณ์ 15 ปี',
                 ],
-                'about' => "ครูประณีตเริ่มเรียนนวดแผนไทยที่วัดโพธิ์ตั้งแต่อายุ 17 ปี\n\nวันนี้ห้องนวดเล็กๆ ในซอย 11 รับลูกค้าเพียง 3 คนต่อรอบ เพื่อให้ทุกการนวดมีสมาธิเต็มที่ — ไม่เร่ง ไม่ใช่สูตรสำเร็จ\n\nผ้าและน้ำมันเป็นของคนไทย ออร์แกนิคทั้งหมด **ครูดูแลลูกค้าด้วยมือเปล่าและด้วยใจ** ตามแบบฉบับวัดโพธิ์ดั้งเดิม",
+                'about' => "ครูประณีตเริ่มเรียนนวดแผนไทยที่วัดโพธิ์ตั้งแต่อายุ 17 ปี\n\nวันนี้ห้องนวดเล็กๆ ในซอย 11 รับลูกค้าเพียง 3 คนต่อรอบ เพื่อให้ทุกการนวดมีสมาธิเต็มที่, ไม่เร่ง ไม่ใช่สูตรสำเร็จ\n\nผ้าและน้ำมันเป็นของคนไทย ออร์แกนิคทั้งหมด **ครูดูแลลูกค้าด้วยมือเปล่าและด้วยใจ** ตามแบบฉบับวัดโพธิ์ดั้งเดิม",
                 'menu' => [
                     'section_label' => 'บริการนวด',
                     'items' => [
@@ -193,12 +193,12 @@ class DemoFeedsSeeder extends Seeder
                 ],
                 'contact_form' => [
                     'title' => 'ส่งข้อความถึงครูประณีต',
-                    'intro' => 'เขียนภาษาอะไรก็ได้ — เราแปลให้ทั้งสองทาง ส่งวันเวลาที่ต้องการมาได้เลยค่ะ',
+                    'intro' => 'เขียนภาษาอะไรก็ได้, เราแปลให้ทั้งสองทาง ส่งวันเวลาที่ต้องการมาได้เลยค่ะ',
                 ],
             ],
 
             // ------------------------------------------------------------
-            // 4. Kru Vee Cultural Walks — temple guide, EN
+            // 4. Kru Vee Cultural Walks, temple guide, EN
             // ------------------------------------------------------------
             [
                 'slug' => 'kru-vee-walks',
@@ -215,14 +215,14 @@ class DemoFeedsSeeder extends Seeder
                     'rating' => '5.0 (94)',
                     'body' => "Licensed cultural guide, history teacher for 20 years. Bangkok's temples through the stories nobody else tells you.",
                 ],
-                'about' => "Kru means *teacher* in Thai, and that's still how Vee thinks of herself — even on her second career.\n\nFor two decades she taught Thai history at a high school in Thonburi. When she retired she didn't stop; she just changed the classroom. Now her students are travellers from Berlin, Munich, London, Singapore — anyone who would rather hear five stories about a temple than tick off ten.\n\n**Small groups only** (max 6). Every walk includes a tea break at a place tour buses can't park. **Licensed by TAT.**",
+                'about' => "Kru means *teacher* in Thai, and that's still how Vee thinks of herself, even on her second career.\n\nFor two decades she taught Thai history at a high school in Thonburi. When she retired she didn't stop; she just changed the classroom. Now her students are travellers from Berlin, Munich, London, Singapore, anyone who would rather hear five stories about a temple than tick off ten.\n\n**Small groups only** (max 6). Every walk includes a tea break at a place tour buses can't park. **Licensed by TAT.**",
                 'menu' => [
                     'section_label' => 'WALKS & TOURS',
                     'items' => [
                         ['name' => 'Sunrise Wat Pho & Reclining Buddha', 'price' => '1,200 THB', 'description' => '2 hours · 6:30 am start, before the tour buses arrive.', 'image' => 'https://images.unsplash.com/photo-1704391445538-cf5e763234be?w=800&q=80'],
                         ['name' => 'Grand Palace Half-Day', 'price' => '2,800 THB', 'description' => '4 hours · history of the Chakri dynasty, hidden murals, royal etiquette.', 'image' => 'https://images.unsplash.com/photo-1703508202823-9b3648ca4f18?w=800&q=80'],
                         ['name' => 'Chinatown Stories Walk', 'price' => '1,800 THB', 'description' => '3 hours · gold shops, herbal sellers, immigrant history, tea stop.', 'image' => 'https://images.unsplash.com/photo-1704312970970-58fbe3652eb4?w=800&q=80'],
-                        ['name' => 'Custom Cultural Walk', 'price' => 'From 2,000 THB', 'description' => 'Tell me what you\'re curious about — I build the route.', 'image' => 'https://images.unsplash.com/photo-1779246364538-52e314e4a9d9?w=800&q=80'],
+                        ['name' => 'Custom Cultural Walk', 'price' => 'From 2,000 THB', 'description' => 'Tell me what you\'re curious about, I build the route.', 'image' => 'https://images.unsplash.com/photo-1779246364538-52e314e4a9d9?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
@@ -239,18 +239,18 @@ class DemoFeedsSeeder extends Seeder
                 ],
                 'cta' => [
                     'title' => 'Walk Bangkok with a teacher',
-                    'body' => 'Tell me your dates and what curiosities you\'re bringing — I\'ll reply with a route + tea-stop within a day.',
+                    'body' => 'Tell me your dates and what curiosities you\'re bringing, I\'ll reply with a route + tea-stop within a day.',
                     'button_label' => 'Book a walk',
                     'button_url' => '#contact-form',
                 ],
                 'contact_form' => [
                     'title' => 'Message Kru Vee',
-                    'intro' => 'Write in any language — we translate both ways. Tell me how many in your group and any history topics you\'re into.',
+                    'intro' => 'Write in any language, we translate both ways. Tell me how many in your group and any history topics you\'re into.',
                 ],
             ],
 
             // ------------------------------------------------------------
-            // 5. Sailom Klong Boat Tours — long-tail boats, TH source
+            // 5. Sailom Klong Boat Tours, long-tail boats, TH source
             // ------------------------------------------------------------
             [
                 'slug' => 'sailom-boats',
@@ -265,13 +265,13 @@ class DemoFeedsSeeder extends Seeder
                     'title' => 'Sailom Klong Boat Tours',
                     'location' => 'ท่าเรือปากเกร็ด · กรุงเทพฯ',
                     'rating' => '4.96 (152)',
-                    'body' => 'เรือหางยาวลำเดียวในตระกูล — สามรุ่นแล้ว ลุงสายลมพาคุณลัดเลียบคลองธนบุรีและอยุธยาแบบไม่ต้องแชร์กับใคร',
+                    'body' => 'เรือหางยาวลำเดียวในตระกูล, สามรุ่นแล้ว ลุงสายลมพาคุณลัดเลียบคลองธนบุรีและอยุธยาแบบไม่ต้องแชร์กับใคร',
                 ],
-                'about' => "ปู่ของลุงสายลมขับเรือหางยาวคลองบางหลวงตั้งแต่ปี **พ.ศ. 2502**\n\nวันนี้เป็นรุ่นที่สามแล้ว เรือลำเดียวกัน (เครื่องยนต์เปลี่ยนแล้ว) เส้นทางเดียวกัน เรื่องเล่าเดียวกัน\n\nเรือออกได้ทั้งเส้นคลองบางหลวง คลองมอญ และวัดบางพลัด ลุงเล่าทุกวัดที่ผ่านเป็นภาษาไทย — ถ้าอยากฟังเป็นภาษาอังกฤษ มีลูกชายลุงไปด้วยได้ค่ะ\n\n**เรือ 1 ลำ รับสูงสุด 4 ท่าน** ไม่แชร์กับใคร เป็นทัวร์ส่วนตัวเสมอ",
+                'about' => "ปู่ของลุงสายลมขับเรือหางยาวคลองบางหลวงตั้งแต่ปี **พ.ศ. 2502**\n\nวันนี้เป็นรุ่นที่สามแล้ว เรือลำเดียวกัน (เครื่องยนต์เปลี่ยนแล้ว) เส้นทางเดียวกัน เรื่องเล่าเดียวกัน\n\nเรือออกได้ทั้งเส้นคลองบางหลวง คลองมอญ และวัดบางพลัด ลุงเล่าทุกวัดที่ผ่านเป็นภาษาไทย, ถ้าอยากฟังเป็นภาษาอังกฤษ มีลูกชายลุงไปด้วยได้ค่ะ\n\n**เรือ 1 ลำ รับสูงสุด 4 ท่าน** ไม่แชร์กับใคร เป็นทัวร์ส่วนตัวเสมอ",
                 'menu' => [
                     'section_label' => 'เส้นทางเรือ',
                     'items' => [
-                        ['name' => 'คลองบางหลวง 2 ชั่วโมง', 'price' => '1,500 บาท', 'description' => 'ต่อเรือ — ผ่าน 5 วัดและตลาดน้ำเล็กๆ ที่ไม่อยู่ในแผนที่', 'image' => 'https://images.unsplash.com/photo-1768241154452-c13d3026bfdf?w=800&q=80'],
+                        ['name' => 'คลองบางหลวง 2 ชั่วโมง', 'price' => '1,500 บาท', 'description' => 'ต่อเรือ, ผ่าน 5 วัดและตลาดน้ำเล็กๆ ที่ไม่อยู่ในแผนที่', 'image' => 'https://images.unsplash.com/photo-1768241154452-c13d3026bfdf?w=800&q=80'],
                         ['name' => 'ตลาดน้ำตลิ่งชัน 4 ชั่วโมง', 'price' => '2,500 บาท', 'description' => 'เช้าตรู่ พายกลับตอนสาย แวะกินข้าวบนเรือ', 'image' => 'https://images.unsplash.com/photo-1590118432058-f2744d6897db?w=800&q=80'],
                         ['name' => 'ทัวร์ถ่ายภาพพระอาทิตย์ขึ้น 3 ชั่วโมง', 'price' => '1,800 บาท', 'description' => 'ออก 5:30 น. หมอกคลองในแสงเช้า ช่างภาพแนะนำ', 'image' => 'https://images.unsplash.com/photo-1576185322547-f2fc77f11836?w=800&q=80'],
                         ['name' => 'เช่าเรือเหมาลำ', 'price' => '800 บาท/ชม.', 'description' => 'บอกเส้นทาง ลุงพา ขั้นต่ำ 2 ชั่วโมง', 'image' => 'https://images.unsplash.com/photo-1743781511190-e579f4bad265?w=800&q=80'],
@@ -297,7 +297,7 @@ class DemoFeedsSeeder extends Seeder
                 ],
                 'contact_form' => [
                     'title' => 'ส่งข้อความถึงลุงสายลม',
-                    'intro' => 'ภาษาอะไรก็ได้ — เราแปลให้ทั้งสองทาง บอกวันและจำนวนคนได้เลย',
+                    'intro' => 'ภาษาอะไรก็ได้, เราแปลให้ทั้งสองทาง บอกวันและจำนวนคนได้เลย',
                 ],
             ],
         ];

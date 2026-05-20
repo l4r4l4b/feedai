@@ -28,7 +28,7 @@
         </a>
         <h1 class="text-hero leading-tight text-ink">{{ __('Pay :name', ['name' => $vendor->name]) }}</h1>
         <p class="text-body text-muted">
-            {{ __('FeedAI never holds your money — every payment goes straight to the vendor. Pick the method that works for you.') }}
+            {{ __('FeedAI never holds your money, every payment goes straight to the vendor. Pick the method that works for you.') }}
         </p>
     </header>
 
@@ -39,7 +39,7 @@
             <p class="mt-1 text-caption text-muted">{{ __('Get in touch directly from their feed.') }}</p>
         </div>
     @else
-        {{-- Tab bar — segmented control style, hides itself if only one method.
+        {{-- Tab bar, segmented control style, hides itself if only one method.
              flex with flex-1 keeps the segments even-width regardless of count;
              a dynamic `grid-cols-N` wouldn't survive Tailwind's JIT scan. --}}
         @if (count($methods) > 1)
@@ -178,7 +178,7 @@
                 </div>
 
                 <p class="text-caption text-muted">
-                    {{ __('The vendor controls this wallet themselves. FeedAI only displays the address — no wallet-connect, no platform fees.') }}
+                    {{ __('The vendor controls this wallet themselves. FeedAI only displays the address, no wallet-connect, no platform fees.') }}
                 </p>
             </section>
         @endif

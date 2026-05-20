@@ -3,7 +3,7 @@
 
     The Flux UI library otherwise auto-manages a `dark` class on <html> based
     on the user's OS theme or a stored preference, which causes its dark-mode
-    Tailwind variants to fire on our light-canvas backgrounds — producing
+    Tailwind variants to fire on our light-canvas backgrounds, producing
     light text on light backgrounds.
 
     This snippet runs as early as possible to:

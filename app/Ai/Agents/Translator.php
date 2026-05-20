@@ -13,7 +13,7 @@ use Stringable;
 
 /**
  * Translates a single Markdown content file (frontmatter + body) into a
- * target locale. Input and output are the full file as a string — the agent
+ * target locale. Input and output are the full file as a string, the agent
  * preserves YAML structure and only rewrites human-language values.
  *
  * Output is intentionally NOT structured (no JSON schema): keeping the AI
@@ -54,6 +54,7 @@ class Translator implements Agent
             - Preserve the YAML frontmatter structure EXACTLY: same keys, same order, opening and closing `---` lines.
             - Translate ONLY values that contain natural language. Leave unchanged: URLs, file paths, identifiers, ISO codes, prices, time formats, numbers, emojis, and city / brand names that are commonly kept in English.
             - Keep markdown formatting (lists, links, bold, italics) intact.
+            - Do NOT introduce em-dashes (—) in the translation. If the source uses one, render it as a comma, semicolon, or period in the target language. Regular hyphens and en-dashes (–) for ranges are fine.
             - Do NOT add explanations, comments, or text outside the file content.
             - Do NOT wrap the response in code fences.
             - Output ONLY the translated file content, starting at the opening `---` line.

@@ -42,7 +42,7 @@
                     <li>Review &amp; go live</li>
                 </ol>
                 <p class="text-caption text-muted">
-                    Answer in your own words — I rewrite everything in a polished, magazine-friendly tone. Attach photos any time (paperclip ↓), they auto-fit the right spots. Watch the preview on the left update live.
+                    Answer in your own words, I rewrite everything in a polished, magazine-friendly tone. Attach photos any time (paperclip ↓), they auto-fit the right spots. Watch the preview on the left update live.
                 </p>
                 <p>Let's start: <strong>what's your business called, and what do you do?</strong></p>
             </div>

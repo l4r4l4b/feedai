@@ -13,11 +13,11 @@
         </h1>
         @if ($sameLocale)
             <p class="text-body text-muted">
-                {{ __('You both speak :lang — no translation needed.', ['lang' => $localeNames[$youSpeak] ?? strtoupper($youSpeak)]) }}
+                {{ __('You both speak :lang, no translation needed.', ['lang' => $localeNames[$youSpeak] ?? strtoupper($youSpeak)]) }}
             </p>
         @else
             <p class="text-body text-muted">
-                {{ __('You write in :you · :name reads in :them — we translate both ways automatically.', [
+                {{ __('You write in :you · :name reads in :them, we translate both ways automatically.', [
                     'you' => $localeNames[$youSpeak] ?? strtoupper($youSpeak),
                     'them' => $localeNames[$vendorSpeaks] ?? strtoupper($vendorSpeaks),
                     'name' => $vendor['name'] ?? __('the vendor'),

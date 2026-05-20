@@ -30,7 +30,7 @@
             <header class="shrink-0 border-b border-line px-4 py-3">
                 <p class="text-caption uppercase tracking-wide text-muted">FeedAI Onboarding</p>
                 <p class="mt-1 text-caption text-soft-muted">
-                    Tell me about your business — I'll build the feed live as we go.
+                    Tell me about your business, I'll build the feed live as we go.
                 </p>
             </header>
 

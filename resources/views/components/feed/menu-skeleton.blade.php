@@ -25,5 +25,5 @@
         @endfor
     </ul>
 
-    <p class="mt-1 text-caption text-soft-muted">Add 3–5 items — dishes, tours or services with names and prices.</p>
+    <p class="mt-1 text-caption text-soft-muted">Add 3–5 items, dishes, tours or services with names and prices.</p>
 </div>

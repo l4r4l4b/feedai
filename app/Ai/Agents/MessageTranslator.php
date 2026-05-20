@@ -15,7 +15,7 @@ use Stringable;
  * Übersetzt eine einzelne Chat-Nachricht zwischen Tourist- und Vendor-Sprache.
  *
  * Anders als der Translator-Agent (Markdown-Files) arbeitet dieser mit
- * plain text — kürzer, einfacher, ohne Frontmatter-Erhalt. Wird einmal
+ * plain text, kürzer, einfacher, ohne Frontmatter-Erhalt. Wird einmal
  * pro Message dispatched.
  */
 #[Provider(Lab::Anthropic)]
@@ -51,7 +51,7 @@ class MessageTranslator implements Agent
             Rules:
             - Translate the user message into {$targetName} as naturally as possible.
             - Preserve names, prices, URLs, phone numbers, emojis, and date/time formats.
-            - Keep the tone of the original — casual stays casual, polite stays polite.
+            - Keep the tone of the original, casual stays casual, polite stays polite.
             - Output ONLY the translated text. No prefix, no explanation, no quotes around it.
             - If the message is already in {$targetName}, return it unchanged.
             PROMPT;

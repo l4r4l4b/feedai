@@ -39,7 +39,7 @@
                             {{ $payment->vendor->name }}
                         </flux:link>
                     </flux:table.cell>
-                    <flux:table.cell>{{ $payment->description ?? '—' }}</flux:table.cell>
+                    <flux:table.cell>{{ $payment->description ?? ', ' }}</flux:table.cell>
                     <flux:table.cell variant="strong" class="whitespace-nowrap">
                         {{ number_format($payment->amount_cents / 100, 2) }} {{ $payment->currency }}
                     </flux:table.cell>
@@ -52,7 +52,7 @@
                         </flux:badge>
                     </flux:table.cell>
                     <flux:table.cell class="font-mono text-caption text-muted">
-                        {{ $payment->provider_reference ? \Illuminate\Support\Str::limit($payment->provider_reference, 18) : '—' }}
+                        {{ $payment->provider_reference ? \Illuminate\Support\Str::limit($payment->provider_reference, 18) : ', ' }}
                     </flux:table.cell>
                     <flux:table.cell class="whitespace-nowrap text-caption text-muted">
                         {{ ($payment->paid_at ?? $payment->created_at)->diffForHumans() }}

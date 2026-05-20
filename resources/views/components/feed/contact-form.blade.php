@@ -62,7 +62,7 @@
         </button>
 
         <p class="mt-1 text-caption text-soft-muted">
-            Auto-translated both ways — the vendor writes in their language, you write in yours.
+            Auto-translated both ways, the vendor writes in their language, you write in yours.
         </p>
     </form>
 </section>

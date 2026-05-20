@@ -21,5 +21,5 @@
         @endfor
     </ul>
 
-    <p class="mt-1 text-caption text-soft-muted">When are you open? Weekdays + times — loose answers work.</p>
+    <p class="mt-1 text-caption text-soft-muted">When are you open? Weekdays + times, loose answers work.</p>
 </div>

@@ -26,17 +26,17 @@
         role="log"
         aria-live="polite"
     >
-        {{-- Static greeting card — always visible (mirrors onboarding) --}}
+        {{-- Static greeting card, always visible (mirrors onboarding) --}}
         <li class="flex justify-start" wire:key="greeting">
             <div class="max-w-[90%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
                 <p>What should we change? 👋</p>
                 <p class="text-caption text-muted">
-                    Three ways to edit your feed — pick whatever feels easier:
+                    Three ways to edit your feed, pick whatever feels easier:
                 </p>
                 <ul class="ml-1 space-y-1 text-caption text-muted">
-                    <li>💬 <strong>Tell me here</strong> — "raise menu prices by 10%", "add a Sunday closed", "replace the hero photo"…</li>
+                    <li>💬 <strong>Tell me here</strong>, "raise menu prices by 10%", "add a Sunday closed", "replace the hero photo"…</li>
                     <li>✎ <strong>Click any component</strong> in the preview to open a form (top-right of each block)</li>
-                    <li>📎 <strong>Drop photos</strong> in this chat — I figure out where they fit</li>
+                    <li>📎 <strong>Drop photos</strong> in this chat, I figure out where they fit</li>
                 </ul>
                 <p class="text-caption text-muted">
                     Changes go live instantly, translations regenerate in the background.
