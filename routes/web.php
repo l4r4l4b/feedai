@@ -15,6 +15,7 @@ use App\Livewire\Public\ConversationView;
 use App\Livewire\PublicPay;
 use App\Models\Payment;
 use App\Services\ContentLoader;
+use App\Support\Locale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stripe\StripeClient;
@@ -74,7 +75,9 @@ Route::get('/{vendor}/pay', PublicPay::class)
 Route::get('/{vendor}/{page?}', function (ContentLoader $loader, Request $request, string $vendor, string $page = 'home') {
     try {
         $vendorData = $loader->loadVendor($vendor);
-        $components = $loader->loadPageComponents($vendor, $page);
+        $viewerLocale = Locale::resolve($request, $vendorData['locale'] ?? null);
+        app()->setLocale($viewerLocale);
+        $components = $loader->loadPageComponents($vendor, $page, $viewerLocale);
     } catch (RuntimeException) {
         abort(404);
     }

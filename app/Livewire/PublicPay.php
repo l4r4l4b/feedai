@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Vendor;
 use App\Services\StripeCheckout;
+use App\Support\Locale;
 use App\Support\PromptPayPayload;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -30,6 +31,8 @@ class PublicPay extends Component
     public function mount(Vendor $vendor): void
     {
         abort_unless($vendor->status === 'live', 404);
+
+        app()->setLocale(Locale::resolve(request(), $vendor->locale));
 
         $this->activeTab = match (true) {
             $this->vendor->acceptsCards() => 'card',

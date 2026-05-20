@@ -1,5 +1,8 @@
+@php($viewerLocale = app()->getLocale())
+@php($isBuilder = (bool) request('builder'))
+@php($localeLabels = ['en' => 'EN', 'de' => 'DE', 'th' => 'TH'])
 <!DOCTYPE html>
-<html lang="{{ $vendor['locale'] ?? 'th' }}">
+<html lang="{{ $viewerLocale }}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +21,54 @@
 >
     <a id="top" class="sr-only" tabindex="-1">{{ __('Top') }}</a>
 
-    @php($isBuilder = (bool) request('builder'))
+    {{-- Locale switcher — top-right pill. Sets the feedai_locale cookie via
+         a one-off JS handler and reloads. Hidden inside builder iframes
+         (the vendor edits in their own language, not the tourist's). --}}
+    @unless ($isBuilder)
+        <div
+            class="fixed right-4 top-4 z-40"
+            x-data="{
+                open: false,
+                set(locale) {
+                    document.cookie = 'feedai_locale=' + locale + ';path=/;max-age=' + (60*60*24*180);
+                    window.location.reload();
+                }
+            }"
+        >
+            <button
+                type="button"
+                x-on:click="open = !open"
+                class="flex items-center gap-1 rounded-full border border-line bg-canvas px-3 py-1.5 text-caption font-semibold text-ink shadow-sm transition hover:border-ink"
+                aria-label="{{ __('Change language') }}"
+            >
+                <span aria-hidden="true">🌐</span>
+                <span>{{ $localeLabels[$viewerLocale] ?? strtoupper($viewerLocale) }}</span>
+            </button>
+            <div
+                x-show="open"
+                x-cloak
+                x-on:click.outside="open = false"
+                x-transition.opacity
+                class="absolute right-0 mt-2 flex w-32 flex-col overflow-hidden rounded-md border border-line bg-canvas shadow-md"
+            >
+                @foreach ($localeLabels as $code => $label)
+                    <button
+                        type="button"
+                        x-on:click="set('{{ $code }}')"
+                        @class([
+                            'flex items-center justify-between gap-2 px-3 py-2 text-caption text-text transition hover:bg-surface',
+                            'font-semibold text-ink' => $viewerLocale === $code,
+                        ])
+                    >
+                        <span>{{ $label }}</span>
+                        @if ($viewerLocale === $code)
+                            <span aria-hidden="true">✓</span>
+                        @endif
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    @endunless
 
     <main class="mx-auto min-h-screen w-full max-w-md px-5 {{ $isBuilder ? 'pb-10' : 'pb-28' }} pt-6 md:max-w-2xl md:px-8 md:pt-10">
         {{ $slot }}

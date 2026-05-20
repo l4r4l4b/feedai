@@ -70,11 +70,23 @@ class ContentLoader
     /**
      * Loads a single component file and validates required fields.
      *
+     * When `$viewerLocale` is provided and differs from the vendor's source
+     * locale, this prefers the translated file at translations/{locale}/…
+     * over the source file, falling back to source when no translation exists.
+     *
      * @return array{type:string, fields:array<string, mixed>, body:string}
      */
-    public function loadComponent(string $vendorSlug, string $pageSlug, string $componentType, string $file): array
+    public function loadComponent(string $vendorSlug, string $pageSlug, string $componentType, string $file, ?string $viewerLocale = null): array
     {
-        $path = "{$vendorSlug}/content/{$pageSlug}/{$file}";
+        $sourcePath = "{$vendorSlug}/content/{$pageSlug}/{$file}";
+        $path = $sourcePath;
+
+        if ($viewerLocale !== null) {
+            $translatedPath = "{$vendorSlug}/translations/{$viewerLocale}/{$pageSlug}/{$file}";
+            if (Storage::disk($this->disk)->exists($translatedPath)) {
+                $path = $translatedPath;
+            }
+        }
 
         if (! Storage::disk($this->disk)->exists($path)) {
             throw new RuntimeException("Component file not found: {$path}");
@@ -83,7 +95,14 @@ class ContentLoader
         $raw = Storage::disk($this->disk)->get($path);
         [$fields, $body] = $this->parseFrontmatter($raw);
 
-        $this->assertRequiredFields($componentType, $fields);
+        // Required-field check runs against the source (canonical) content —
+        // a missing translation should never block rendering.
+        if ($path !== $sourcePath && Storage::disk($this->disk)->exists($sourcePath)) {
+            [$sourceFields] = $this->parseFrontmatter(Storage::disk($this->disk)->get($sourcePath));
+            $this->assertRequiredFields($componentType, $sourceFields);
+        } else {
+            $this->assertRequiredFields($componentType, $fields);
+        }
 
         return [
             'type' => $componentType,
@@ -110,9 +129,13 @@ class ContentLoader
     /**
      * Loads an entire page including all component contents.
      *
+     * Pass `$viewerLocale` to render in a tourist's language — components
+     * with a translation at translations/{locale}/{page}/{file} use that
+     * file, others fall back to the source.
+     *
      * @return array<int, array{type:string, fields:array<string, mixed>, body:string}>
      */
-    public function loadPageComponents(string $vendorSlug, string $pageSlug): array
+    public function loadPageComponents(string $vendorSlug, string $pageSlug, ?string $viewerLocale = null): array
     {
         $page = $this->loadPage($vendorSlug, $pageSlug);
 
@@ -122,6 +145,7 @@ class ContentLoader
                 $pageSlug,
                 $component['type'],
                 $component['file'],
+                $viewerLocale,
             ),
             $page['components'],
         );

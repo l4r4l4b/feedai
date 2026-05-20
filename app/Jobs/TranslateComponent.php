@@ -25,11 +25,13 @@ class TranslateComponent implements ShouldBeUnique, ShouldQueue
     use Queueable;
 
     /**
-     * Target locales — source locale is skipped automatically.
+     * Every locale FeedAI supports. The job skips the vendor's source
+     * locale automatically — `th` vendor gets `en` and `de` translated;
+     * `en` vendor gets `de` and `th`; `de` vendor gets `en` and `th`.
      *
      * @var list<string>
      */
-    private const TARGET_LOCALES = ['en', 'de'];
+    private const TARGET_LOCALES = ['en', 'de', 'th'];
 
     public function __construct(
         public readonly int $vendorId,

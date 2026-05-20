@@ -6,6 +6,7 @@ use App\Jobs\TranslateMessage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Notifications\TouristMessageReceived;
+use App\Support\Locale;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Locked;
@@ -34,6 +35,9 @@ class ConversationView extends Component
     public function mount(string $conversation): void
     {
         $this->token = $conversation;
+
+        $vendor = $this->conversation()->vendor;
+        app()->setLocale(Locale::resolve(request(), $vendor?->locale));
     }
 
     public function sendMessage(): void

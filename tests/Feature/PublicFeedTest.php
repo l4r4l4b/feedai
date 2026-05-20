@@ -1,7 +1,7 @@
 <?php
 
 it('renders the demo vendor feed', function () {
-    $response = $this->get('/demo');
+    $response = $this->get('/demo?lang=th');
 
     $response->assertOk()
         ->assertSee('Mae Som Pad Thai', escape: false)

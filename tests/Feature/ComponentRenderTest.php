@@ -1,7 +1,9 @@
 <?php
 
 it('renders all 17 components from the demo vendor without errors', function () {
-    $response = $this->get('/demo');
+    // Force source locale so we assert against the canonical (th-source)
+    // content; locale-aware translations are covered separately.
+    $response = $this->get('/demo?lang=th');
 
     $response->assertOk()
         // Hero — v2 with location + rating instead of badge_label

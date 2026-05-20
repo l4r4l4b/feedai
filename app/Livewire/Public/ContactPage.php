@@ -5,6 +5,7 @@ namespace App\Livewire\Public;
 use App\Models\Conversation;
 use App\Models\Vendor;
 use App\Services\ContentLoader;
+use App\Support\Locale;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cookie;
 use Livewire\Attributes\Locked;
@@ -32,10 +33,12 @@ class ContactPage extends Component
     public function mount(ContentLoader $loader, string $vendor): mixed
     {
         try {
-            $loader->loadVendor($vendor);
+            $vendorData = $loader->loadVendor($vendor);
         } catch (RuntimeException) {
             abort(404);
         }
+
+        app()->setLocale(Locale::resolve(request(), $vendorData['locale'] ?? null));
 
         $this->slug = $vendor;
 
