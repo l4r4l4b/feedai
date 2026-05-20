@@ -36,7 +36,7 @@ class DemoVendorSeeder extends Seeder
                 'user_id' => $user->id,
                 'name' => 'Mae Som Pad Thai',
                 'status' => 'live',
-                'locale' => 'th',
+                'locale' => 'en',
                 'onboarding_completed_at' => now(),
                 'stripe_account_id' => $stripeAccountId,
                 'stripe_charges_enabled' => filled($stripeAccountId),
