@@ -11,10 +11,10 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Aktiviert eine Komponente auf einer Page. Idempotent.
+ * Activates a component on a page. Idempotent.
  *
- * Nach Activate ist die Komponente in pages/{page}.yaml gelistet,
- * aber noch ohne Content. fillComponent muss folgen.
+ * After activation the component is listed in pages/{page}.yaml,
+ * but still has no content. fillComponent must follow.
  */
 class ActivateComponent implements Tool
 {

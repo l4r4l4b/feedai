@@ -14,14 +14,14 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 /**
- * Vendor wählt eine optionale Akzent-Farbe für seinen Feed.
+ * Vendor picks an optional accent color for their feed.
  *
- * Null/leer = monochrom (Default ink). Schreibt sowohl in die DB-Row
- * als auch in die vendor.yaml im Storage, damit der Public-Feed-Layout
- * die CSS-Variable `--accent` aus den Vendor-Daten setzen kann.
+ * Null/empty = monochrome (default ink). Writes both to the DB row
+ * and the vendor.yaml in storage, so the public feed layout can set
+ * the CSS variable `--accent` from the vendor data.
  */
 #[Layout('layouts.app')]
-#[Title('Akzent')]
+#[Title('Accent')]
 class AccentSettings extends Component
 {
     #[Locked]
@@ -34,9 +34,9 @@ class AccentSettings extends Component
      * @var array<int, array{value:string, label:string}>
      */
     public array $presets = [
-        ['value' => '', 'label' => 'Monochrom (Default)'],
+        ['value' => '', 'label' => 'Monochrome (default)'],
         ['value' => '#0F5C5C', 'label' => 'Petrol'],
-        ['value' => '#B5483A', 'label' => 'Terrakotta'],
+        ['value' => '#B5483A', 'label' => 'Terracotta'],
         ['value' => '#4C3A8C', 'label' => 'Deep Purple'],
         ['value' => '#2D5A3D', 'label' => 'Forest'],
     ];

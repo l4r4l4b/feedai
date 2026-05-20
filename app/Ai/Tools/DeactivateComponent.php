@@ -11,10 +11,10 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Entfernt eine Komponente aus der Components-Liste einer Page.
+ * Removes a component from the components list of a page.
  *
- * Das Content-File bleibt erhalten, falls die Komponente später
- * wieder aktiviert werden soll.
+ * The content file is preserved in case the component is
+ * reactivated later.
  */
 class DeactivateComponent implements Tool
 {

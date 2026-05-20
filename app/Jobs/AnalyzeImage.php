@@ -12,18 +12,18 @@ use Laravel\Ai\Files\Image as AiImage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Analysiert ein eben hochgeladenes Vendor-Bild via Vision-Agent und
- * schreibt das Ergebnis in `custom_properties` der Media-Row.
+ * Analyzes a freshly uploaded vendor image via the vision agent and
+ * writes the result to the media row's `custom_properties`.
  *
- * Wird vom VendorImageIngestor dispatched. Standard ist sync (siehe
- * Ingestor::ingest…(analyzeSync: true)), kann aber async laufen wenn der
- * Caller nicht auf die Beschreibung warten muss.
+ * Dispatched by VendorImageIngestor. Default is sync (see
+ * Ingestor::ingest…(analyzeSync: true)), but can run async when the
+ * caller does not need to wait for the description.
  *
- * Schreibt:
+ * Writes:
  *  - description, alt_text, suggested_intent, tags, detected_text, locale_hint
- *  - analyzed_at (Timestamp)
- *  - Erneuert den File-Namen mit beschreibendem Slug, damit das Bild in
- *    der Spatie-Library leicht zu identifizieren ist.
+ *  - analyzed_at (timestamp)
+ *  - Renames the file with a descriptive slug so the image is easy to
+ *    identify in the Spatie media library.
  */
 class AnalyzeImage implements ShouldBeUnique, ShouldQueue
 {
@@ -50,7 +50,7 @@ class AnalyzeImage implements ShouldBeUnique, ShouldQueue
         }
 
         if (! empty($media->getCustomProperty('analyzed_at'))) {
-            // Bereits analysiert — Job-Re-Run gibt's nicht zweimal.
+            // Already analyzed — no double job re-runs.
             return;
         }
 
@@ -86,8 +86,8 @@ class AnalyzeImage implements ShouldBeUnique, ShouldQueue
             $media->setCustomProperty($key, $value);
         }
 
-        // Datei umbenennen mit beschreibendem Slug — die UUID-Variante
-        // ist für AI/Vendor unverständlich. Original-Extension behalten.
+        // Rename file with a descriptive slug — the UUID variant is
+        // unintelligible for AI/vendor. Keep the original extension.
         $extension = pathinfo($media->file_name, PATHINFO_EXTENSION) ?: 'jpg';
         $intent = $payload['suggested_intent'];
         $slug = Str::slug(Str::limit($payload['description'], 40, ''));

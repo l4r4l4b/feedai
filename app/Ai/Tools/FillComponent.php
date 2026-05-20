@@ -14,13 +14,13 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Befüllt eine Komponente mit Inhalten. Aktiviert sie falls noch nicht aktiv.
+ * Fills a component with content. Activates it if not already active.
  *
- * Triggert anschließend TranslateComponent für EN/DE-Übersetzung.
+ * Subsequently triggers TranslateComponent for EN/DE translation.
  *
- * Das fields-Argument ist ein JSON-Objekt-String, dessen Keys exakt
- * dem Schema des jeweiligen Component-Typs entsprechen müssen
- * (siehe System-Prompt für die Schemas).
+ * The fields argument is a JSON object string whose keys must match
+ * the schema of the respective component type exactly
+ * (see system prompt for the schemas).
  */
 class FillComponent implements Tool
 {

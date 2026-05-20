@@ -11,10 +11,10 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Ändert die Reihenfolge der aktiven Komponenten auf einer Page.
+ * Changes the order of the active components on a page.
  *
- * Die übergebene Liste muss exakt die aktuell aktiven Typen enthalten —
- * keine fehlenden, keine zusätzlichen.
+ * The list provided must contain exactly the currently active types —
+ * none missing, none extra.
  */
 class ReorderComponents implements Tool
 {

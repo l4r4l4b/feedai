@@ -12,7 +12,7 @@
             <flux:table.column>Tourist</flux:table.column>
             <flux:table.column>Language</flux:table.column>
             <flux:table.column>Messages</flux:table.column>
-            <flux:table.column>Letzte Aktivität</flux:table.column>
+            <flux:table.column>Last activity</flux:table.column>
             <flux:table.column>Token</flux:table.column>
         </flux:table.columns>
 
@@ -44,7 +44,7 @@
             @empty
                 <flux:table.row>
                     <flux:table.cell colspan="6">
-                        <span class="text-muted">Noch keine Conversations.</span>
+                        <span class="text-muted">No conversations yet.</span>
                     </flux:table.cell>
                 </flux:table.row>
             @endforelse

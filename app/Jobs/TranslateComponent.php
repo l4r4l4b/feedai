@@ -12,20 +12,20 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Übersetzt eine einzelne Komponente in alle Tourist-Sprachen.
+ * Translates a single component into all tourist languages.
  *
- * Liest das Original-File aus content/{page}/{file} und schreibt
- * pro Ziel-Locale ein paralleles File nach translations/{lang}/{page}/{file}.
+ * Reads the original file from content/{page}/{file} and writes a
+ * parallel file per target locale to translations/{lang}/{page}/{file}.
  *
- * Dedupliziert per Vendor+Page+Type via ShouldBeUnique, damit parallele
- * Edits keine Race-Conditions auf dem Translation-File auslösen.
+ * Deduplicated per vendor+page+type via ShouldBeUnique so that parallel
+ * edits do not trigger race conditions on the translation file.
  */
 class TranslateComponent implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
     /**
-     * Ziel-Locales — Source-Locale wird automatisch übersprungen.
+     * Target locales — source locale is skipped automatically.
      *
      * @var list<string>
      */

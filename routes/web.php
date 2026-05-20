@@ -8,6 +8,7 @@ use App\Livewire\Dashboard\Inbox;
 use App\Livewire\Dashboard\InboxConversation;
 use App\Livewire\Dashboard\Page as DashboardPage;
 use App\Livewire\Dashboard\Payments\Settings as PaymentSettings;
+use App\Livewire\Onboarding\Complete as OnboardingComplete;
 use App\Livewire\Onboarding\Page as OnboardingPage;
 use App\Livewire\Public\ContactPage;
 use App\Livewire\Public\ConversationView;
@@ -19,6 +20,7 @@ Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/onboarding', OnboardingPage::class)->name('onboarding');
+    Route::get('/onboarding/complete', OnboardingComplete::class)->name('onboarding.complete');
     Route::get('/dashboard', DashboardPage::class)->name('dashboard');
     Route::get('/dashboard/inbox', Inbox::class)->name('inbox');
     Route::get('/dashboard/inbox/{conversation}', InboxConversation::class)

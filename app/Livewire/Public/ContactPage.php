@@ -13,15 +13,15 @@ use Livewire\Component;
 use RuntimeException;
 
 /**
- * Public Tourist-Contact-Page (`/{slug}/contact`).
+ * Public tourist contact page (`/{slug}/contact`).
  *
- * Erste Visit: Contact-Form wird gerendert. POST landet bei
- * ContactSubmitController, der eine Conversation anlegt + Cookie setzt
- * und auf /conversations/{token} weiterleitet.
+ * First visit: the contact form is rendered. POST lands at
+ * ContactSubmitController, which creates a conversation + sets a cookie
+ * and redirects to /conversations/{token}.
  *
- * Bei Wiederkehr: Cookie `feedai_conversation_{slug}` enthält den Token —
- * wir leiten direkt in die laufende Conversation zurück, damit der Tourist
- * Vendor-Antworten sieht ohne nochmal zu suchen.
+ * On return: cookie `feedai_conversation_{slug}` contains the token —
+ * we redirect straight to the running conversation so the tourist sees
+ * vendor replies without searching again.
  */
 #[Title('Contact')]
 class ContactPage extends Component
@@ -55,7 +55,7 @@ class ContactPage extends Component
                 }
             }
 
-            // Stale cookie (Conversation gelöscht oder Vendor entfernt) — räumen wir auf.
+            // Stale cookie (conversation deleted or vendor removed) — clean it up.
             Cookie::queue(Cookie::forget($cookieName));
         }
 

@@ -14,14 +14,14 @@ use Laravel\Ai\Promptable;
 use Stringable;
 
 /**
- * Vision-Agent zum Verstehen eines Vendor-Bildes.
+ * Vision agent for understanding a vendor image.
  *
- * Bekommt das Bild als Attachment beim prompt(), produziert strukturierten
- * Output: Beschreibung, Alt-Text, vorgeschlagene Verwendung (welche
- * FeedAI-Komponente passt), Tags und optional erkannter Text + Sprache.
+ * Receives the image as an attachment via prompt() and produces structured
+ * output: description, alt text, suggested usage (which FeedAI component
+ * fits), tags, and optionally detected text + language.
  *
- * Wird primär vom AnalyzeImage Job aufgerufen, kann aber auch direkt
- * verwendet werden (z.B. von einem späteren "preview before save"-Flow).
+ * Primarily invoked by the AnalyzeImage job, but can also be used directly
+ * (e.g. by a future "preview before save" flow).
  */
 #[Provider(Lab::Anthropic)]
 #[Model('claude-sonnet-4-6')]

@@ -12,10 +12,11 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Page-Level Component für /onboarding. Rendert das Split-View-Layout
- * mit Live-Preview-iframe links/oben und Chat-Subcomponent rechts/unten.
+ * Page-level component for /onboarding. Renders the split-view layout
+ * with a live-preview iframe on the left/top and the chat subcomponent
+ * on the right/bottom.
  *
- * Redirected zum Dashboard wenn das Onboarding bereits abgeschlossen ist.
+ * Redirects to the dashboard once onboarding is already complete.
  */
 #[Layout('components.layouts.onboarding')]
 #[Title('Onboarding')]

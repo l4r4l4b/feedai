@@ -10,30 +10,30 @@ use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Schreibt Vendor-Content nach storage/app/vendors/{slug}/.
+ * Writes vendor content to storage/app/vendors/{slug}/.
  *
- * Pendant zu ContentLoader. Wird von AI-Tools und Direct-Edit-Drawer
- * benutzt. Schreibt atomar (tmp-file + rename) damit Reader nie auf
- * halb geschriebene Files treffen.
+ * Counterpart to ContentLoader. Used by AI tools and the direct-edit
+ * drawer. Writes atomically (tmp file + rename) so readers never hit
+ * half-written files.
  *
- * Snake-case Frontmatter-Keys bleiben in YAML/MD erhalten (Konvention).
- * Die camelCase-Transformation passiert erst beim Lesen über ContentLoader.
+ * Snake-case frontmatter keys are preserved in YAML/MD (convention).
+ * The camelCase transformation only happens on read via ContentLoader.
  */
 class ContentWriter
 {
     public function __construct(private readonly string $disk = 'vendors') {}
 
     /**
-     * Legt das initiale Storage-Skelett für einen neuen Vendor an.
+     * Creates the initial storage skeleton for a new vendor.
      *
-     * Erzeugt vendor.yaml + leere pages/home.yaml mit Template-Referenz.
-     * Keine Komponenten aktiv — AI aktiviert sie schrittweise.
+     * Generates vendor.yaml + an empty pages/home.yaml with template reference.
+     * No components active — the AI activates them step by step.
      */
     public function initializeVendor(Vendor $vendor, string $template = 'default'): void
     {
         $slug = $vendor->slug;
 
-        // Metadaten immer aktualisieren — AI darf Name/Locale/Accent später ändern.
+        // Always update metadata — AI may change name/locale/accent later.
         $this->writeYaml("{$slug}/vendor.yaml", [
             'slug' => $vendor->slug,
             'name' => $vendor->name,
@@ -43,8 +43,8 @@ class ContentWriter
             'accent_color' => $vendor->accent_color,
         ]);
 
-        // Home-Page nur anlegen falls noch nicht da — sonst würden bereits
-        // aktivierte Komponenten beim erneuten Init verloren gehen.
+        // Only create home page if it does not exist yet — otherwise already
+        // activated components would be lost on a re-init.
         $homePath = "{$slug}/pages/home.yaml";
         if (! Storage::disk($this->disk)->exists($homePath)) {
             $this->writeYaml($homePath, [
@@ -55,10 +55,10 @@ class ContentWriter
     }
 
     /**
-     * Aktiviert eine Komponente auf einer Page (legt sie zur Components-Liste).
+     * Activates a component on a page (adds it to the components list).
      *
-     * Idempotent — doppeltes Aktivieren wirft nicht. Datei wird angelegt
-     * sofern noch nicht da (mit leerer Frontmatter).
+     * Idempotent — activating twice does not throw. File is created if
+     * not yet present (with empty frontmatter).
      */
     public function activateComponent(Vendor $vendor, string $pageSlug, string $type): string
     {
@@ -92,7 +92,7 @@ class ContentWriter
     }
 
     /**
-     * Deaktiviert eine Komponente — entfernt aus Liste, Content-File bleibt erhalten.
+     * Deactivates a component — removes it from the list, the content file is preserved.
      */
     public function deactivateComponent(Vendor $vendor, string $pageSlug, string $type): void
     {
@@ -106,9 +106,9 @@ class ContentWriter
     }
 
     /**
-     * Befüllt eine Komponente mit Daten. Validiert gegen Schema.
+     * Fills a component with data. Validates against schema.
      *
-     * Bestehender Body wird übernommen wenn kein neuer übergeben wird.
+     * Existing body is preserved when no new one is provided.
      *
      * @param  array<string, mixed>  $fields
      */
@@ -135,7 +135,7 @@ class ContentWriter
     }
 
     /**
-     * Ändert Reihenfolge der aktiven Komponenten auf einer Page.
+     * Changes the order of active components on a page.
      *
      * @param  array<int, string>  $orderedTypes
      */
@@ -161,7 +161,7 @@ class ContentWriter
     }
 
     /**
-     * Legt eine neue Sub-Page an.
+     * Creates a new sub-page.
      */
     public function createSubpage(Vendor $vendor, string $pageSlug): void
     {
@@ -243,7 +243,7 @@ class ContentWriter
     }
 
     /**
-     * Prüft alle required-Felder gegen das Component-Schema.
+     * Checks all required fields against the component schema.
      *
      * @param  array<string, mixed>  $fields
      */

@@ -9,15 +9,15 @@ use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Liest Vendor-Content aus storage/app/vendors/{slug}/.
+ * Reads vendor content from storage/app/vendors/{slug}/.
  *
- * Drei Ebenen:
- *  - Vendor-Metadaten (vendor.yaml)
- *  - Page-Definition (pages/{page}.yaml) — aktive Komponenten + Reihenfolge
- *  - Component-Content (content/{page}/{file}.md) — Frontmatter + Body
+ * Three layers:
+ *  - Vendor metadata (vendor.yaml)
+ *  - Page definition (pages/{page}.yaml) — active components + order
+ *  - Component content (content/{page}/{file}.md) — frontmatter + body
  *
- * Schemas liegen unter config/feedai/component-schemas/{type}.yaml und werden
- * für die required-Feld-Validierung herangezogen.
+ * Schemas live under config/feedai/component-schemas/{type}.yaml and are
+ * used for required-field validation.
  */
 class ContentLoader
 {
@@ -68,7 +68,7 @@ class ContentLoader
     }
 
     /**
-     * Lädt eine einzelne Komponenten-Datei und validiert required-Felder.
+     * Loads a single component file and validates required fields.
      *
      * @return array{type:string, fields:array<string, mixed>, body:string}
      */
@@ -108,7 +108,7 @@ class ContentLoader
     }
 
     /**
-     * Lädt eine komplette Seite inklusive aller Komponenten-Inhalte.
+     * Loads an entire page including all component contents.
      *
      * @return array<int, array{type:string, fields:array<string, mixed>, body:string}>
      */
@@ -128,7 +128,7 @@ class ContentLoader
     }
 
     /**
-     * Liste aller verfügbaren Komponenten-Typen (aus den Schema-Files).
+     * List of all available component types (from the schema files).
      *
      * @return array<int, string>
      */

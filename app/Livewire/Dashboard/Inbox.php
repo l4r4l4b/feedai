@@ -13,11 +13,11 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Vendor-Posteingang. Listet alle Conversations, neueste zuerst.
- * Zeigt Vorschau in Vendor-Sprache (translated_text bei Tourist-Messages).
+ * Vendor inbox. Lists all conversations, newest first.
+ * Shows preview in vendor language (translated_text for tourist messages).
  */
 #[Layout('layouts.app')]
-#[Title('Posteingang')]
+#[Title('Inbox')]
 class Inbox extends Component
 {
     #[Locked]

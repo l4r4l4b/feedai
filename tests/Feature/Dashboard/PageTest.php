@@ -84,5 +84,5 @@ it('surfaces an error when YAML is invalid', function () {
         ->set('editingYaml', 'title: { broken')
         ->call('saveEditor')
         ->assertSet('editingType', 'hero')
-        ->assertSeeText('YAML konnte nicht geparst werden');
+        ->assertSeeText('YAML could not be parsed');
 });

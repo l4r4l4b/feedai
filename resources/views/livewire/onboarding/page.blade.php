@@ -11,7 +11,7 @@
                 x-on:click="refresh()"
                 class="text-label text-text underline"
             >
-                Neu laden
+                Reload
             </button>
         </header>
 
@@ -27,7 +27,7 @@
         <header class="border-b border-line px-4 py-3">
             <p class="text-caption uppercase tracking-wide text-muted">FeedAI Onboarding</p>
             <p class="mt-1 text-caption text-soft-muted">
-                Erzähl mir von Deinem Business — ich baue Deinen Feed dabei live auf.
+                Tell me about your business — I'll build the feed live as we go.
             </p>
         </header>
 

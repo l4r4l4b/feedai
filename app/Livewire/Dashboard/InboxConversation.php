@@ -17,11 +17,11 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Conversation-Chat-View für den Vendor im Dashboard-Inbox.
+ * Conversation chat view for the vendor in the dashboard inbox.
  *
- * Vendor sieht alle Nachrichten in seiner Sprache (Original bei eigenen,
- * translated_text bei Tourist-Messages). Antworten werden in Vendor-Sprache
- * gespeichert und für den Touristen übersetzt.
+ * Vendor sees all messages in their language (original for their own,
+ * translated_text for tourist messages). Replies are stored in the
+ * vendor's language and translated for the tourist.
  */
 #[Layout('layouts.app')]
 #[Title('Conversation')]

@@ -22,8 +22,8 @@
         {{ $slot }}
     </main>
 
-    {{-- Floating tourist nav. Black pill, fixed bottom-center, immer monochrom
-         (NICHT accent — die Nav bleibt neutral, accent ist nur für Vendor-CTAs). --}}
+    {{-- Floating tourist nav. Black pill, fixed bottom-center, always monochrome
+         (NOT accent — the nav stays neutral, accent is for vendor CTAs only). --}}
     <nav
         x-data="{
             showTop: false,
@@ -42,7 +42,7 @@
         aria-label="{{ __('Quick navigation') }}"
     >
         <ul class="pointer-events-auto flex items-center gap-1 rounded-full bg-ink px-2 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
-            {{-- Top — nur wenn etwas gescrollt --}}
+            {{-- Top — only after some scroll --}}
             <li x-show="showTop" x-cloak x-transition.opacity>
                 <button
                     type="button"
@@ -94,7 +94,7 @@
                 </li>
             @endif
 
-            {{-- Contact — dedicated chat page mit Cookie-Persistenz --}}
+            {{-- Contact — dedicated chat page with cookie persistence --}}
             @if (! empty($vendor['slug']))
                 <li>
                     <a

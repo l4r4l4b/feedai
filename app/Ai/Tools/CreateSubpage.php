@@ -10,9 +10,9 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Legt eine neue Unterseite an (z.B. "tour-floating-market").
+ * Creates a new sub-page (e.g. "tour-floating-market").
  *
- * Unterseiten teilen sich die Komponenten-Bibliothek mit der Home-Page.
+ * Sub-pages share the component library with the home page.
  */
 class CreateSubpage implements Tool
 {

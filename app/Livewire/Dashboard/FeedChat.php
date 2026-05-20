@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Livewire\Onboarding;
+namespace App\Livewire\Dashboard;
 
-use App\Ai\Agents\OnboardingAgent;
-use App\Models\OnboardingSession;
+use App\Ai\Agents\EditAgent;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\VendorImageIngestor;
@@ -19,34 +18,21 @@ use Livewire\WithFileUploads;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Onboarding chat — two-step send + multi-image + DB-backed history.
+ * Dashboard edit chat — drives the live feed via EditAgent.
  *
- * Send flow:
- *  1. submitPrompt() — fast. Ingests all photos, builds prompt block,
- *     sets $pendingText/$pendingImageUrls for the optimistic user bubble,
- *     clears draft + photos, triggers the second request via $this->js().
- *  2. runAgent() — slow. Calls the AI agent. RememberConversations middleware
- *     writes user + assistant to agent_conversation_messages. Pending is
- *     cleared, feed-updated dispatched.
+ * Mirrors the onboarding chat (two-step send, multi-image, DB-backed history)
+ * but persists the agent conversation_id on the vendor row so the thread
+ * continues across requests and sessions.
  *
- * UI effect: browser sees re-render from step 1 (input empty, pending bubble
- * visible, loading dots) BEFORE the agent call starts. Typical chat UX.
- *
- * Multi-image: $photos is an array. Each image is analyzed sync via
- * VendorImageIngestor, each as its own [IMAGE_UPLOADED] block in the prompt.
- *
- * History is reload-proof: rendered from DB via loadMessages() in render().
+ * Dispatches `feed-updated` so the sibling preview iframe can refresh.
  */
-#[Title('Onboarding')]
-class Chat extends Component
+#[Title('Edit chat')]
+class FeedChat extends Component
 {
     use WithFileUploads;
 
     #[Locked]
     public int $vendorId = 0;
-
-    #[Locked]
-    public string $vendorName = '';
 
     public string $draft = '';
 
@@ -60,7 +46,7 @@ class Chat extends Component
     /** @var array<int, string> */
     public $pendingImageUrls = [];
 
-    /** Full prompt incl. [IMAGE_UPLOADED]-blocks, used by runAgent. */
+    /** Full prompt incl. [IMAGE_UPLOADED] blocks, used by runAgent. */
     #[Locked]
     public string $queuedPrompt = '';
 
@@ -72,7 +58,6 @@ class Chat extends Component
         abort_unless($vendor instanceof Vendor, 404);
 
         $this->vendorId = $vendor->id;
-        $this->vendorName = (string) $vendor->name;
     }
 
     /**
@@ -99,7 +84,7 @@ class Chat extends Component
                     vendor: $vendor,
                     upload: $photo,
                     intent: null,
-                    source: 'onboarding-chat',
+                    source: 'dashboard-edit-chat',
                     analyzeSync: true,
                 );
                 $imageBlocks[] = $this->buildImageBlock($media);
@@ -120,16 +105,13 @@ class Chat extends Component
     }
 
     /**
-     * Step 2 — slow. Calls the AI agent. RememberConversations persists.
-     *
-     * If the agent called FinalizeOnboarding in this turn (vendor status
-     * → live), redirect to the onboarding success page, from which the
-     * vendor is guided to payments + inbox test + public feed.
+     * Step 2 — slow. Calls the EditAgent. Persists conversation_id on first
+     * response so subsequent prompts continue the same thread.
      */
-    public function runAgent(): mixed
+    public function runAgent(): void
     {
         if ($this->queuedPrompt === '') {
-            return null;
+            return;
         }
 
         $prompt = $this->queuedPrompt;
@@ -142,13 +124,6 @@ class Chat extends Component
 
         $this->dispatch('feed-updated');
         $this->dispatch('chat-scroll');
-
-        $vendor = Vendor::find($this->vendorId);
-        if ($vendor !== null && $vendor->status === 'live') {
-            return $this->redirectRoute('onboarding.complete', navigate: true);
-        }
-
-        return null;
     }
 
     public function removePhoto(int $index): void
@@ -163,7 +138,7 @@ class Chat extends Component
 
     public function render(): View
     {
-        return view('livewire.onboarding.chat', [
+        return view('livewire.dashboard.feed-chat', [
             'chatMessages' => $this->loadMessages(),
         ]);
     }
@@ -173,13 +148,13 @@ class Chat extends Component
      */
     private function loadMessages(): Collection
     {
-        $conversationId = $this->resolveConversationId();
+        $vendor = Vendor::find($this->vendorId);
 
-        if ($conversationId === null) {
+        if ($vendor === null || $vendor->edit_agent_conversation_id === null) {
             return collect();
         }
 
-        $conversation = AiConversation::find($conversationId);
+        $conversation = AiConversation::find($vendor->edit_agent_conversation_id);
 
         if ($conversation === null) {
             return collect();
@@ -204,32 +179,22 @@ class Chat extends Component
             ->values();
     }
 
-    private function resolveConversationId(): ?string
-    {
-        return OnboardingSession::where('vendor_id', $this->vendorId)
-            ->where('status', 'in_progress')
-            ->latest()
-            ->value('conversation_id');
-    }
-
     private function promptAgent(string $message): void
     {
         $vendor = Vendor::findOrFail($this->vendorId);
         /** @var User $user */
         $user = Auth::user();
 
-        $existing = $this->resolveConversationId();
+        $existing = $vendor->edit_agent_conversation_id;
 
         $agent = $existing !== null
-            ? (new OnboardingAgent($vendor))->continue($existing, as: $user)
-            : (new OnboardingAgent($vendor))->forUser($user);
+            ? (new EditAgent($vendor))->continue($existing, as: $user)
+            : (new EditAgent($vendor))->forUser($user);
 
         $response = $agent->prompt($message);
 
         if ($existing === null && property_exists($response, 'conversationId') && $response->conversationId !== null) {
-            OnboardingSession::where('vendor_id', $this->vendorId)
-                ->where('status', 'in_progress')
-                ->update(['conversation_id' => $response->conversationId]);
+            $vendor->forceFill(['edit_agent_conversation_id' => $response->conversationId])->save();
         }
     }
 

@@ -11,29 +11,29 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Zentrale Anlaufstelle für jeden Bild-Upload auf einen Vendor.
+ * Central entry point for every image upload onto a vendor.
  *
- * Egal woher das Bild kommt — Onboarding-Chat, Dashboard-Drawer, künftig
- * vielleicht Contact-Form oder Admin-Moderation, oder vom AI-Agent über
- * das `UploadImage` Tool — alle Pfade landen hier. Damit gibt es nur
- * EINE Stelle die:
+ * Regardless of where the image comes from — onboarding chat, dashboard
+ * drawer, possibly the contact form or admin moderation in the future, or
+ * from the AI agent via the `UploadImage` tool — every path lands here.
+ * This way there is only ONE place that:
  *
- *  - die Datei via Spatie Media Library auf den Vendor heftet
- *  - die Media-Row mit `intent` + `source` Custom-Properties anreichert
- *  - den AnalyzeImage Job dispatcht (sync per default — der Caller wartet
- *    in der Regel auf die Description um sie an den AI-Agent zu geben)
- *  - die fertige Media-Row mit Description, Alt-Text, Suggested-Intent etc.
- *    zurückliefert
+ *  - attaches the file to the vendor via Spatie Media Library
+ *  - enriches the media row with `intent` + `source` custom properties
+ *  - dispatches the AnalyzeImage job (sync by default — the caller usually
+ *    waits for the description to pass it to the AI agent)
+ *  - returns the completed media row with description, alt text,
+ *    suggested intent, etc.
  *
- * Verfügbare Eingänge: TemporaryUploadedFile / UploadedFile / lokaler Pfad /
- * Base64-String + Mime / externe URL. Alle konvergieren auf `ingestPath()`.
+ * Supported inputs: TemporaryUploadedFile / UploadedFile / local path /
+ * base64 string + mime / external URL. All converge on `ingestPath()`.
  */
 class VendorImageIngestor
 {
     private const ALLOWED_MIMES = ['image/jpeg', 'image/png', 'image/webp'];
 
     /**
-     * Bild aus einem Livewire-Upload oder regulären Laravel-UploadedFile.
+     * Image from a Livewire upload or a regular Laravel UploadedFile.
      */
     public function fromUpload(
         Vendor $vendor,
@@ -56,7 +56,7 @@ class VendorImageIngestor
     }
 
     /**
-     * Bild von einem lokalen Pfad.
+     * Image from a local path.
      */
     public function fromPath(
         Vendor $vendor,
@@ -84,8 +84,8 @@ class VendorImageIngestor
     }
 
     /**
-     * Bild aus Base64-kodiertem String (typisch wenn der AI-Agent ein Bild
-     * direkt durchreicht).
+     * Image from a base64-encoded string (typical when the AI agent passes
+     * an image through directly).
      */
     public function fromBase64(
         Vendor $vendor,
@@ -119,7 +119,7 @@ class VendorImageIngestor
     }
 
     /**
-     * Bild von einer öffentlich erreichbaren URL.
+     * Image from a publicly accessible URL.
      */
     public function fromUrl(
         Vendor $vendor,
@@ -156,8 +156,8 @@ class VendorImageIngestor
     }
 
     /**
-     * Gemeinsamer Endpunkt. Schreibt nach Spatie, dispatcht Analyse,
-     * liefert die fertige Media-Row zurück.
+     * Shared endpoint. Writes to Spatie, dispatches analysis,
+     * returns the completed media row.
      */
     private function ingestPath(
         Vendor $vendor,

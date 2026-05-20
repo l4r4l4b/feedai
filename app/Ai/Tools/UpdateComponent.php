@@ -14,9 +14,9 @@ use Laravel\Ai\Tools\Request;
 use Stringable;
 
 /**
- * Aktualisiert eine bereits gefüllte Komponente. Funktional identisch
- * zu FillComponent — semantisches Alias damit der Agent zwischen
- * "Erst-Befüllung" und "Edit" unterscheiden kann.
+ * Updates a component that has already been filled. Functionally identical
+ * to FillComponent — a semantic alias so the agent can distinguish between
+ * "initial fill" and "edit".
  */
 class UpdateComponent implements Tool
 {

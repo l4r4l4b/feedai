@@ -19,6 +19,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
     'locale',
     'accent_color',
     'onboarding_completed_at',
+    'edit_agent_conversation_id',
     'stripe_account_id',
     'stripe_charges_enabled',
     'stripe_details_submitted',

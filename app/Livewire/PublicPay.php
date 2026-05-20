@@ -76,11 +76,11 @@ class PublicPay extends Component
 
         if ($amount <= 0) {
             throw ValidationException::withMessages([
-                'customAmount' => __('Bitte einen Betrag größer 0 eingeben.'),
+                'customAmount' => __('Please enter an amount greater than 0.'),
             ]);
         }
 
-        return $this->payFixed($checkout, (int) round($amount * 100), __('Tip für :name', ['name' => $this->vendor->name]));
+        return $this->payFixed($checkout, (int) round($amount * 100), __('Tip for :name', ['name' => $this->vendor->name]));
     }
 
     #[Computed]

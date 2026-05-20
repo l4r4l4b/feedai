@@ -17,14 +17,15 @@
         role="log"
         aria-live="polite"
     >
-        {{-- Static greeting card --}}
-        <li class="flex justify-start" wire:key="greeting">
-            <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
-                <p>Hi{{ $vendorName !== '' ? ' '.$vendorName : '' }}!</p>
-                <p>Good to meet you. Tell me briefly — what do you do, and where?</p>
-                <p>You can attach photos right here — multiple at once works too.</p>
-            </div>
-        </li>
+        {{-- Static intro card when no messages yet --}}
+        @if ($chatMessages->isEmpty())
+            <li class="flex justify-start" wire:key="intro">
+                <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
+                    <p>{{ __('What should we change?') }}</p>
+                    <p>{{ __('Tell me what to tweak — opening hours, a new menu item, swap the hero image. I can also suggest what to add.') }}</p>
+                </div>
+            </li>
+        @endif
 
         {{-- Persisted DB messages --}}
         @foreach ($chatMessages as $message)
@@ -71,7 +72,7 @@
             </li>
         @endforeach
 
-        {{-- Optimistic user bubble: shown between submitPrompt and runAgent --}}
+        {{-- Optimistic user bubble --}}
         @if ($pendingText !== '' || ! empty($pendingImageUrls))
             <li class="flex justify-end" wire:key="pending">
                 <div class="max-w-[85%] flex flex-col items-end gap-2">
@@ -97,7 +98,7 @@
             </li>
         @endif
 
-        {{-- Typing indicator: visible while submitPrompt OR runAgent is running --}}
+        {{-- Typing indicator --}}
         <li
             wire:loading.flex
             wire:target="submitPrompt,runAgent,photos"
@@ -114,7 +115,7 @@
         </li>
     </ol>
 
-    {{-- Photo preview strip before send --}}
+    {{-- Photo preview strip --}}
     @if (! empty($photos))
         <div class="flex items-center gap-2 overflow-x-auto border-t border-line bg-surface px-4 py-2">
             @foreach ($photos as $i => $photo)
@@ -128,7 +129,7 @@
                         type="button"
                         wire:click="removePhoto({{ $i }})"
                         class="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-canvas text-[10px]"
-                        aria-label="Remove"
+                        aria-label="{{ __('Remove') }}"
                     >
                         ×
                     </button>
@@ -155,7 +156,7 @@
         <textarea
             wire:model="draft"
             rows="1"
-            placeholder="Just start typing…"
+            placeholder="{{ __('Ask for a tweak…') }}"
             class="flex-1 resize-none rounded-full border-[1.5px] border-line bg-canvas px-4 py-2.5 text-body text-text placeholder:text-soft-muted focus:border-ink focus:outline-none"
             x-on:keydown.enter.prevent="$el.form.requestSubmit()"
             wire:loading.attr="disabled"
@@ -167,7 +168,7 @@
             wire:loading.attr="disabled"
             wire:target="submitPrompt,runAgent,photos"
             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-canvas transition hover:opacity-90 disabled:opacity-50"
-            aria-label="Send"
+            aria-label="{{ __('Send') }}"
         >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
                 <path d="M5 12h14M13 5l7 7-7 7"/>

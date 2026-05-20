@@ -13,14 +13,15 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 /**
- * Tourist-Chat-View. Wird per Token aus der Contact-Form-Submit-Route aufgerufen.
- * Kein Login nötig — der Token in der URL ist Auth+Identity.
+ * Tourist chat view. Invoked by token from the contact-form submit route.
+ * No login required — the token in the URL serves as auth + identity.
  *
- * Zeigt alle Messages der Conversation in der Tourist-Sprache (translated_text
- * fallback auf original_text). Tourist kann weitere Nachrichten posten.
+ * Shows all messages of the conversation in the tourist's language
+ * (translated_text with fallback to original_text). Tourist can post more
+ * messages.
  *
- * Eingebettet im Public-Layout damit die Tourist-Bottom-Nav (Feed/Pay/Contact)
- * verfügbar bleibt — der Contact-Tab markiert sich aktiv.
+ * Embedded in the public layout so the tourist bottom nav (Feed/Pay/Contact)
+ * stays available — the contact tab marks itself active.
  */
 #[Title('Chat')]
 class ConversationView extends Component

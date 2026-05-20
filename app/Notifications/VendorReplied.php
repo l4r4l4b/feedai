@@ -8,9 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Mail-Benachrichtigung an den Touristen wenn der Vendor antwortet.
- * Versand nur falls der Tourist beim Contact-Form eine Email angegeben hat.
- * Link führt zur signed-URL-Chat-View, kein Login erforderlich.
+ * Mail notification to the tourist when the vendor replies. Only sent if
+ * the tourist provided an email on the contact form. The link goes to the
+ * token-based chat view — no login required.
  */
 class VendorReplied extends Notification
 {
@@ -32,10 +32,10 @@ class VendorReplied extends Notification
         $url = route('conversations.show', ['conversation' => $this->conversation->token]);
 
         return (new MailMessage)
-            ->subject($vendorName.' hat dir geantwortet')
+            ->subject($vendorName.' replied to you')
             ->greeting('Hi!')
-            ->line($vendorName.' hat auf deine Nachricht geantwortet.')
-            ->action('Antwort lesen', $url)
-            ->line('Du kannst direkt antworten — wir übersetzen automatisch.');
+            ->line($vendorName.' answered your message.')
+            ->action('Read reply', $url)
+            ->line('You can reply right back — we translate automatically.');
     }
 }

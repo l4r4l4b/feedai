@@ -16,11 +16,11 @@ use Livewire\Component;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Vendor-Dashboard. Live-Preview links, Component-Liste rechts mit Edit-Drawer.
+ * Vendor dashboard. Live preview on the left, component list on the right with edit drawer.
  *
- * Der Drawer ist ein simpler JSON-Editor — er gibt die rohen Frontmatter-Felder
- * als YAML zum Bearbeiten frei. Damit kann der Vendor exakt dieselben Werte
- * editieren, die der AI-Agent über fillComponent setzt.
+ * The drawer is a simple JSON editor — it exposes the raw frontmatter fields
+ * as YAML for editing. This lets the vendor edit exactly the same values
+ * the AI agent sets via fillComponent.
  */
 #[Layout('layouts.app')]
 #[Title('Dashboard')]
@@ -104,10 +104,10 @@ class Page extends Component
 
         $loaded = $loader->loadComponent($this->vendorSlug, 'home', $type, $file);
 
-        // Yaml::dump zeigt die Felder so wie sie auch in der MD-Datei stehen
-        // (snake_case Keys). Die camelCase-Transformation im Loader wird hier
-        // umgangen indem wir das raw-File neu parsen wäre overkill — wir
-        // konvertieren stattdessen camel zurück nach snake für die Anzeige.
+        // Yaml::dump shows the fields the way they also appear in the MD file
+        // (snake_case keys). Bypassing the camelCase transformation in the
+        // loader by re-parsing the raw file would be overkill — instead, we
+        // convert camel back to snake for display.
         $rawFields = $this->camelToSnakeKeys($loaded['fields']);
 
         $this->editingType = $type;
@@ -133,13 +133,13 @@ class Page extends Component
             /** @var array<string, mixed>|null $fields */
             $fields = Yaml::parse($this->editingYaml) ?? [];
         } catch (\Throwable $e) {
-            $this->editError = 'YAML konnte nicht geparst werden: '.$e->getMessage();
+            $this->editError = 'YAML could not be parsed: '.$e->getMessage();
 
             return;
         }
 
         if (! is_array($fields)) {
-            $this->editError = 'YAML muss ein Objekt sein, kein Skalar.';
+            $this->editError = 'YAML must be an object, not a scalar.';
 
             return;
         }

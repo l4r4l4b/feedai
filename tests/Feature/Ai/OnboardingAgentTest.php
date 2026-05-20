@@ -58,9 +58,11 @@ it('communicates the one-question-per-turn rule', function () {
     $instructions = (string) (new OnboardingAgent($vendor))->instructions();
 
     expect($instructions)
-        ->toContain('Eine Frage pro Turn.')
+        ->toContain('one question')
         ->toContain('initializeVendorFeed')
-        ->toContain('finalizeOnboarding');
+        ->toContain('finalizeOnboarding')
+        ->toContain('Phased Workflow')
+        ->toContain('Magazine Editorial Voice');
 });
 
 it('responds to prompts when faked', function () {
