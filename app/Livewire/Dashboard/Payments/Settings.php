@@ -54,8 +54,21 @@ class Settings extends Component
 
     public function startStripeOnboarding(StripeConnect $stripe)
     {
+        $vendor = $this->vendor->fresh();
+
+        // Demo path: no real Stripe credentials → instantly mark the vendor
+        // as active. Lets the hackathon demo end with a working "Active"
+        // state instead of a Stripe API error.
+        if ($stripe->isDemoMode()) {
+            $stripe->activateDemo($vendor);
+            $this->vendor = $vendor->fresh();
+            Flux::toast(variant: 'success', text: __('Stripe activated in demo mode — cards are accepted on your feed.'));
+
+            return null;
+        }
+
         $link = $stripe->createOnboardingLink(
-            $this->vendor->fresh(),
+            $vendor,
             returnUrl: route('dashboard.payments.stripe.return'),
             refreshUrl: route('dashboard.payments.stripe.refresh'),
         );

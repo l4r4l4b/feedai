@@ -41,6 +41,10 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
         // Platform fee in basis points (100 = 1%). 0 = FeedAI takes nothing.
         'platform_fee_bps' => (int) env('STRIPE_PLATFORM_FEE_BPS', 0),
+        // Demo mode: instantly mark a vendor as Stripe-active without any real
+        // API call. Auto-enabled when STRIPE_SECRET is empty so the hackathon
+        // flow doesn't dead-end at "Connect Stripe".
+        'demo_mode' => env('STRIPE_DEMO_MODE', empty(env('STRIPE_SECRET'))),
     ],
 
 ];

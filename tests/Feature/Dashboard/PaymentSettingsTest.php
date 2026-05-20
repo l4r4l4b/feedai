@@ -66,3 +66,23 @@ it('shows the active badge for Stripe once charges are enabled', function () {
         ->assertOk()
         ->assertSeeInOrder(['Credit card', 'Active']);
 });
+
+it('instantly activates Stripe in demo mode (no real API call)', function () {
+    config()->set('services.stripe.demo_mode', true);
+
+    $user = User::factory()->vendor()->create();
+    $vendor = Vendor::factory()->for($user)->create([
+        'stripe_account_id' => null,
+        'stripe_charges_enabled' => false,
+        'stripe_details_submitted' => false,
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(Settings::class)
+        ->call('startStripeOnboarding');
+
+    expect($vendor->fresh())
+        ->stripe_account_id->toStartWith('acct_demo_')
+        ->stripe_charges_enabled->toBeTrue()
+        ->stripe_details_submitted->toBeTrue();
+});

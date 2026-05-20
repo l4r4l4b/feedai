@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Vendor;
+use Illuminate\Support\Str;
 use Stripe\Account;
 use Stripe\AccountLink;
 use Stripe\StripeClient;
@@ -26,6 +27,33 @@ class StripeConnect
     public function __construct(
         protected StripeClient $stripe,
     ) {}
+
+    /**
+     * Demo mode skips every Stripe API call. Enabled automatically when no
+     * STRIPE_SECRET is configured — flips vendor flags locally so the rest
+     * of the app (acceptsCards(), payments page) behaves as if onboarded.
+     */
+    public function isDemoMode(): bool
+    {
+        return (bool) config('services.stripe.demo_mode');
+    }
+
+    /**
+     * Mark a vendor as Stripe-active without ever hitting Stripe. Used as
+     * the demo path when there's no live Stripe Connect platform configured.
+     */
+    public function activateDemo(Vendor $vendor): void
+    {
+        if (! $vendor->stripe_account_id) {
+            $vendor->stripe_account_id = 'acct_demo_'.Str::lower(Str::random(16));
+        }
+
+        $vendor->forceFill([
+            'stripe_account_id' => $vendor->stripe_account_id,
+            'stripe_charges_enabled' => true,
+            'stripe_details_submitted' => true,
+        ])->save();
+    }
 
     /**
      * Provision a Stripe Express account for the vendor (idempotent).

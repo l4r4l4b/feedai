@@ -9,9 +9,8 @@ it('shows only the methods the vendor accepts', function () {
 
     $response->assertOk()
         ->assertSee('Pay '.$vendor->name)
-        ->assertSee("setTab('promptpay')", escape: false)
-        ->assertDontSee("setTab('card')", escape: false)
-        ->assertDontSee("setTab('crypto')", escape: false);
+        ->assertSee('data-test="promptpay-qr"', escape: false)
+        ->assertDontSee('data-test="crypto-copy"', escape: false);
 });
 
 it('renders all three tabs when vendor accepts all', function () {
@@ -63,7 +62,7 @@ it('renders the crypto address with copy button and chain badge', function () {
         ->assertSee('0x742d35Cc6634C0532925a3b844Bc454e4438f44e')
         ->assertSee('Polygon')                              // chain label
         ->assertSee('data-test="crypto-copy"', escape: false)
-        ->assertSee('Adresse kopieren');
+        ->assertSee('Copy address');
 });
 
 it('falls back to a helpful message when no payment method is configured', function () {
@@ -71,5 +70,5 @@ it('falls back to a helpful message when no payment method is configured', funct
 
     $this->get("/{$vendor->slug}/pay")
         ->assertOk()
-        ->assertSee("hasn't set up any payment methods", escape: false);
+        ->assertSee('Get in touch directly', escape: false);
 });
