@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\StripeReturnController;
 use App\Http\Controllers\Public\ContactSubmitController;
+use App\Http\Controllers\Public\SetLocaleController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Dashboard\AccentSettings;
 use App\Livewire\Dashboard\Inbox;
@@ -21,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 use Stripe\StripeClient;
 
 Route::view('/', 'welcome')->name('home');
+
+Route::get('/locale/{locale}', SetLocaleController::class)
+    ->where('locale', '[a-z]{2}')
+    ->name('locale.set');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/onboarding', OnboardingPage::class)->name('onboarding');

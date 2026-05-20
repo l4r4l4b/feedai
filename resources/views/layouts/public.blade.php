@@ -21,56 +21,44 @@
 >
     <a id="top" class="sr-only" tabindex="-1">{{ __('Top') }}</a>
 
-    {{-- Locale switcher — top-right pill. Sets the feedai_locale cookie via
-         a one-off JS handler and reloads. Hidden inside builder iframes
-         (the vendor edits in their own language, not the tourist's). --}}
+    {{-- Top navbar with the locale switcher. Pure server-rendered links
+         hitting /locale/{code} which sets a 180-day cookie and bounces
+         back — no JavaScript needed, no Alpine. Hidden in builder
+         iframes (the vendor edits in their own language). --}}
     @unless ($isBuilder)
-        <div
-            class="fixed right-4 top-4 z-40"
-            x-data="{
-                open: false,
-                set(locale) {
-                    document.cookie = 'feedai_locale=' + locale + ';path=/;max-age=' + (60*60*24*180);
-                    window.location.reload();
-                }
-            }"
-        >
-            <button
-                type="button"
-                x-on:click="open = !open"
-                class="flex items-center gap-1 rounded-full border border-line bg-canvas px-3 py-1.5 text-caption font-semibold text-ink shadow-sm transition hover:border-ink"
-                aria-label="{{ __('Change language') }}"
-            >
-                <span aria-hidden="true">🌐</span>
-                <span>{{ $localeLabels[$viewerLocale] ?? strtoupper($viewerLocale) }}</span>
-            </button>
-            <div
-                x-show="open"
-                x-cloak
-                x-on:click.outside="open = false"
-                x-transition.opacity
-                class="absolute right-0 mt-2 flex w-32 flex-col overflow-hidden rounded-md border border-line bg-canvas shadow-md"
-            >
-                @foreach ($localeLabels as $code => $label)
-                    <button
-                        type="button"
-                        x-on:click="set('{{ $code }}')"
-                        @class([
-                            'flex items-center justify-between gap-2 px-3 py-2 text-caption text-text transition hover:bg-surface',
-                            'font-semibold text-ink' => $viewerLocale === $code,
-                        ])
+        <header class="sticky top-0 z-30 border-b border-line bg-canvas/95 backdrop-blur-sm">
+            <div class="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-5 py-2 md:max-w-2xl md:px-8">
+                @if (! empty($vendor['slug']))
+                    <a
+                        href="{{ url('/'.$vendor['slug']) }}"
+                        class="truncate text-caption uppercase tracking-wide text-muted transition hover:text-ink"
                     >
-                        <span>{{ $label }}</span>
-                        @if ($viewerLocale === $code)
-                            <span aria-hidden="true">✓</span>
-                        @endif
-                    </button>
-                @endforeach
+                        {{ $vendor['name'] ?? 'FeedAI' }}
+                    </a>
+                @else
+                    <span class="text-caption uppercase tracking-wide text-muted">{{ $vendor['name'] ?? 'FeedAI' }}</span>
+                @endif
+
+                <nav class="flex items-center gap-1 rounded-full border border-line bg-surface p-1" aria-label="{{ __('Language') }}">
+                    @foreach ($localeLabels as $code => $label)
+                        <a
+                            href="{{ route('locale.set', ['locale' => $code]) }}"
+                            @class([
+                                'rounded-full px-3 py-1 text-caption font-semibold transition',
+                                'bg-ink text-canvas' => $viewerLocale === $code,
+                                'text-muted hover:bg-canvas hover:text-ink' => $viewerLocale !== $code,
+                            ])
+                            aria-current="{{ $viewerLocale === $code ? 'true' : 'false' }}"
+                        >
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </nav>
             </div>
-        </div>
+        </header>
     @endunless
 
-    <main class="mx-auto min-h-screen w-full max-w-md px-5 {{ $isBuilder ? 'pb-10' : 'pb-28' }} pt-6 md:max-w-2xl md:px-8 md:pt-10">
+    <main class="mx-auto min-h-screen w-full max-w-md px-5 {{ $isBuilder ? 'pb-10' : 'pb-28' }} {{ $isBuilder ? 'pt-6' : 'pt-4' }} md:max-w-2xl md:px-8 {{ $isBuilder ? 'md:pt-10' : 'md:pt-6' }}">
         {{ $slot }}
     </main>
 
