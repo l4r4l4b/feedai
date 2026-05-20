@@ -26,12 +26,25 @@
         role="log"
         aria-live="polite"
     >
-        {{-- Static greeting card --}}
+        {{-- Static greeting + onboarding overview --}}
         <li class="flex justify-start" wire:key="greeting">
-            <div class="max-w-[85%] space-y-2 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
-                <p>Hi{{ $vendorName !== '' ? ' '.$vendorName : '' }}!</p>
-                <p>Good to meet you. Tell me briefly — what do you do, and where?</p>
-                <p>You can attach photos right here — multiple at once works too.</p>
+            <div class="max-w-[90%] space-y-3 rounded-md rounded-bl-sm bg-surface px-4 py-3 text-body text-text">
+                <p>Hi{{ $vendorName !== '' ? ' '.$vendorName : '' }}! 👋</p>
+                <p>
+                    I'll build your public feed with you in <strong>6 quick steps</strong>:
+                </p>
+                <ol class="ml-4 list-decimal space-y-0.5 text-caption text-muted">
+                    <li>Who you are + where</li>
+                    <li>A short story about your business</li>
+                    <li>Your offerings (dishes / services / tours)</li>
+                    <li>Opening hours</li>
+                    <li>Contact channels (WhatsApp, LINE, phone…)</li>
+                    <li>Review &amp; go live</li>
+                </ol>
+                <p class="text-caption text-muted">
+                    Answer in your own words — I rewrite everything in a polished, magazine-friendly tone. Attach photos any time (paperclip ↓), they auto-fit the right spots. Watch the preview on the left update live.
+                </p>
+                <p>Let's start: <strong>what's your business called, and what do you do?</strong></p>
             </div>
         </li>
 

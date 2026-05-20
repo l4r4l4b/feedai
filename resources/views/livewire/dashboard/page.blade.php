@@ -48,6 +48,35 @@
     </div>
 @endif
 
+{{-- First-visit dashboard tip — floating toast bottom-left, dismissable
+     via localStorage. Doesn't affect the split-view layout below. --}}
+<div
+    x-data="{ open: ! (typeof localStorage !== 'undefined' && localStorage.getItem('feedai_dash_tip') === 'dismissed') }"
+    x-show="open"
+    x-cloak
+    x-transition.opacity
+    class="fixed bottom-6 left-6 z-40 hidden max-w-sm rounded-lg border border-line bg-canvas px-4 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.16)] lg:block"
+    role="status"
+>
+    <div class="flex items-start gap-3">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-canvas">💡</span>
+        <div class="flex-1 text-caption text-text">
+            <p class="text-label">{{ __('Welcome to your feed editor.') }}</p>
+            <p class="mt-1 text-muted">
+                {{ __('Left: your public feed — guests see this exact thing. Right: chat with me to change anything. Or click any component\'s pencil icon (top-right) to open a form. Changes go live instantly.') }}
+            </p>
+        </div>
+        <button
+            type="button"
+            x-on:click="open = false; localStorage.setItem('feedai_dash_tip', 'dismissed')"
+            class="shrink-0 rounded-full p-1 text-muted transition hover:bg-surface hover:text-text"
+            aria-label="{{ __('Dismiss') }}"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
+</div>
+
 {{-- Split view — same optics as the onboarding page (iframe left, chat right).
      Negative margins cancel the Flux `[grid-area:main]` padding so the split
      reaches the viewport edges. Height subtracts the 56px mobile header
