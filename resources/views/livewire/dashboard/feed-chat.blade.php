@@ -6,10 +6,20 @@
                 const ol = this.$refs.messages;
                 if (ol) ol.scrollTop = ol.scrollHeight;
             });
+        },
+        init() {
+            this.scrollDown();
+            // Listen for iframe-originated 'edit-in-chat' postMessages and
+            // forward as a Livewire event so the backend can prefill draft.
+            window.addEventListener('message', (event) => {
+                if (event.data?.type === 'feedai:edit-in-chat' && typeof event.data.component === 'string') {
+                    Livewire.dispatch('prefill-chat-draft', { component: event.data.component });
+                }
+            });
         }
     }"
-    x-init="scrollDown()"
     x-on:chat-scroll.window="scrollDown()"
+    x-on:chat-prefill.window="$nextTick(() => $refs.draftInput?.focus())"
 >
     <ol
         x-ref="messages"
@@ -148,6 +158,7 @@
         </label>
 
         <textarea
+            x-ref="draftInput"
             wire:model="draft"
             rows="1"
             placeholder="Ask for a tweak…"

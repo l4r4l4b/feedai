@@ -17,17 +17,15 @@ beforeEach(function () {
     Queue::fake();
 });
 
-it('lists active components from the home page', function () {
+it('embeds the builder-mode iframe so the vendor sees their feed inline', function () {
     $vendor = Vendor::factory()->live()->create(['slug' => 'demo-bistro']);
     $writer = app(ContentWriter::class);
     $writer->initializeVendor($vendor);
     $writer->fillComponent($vendor, 'home', 'hero', ['image' => 'x', 'title' => 'Demo']);
-    $writer->fillComponent($vendor, 'home', 'about', ['section_label' => 'Test'], 'body text');
 
     Livewire::actingAs($vendor->user)
         ->test(Page::class)
-        ->assertSee('hero', escape: false)
-        ->assertSee('about', escape: false);
+        ->assertSee('/demo-bistro?builder=1', escape: false);
 });
 
 it('opens the editor with the current YAML for a component', function () {

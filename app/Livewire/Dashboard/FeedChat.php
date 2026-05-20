@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Ai\Models\Conversation as AiConversation;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -159,6 +160,17 @@ class FeedChat extends Component
 
         $this->dispatch('feed-updated');
         $this->dispatch('chat-scroll');
+    }
+
+    /**
+     * Prefill the draft textarea with a starter sentence when the vendor
+     * clicks the "Discuss in chat" marker on a component in the preview.
+     */
+    #[On('prefill-chat-draft')]
+    public function prefillFromComponent(string $component): void
+    {
+        $this->draft = sprintf('Edit the %s — ', $component);
+        $this->dispatch('chat-prefill');
     }
 
     public function removePhoto(int $index): void

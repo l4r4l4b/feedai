@@ -7,11 +7,15 @@
 
 <x-layouts::public :vendor="$vendor">
     <div class="flex flex-col gap-7">
-        @foreach ($components as $component)
-            @php($fields = $component['fields'])
-            @php($body = $component['body'] ?? '')
+        @foreach ($components as $comp)
+            @php($fields = $comp['fields'])
+            @php($body = $comp['body'] ?? '')
 
-            @switch($component['type'])
+            <div @class(['relative' => $builder])>
+            @if ($builder)
+                <x-feed.edit-marker :type="$comp['type']" />
+            @endif
+            @switch($comp['type'])
                 @case('hero')
                     <x-feed.hero
                         :image="$fields['image']"
@@ -152,6 +156,7 @@
                     />
                 @break
             @endswitch
+            </div>
         @endforeach
 
         {{-- Builder mode — render skeletons for required components that

@@ -85,50 +85,6 @@
             class="min-h-0 w-full flex-1 bg-canvas"
         ></iframe>
 
-        {{-- Components list footer — power-user shortcut into the YAML editor.
-             Stays collapsible so it doesn't clutter the optics. Capped height
-             + scroll prevents long lists from pushing the iframe out. --}}
-        <details class="shrink-0 border-t border-line bg-canvas px-4 py-2">
-            <summary class="cursor-pointer text-caption text-muted">
-                Components ({{ count($components) }})
-            </summary>
-            <div class="max-h-60 overflow-y-auto">
-            @if (empty($components))
-                <p class="mt-2 text-caption text-muted">
-                    No components yet — ask the chat to add something.
-                </p>
-            @else
-                <ul class="mt-2 divide-y divide-line">
-                    @foreach ($components as $component)
-                        <li class="flex items-center justify-between gap-3 py-2 text-caption">
-                            <span class="font-mono">{{ $component['type'] }}</span>
-                            <div class="flex items-center gap-3">
-                                <button
-                                    type="button"
-                                    x-on:click="$dispatch('open-component-drawer', { type: '{{ $component['type'] }}' })"
-                                    class="inline-flex items-center gap-1 text-text transition hover:opacity-70"
-                                    title="Edit with form"
-                                >
-                                    <flux:icon name="pencil-square" class="size-4" />
-                                    Edit
-                                </button>
-                                <button
-                                    type="button"
-                                    wire:click="openEditor('{{ $component['type'] }}')"
-                                    class="text-muted underline transition hover:text-text"
-                                    title="Raw YAML"
-                                >
-                                    Raw
-                                </button>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-            </div>
-        </details>
-
-        {{-- iframe section also needs the shrink class on its header so flex math works --}}
     </section>
 
     <aside class="flex h-1/2 w-full min-h-0 flex-col bg-canvas md:h-full md:w-2/5">
