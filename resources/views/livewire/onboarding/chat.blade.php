@@ -6,9 +6,18 @@
                 const ol = this.$refs.messages;
                 if (ol) ol.scrollTop = ol.scrollHeight;
             });
+        },
+        init() {
+            this.scrollDown();
+            // Edit-in-chat marker in the preview iframe postMessages here;
+            // forward as a Livewire event so the agent picks it up.
+            window.addEventListener('message', (event) => {
+                if (event.data?.type === 'feedai:edit-in-chat' && typeof event.data.component === 'string') {
+                    Livewire.dispatch('prefill-chat-draft', { component: event.data.component });
+                }
+            });
         }
     }"
-    x-init="scrollDown()"
     x-on:chat-scroll.window="scrollDown()"
 >
     <ol

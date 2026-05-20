@@ -70,6 +70,19 @@ it('ignores empty submissions', function () {
         ->assertSet('queuedPrompt', '');
 });
 
+it('sends an immediate message when prefill-chat-draft fires', function () {
+    EditAgent::fake(['Sure, what should we change about it?']);
+
+    $vendor = Vendor::factory()->live()->create();
+    app(ContentWriter::class)->initializeVendor($vendor);
+
+    Livewire::actingAs($vendor->user)
+        ->test(FeedChat::class)
+        ->dispatch('prefill-chat-draft', component: 'hero')
+        ->assertSet('pendingText', "I'd like to edit the hero. What can we change?")
+        ->assertSet('draft', '');
+});
+
 it('aborts 404 for users without a vendor', function () {
     $user = User::factory()->create(['role' => 'vendor']);
 

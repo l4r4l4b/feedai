@@ -19,7 +19,6 @@
         }
     }"
     x-on:chat-scroll.window="scrollDown()"
-    x-on:chat-prefill.window="$nextTick(() => $refs.draftInput?.focus())"
 >
     <ol
         x-ref="messages"
@@ -158,7 +157,6 @@
         </label>
 
         <textarea
-            x-ref="draftInput"
             wire:model="draft"
             rows="1"
             placeholder="Ask for a tweak…"

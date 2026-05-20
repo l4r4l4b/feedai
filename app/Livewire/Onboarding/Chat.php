@@ -13,11 +13,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Ai\Models\Conversation as AiConversation;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Onboarding chat — two-step send + multi-image + DB-backed history.
@@ -184,6 +186,38 @@ class Chat extends Component
         }
 
         return null;
+    }
+
+    /**
+     * Sends an immediate message when the vendor clicks "Discuss in chat"
+     * on a component marker. Mirrors Dashboard\FeedChat for consistency.
+     */
+    #[On('prefill-chat-draft')]
+    public function prefillFromComponent(string $component, VendorImageIngestor $ingestor): void
+    {
+        $this->draft = sprintf(
+            "I'd like to edit the %s. What can we change?",
+            $this->componentLabel($component),
+        );
+        $this->submitPrompt($ingestor);
+    }
+
+    private function componentLabel(string $type): string
+    {
+        $path = config_path("feedai/component-schemas/{$type}.yaml");
+
+        if (is_file($path)) {
+            try {
+                $schema = Yaml::parseFile($path);
+                if (is_array($schema) && ! empty($schema['label'])) {
+                    return mb_strtolower((string) $schema['label']);
+                }
+            } catch (\Throwable) {
+                // fall through
+            }
+        }
+
+        return str_replace('_', ' ', $type);
     }
 
     public function removePhoto(int $index): void

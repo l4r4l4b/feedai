@@ -18,6 +18,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Dashboard edit chat — drives the live feed via EditAgent.
@@ -163,14 +164,40 @@ class FeedChat extends Component
     }
 
     /**
-     * Prefill the draft textarea with a starter sentence when the vendor
-     * clicks the "Discuss in chat" marker on a component in the preview.
+     * Sends an immediate message when the vendor clicks "Discuss in chat"
+     * on a component marker. Reuses the two-step submit flow so the user
+     * bubble appears instantly and the agent picks it up.
      */
     #[On('prefill-chat-draft')]
     public function prefillFromComponent(string $component): void
     {
-        $this->draft = sprintf('Edit the %s — ', $component);
-        $this->dispatch('chat-prefill');
+        $this->draft = sprintf(
+            "I'd like to edit the %s. What can we change?",
+            $this->componentLabel($component),
+        );
+        $this->submitPrompt(app(VendorImageIngestor::class));
+    }
+
+    /**
+     * Looks up the friendly label for a component type from its YAML schema.
+     * Falls back to a humanised version of the slug if the schema is missing.
+     */
+    private function componentLabel(string $type): string
+    {
+        $path = config_path("feedai/component-schemas/{$type}.yaml");
+
+        if (is_file($path)) {
+            try {
+                $schema = Yaml::parseFile($path);
+                if (is_array($schema) && ! empty($schema['label'])) {
+                    return mb_strtolower((string) $schema['label']);
+                }
+            } catch (\Throwable) {
+                // fall through
+            }
+        }
+
+        return str_replace('_', ' ', $type);
     }
 
     public function removePhoto(int $index): void
