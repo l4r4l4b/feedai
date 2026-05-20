@@ -79,9 +79,17 @@ class ConversationView extends Component
             'accent_color' => $vendor->accent_color,
         ];
 
+        $messages = $conversation->messages()->orderBy('created_at')->get();
+
+        // Mark vendor replies as read once the tourist actually loads them.
+        $conversation->messages()
+            ->where('sender', 'vendor')
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
         return view('livewire.public.conversation-view', [
             'conversation' => $conversation,
-            'messages' => $conversation->messages()->orderBy('created_at')->get(),
+            'messages' => $messages,
             'vendor' => $vendorArray,
         ])->layout('layouts.public', [
             'vendor' => $vendorArray,

@@ -37,6 +37,7 @@ class Inbox extends Component
     public function render(): View
     {
         $conversations = Conversation::with(['messages' => fn ($q) => $q->latest()->limit(1)])
+            ->withCount(['messages as unread_count' => fn ($q) => $q->where('sender', 'tourist')->whereNull('read_at')])
             ->where('vendor_id', $this->vendorId)
             ->orderByDesc('last_message_at')
             ->get();

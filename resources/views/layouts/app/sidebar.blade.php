@@ -16,8 +16,17 @@
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                     @if (auth()->user()?->isVendor())
+                        @php
+                            $unreadCount = \App\Models\Message::whereHas('conversation', fn ($q) => $q->where('vendor_id', auth()->user()->vendor?->id))
+                                ->where('sender', 'tourist')
+                                ->whereNull('read_at')
+                                ->count();
+                        @endphp
                         <flux:sidebar.item icon="inbox" :href="route('inbox')" :current="request()->routeIs('inbox*')" wire:navigate>
                             {{ __('Inbox') }}
+                            @if ($unreadCount > 0)
+                                <flux:badge size="sm" color="zinc" class="ml-auto">{{ $unreadCount }}</flux:badge>
+                            @endif
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="paint-brush" :href="route('dashboard.accent')" :current="request()->routeIs('dashboard.accent')" wire:navigate>
                             {{ __('Accent color') }}

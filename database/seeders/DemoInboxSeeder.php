@@ -25,7 +25,7 @@ class DemoInboxSeeder extends Seeder
 
         $this->seedConversation(
             vendor: $vendor,
-            token: str_pad('lena-tom-de', 48, 'a'),
+            token: str_pad('lenatomde', 48, 'a'),
             touristLocale: 'de',
             touristName: 'Lena & Tom',
             touristEmail: 'lena@example.test',
@@ -59,7 +59,7 @@ class DemoInboxSeeder extends Seeder
 
         $this->seedConversation(
             vendor: $vendor,
-            token: str_pad('sara-en', 48, 'b'),
+            token: str_pad('saraen', 48, 'b'),
             touristLocale: 'en',
             touristName: 'Sara',
             touristEmail: null,
