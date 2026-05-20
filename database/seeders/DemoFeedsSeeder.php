@@ -50,7 +50,7 @@ class DemoFeedsSeeder extends Seeder
                 'accent_color' => '#3F2C20',
                 'promptpay' => '0812222111',
                 'hero' => [
-                    'image' => 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=80',
+                    'image' => 'https://images.unsplash.com/photo-1772993629858-5ca090cf226a?w=1200&q=80',
                     'title' => 'Khao San Coffee Lab',
                     'location' => 'Khao San Road · Bangkok',
                     'rating' => '4.9 (412)',
@@ -60,11 +60,11 @@ class DemoFeedsSeeder extends Seeder
                 'menu' => [
                     'section_label' => 'COFFEE & DRINKS',
                     'items' => [
-                        ['name' => 'Slow Cold Brew', 'price' => '120 THB', 'description' => '12-hour drip, Doi Chaang honey-process beans, served black.', 'image' => 'https://picsum.photos/seed/coldbrew-doichaang/600/600'],
-                        ['name' => 'Coconut Iced Latte', 'price' => '110 THB', 'description' => 'Double espresso, ice, condensed coconut milk — local way.', 'image' => 'https://picsum.photos/seed/coconut-iced-latte/600/600'],
-                        ['name' => 'Espresso Doppio', 'price' => '85 THB', 'description' => 'Two ristretto shots from our house Chiang Rai blend.', 'image' => 'https://picsum.photos/seed/espresso-doppio/600/600'],
-                        ['name' => 'Single-Origin Pour-Over', 'price' => '150 THB', 'description' => 'V60, rotating bean, 3-minute steep, ceramic dripper.', 'image' => 'https://picsum.photos/seed/pourover-v60/600/600'],
-                        ['name' => 'Affogato', 'price' => '140 THB', 'description' => 'Espresso poured tableside over local vanilla bean ice cream.', 'image' => 'https://picsum.photos/seed/affogato-vanilla/600/600'],
+                        ['name' => 'Slow Cold Brew', 'price' => '120 THB', 'description' => '12-hour drip, Doi Chaang honey-process beans, served black.', 'image' => 'https://images.unsplash.com/photo-1549652127-2e5e59e86a7a?w=800&q=80'],
+                        ['name' => 'Coconut Iced Latte', 'price' => '110 THB', 'description' => 'Double espresso, ice, condensed coconut milk — local way.', 'image' => 'https://images.unsplash.com/photo-1595000453467-15d064f058c8?w=800&q=80'],
+                        ['name' => 'Espresso Doppio', 'price' => '85 THB', 'description' => 'Two ristretto shots from our house Chiang Rai blend.', 'image' => 'https://images.unsplash.com/photo-1705952285570-113e76f63fb0?w=800&q=80'],
+                        ['name' => 'Single-Origin Pour-Over', 'price' => '150 THB', 'description' => 'V60, rotating bean, 3-minute steep, ceramic dripper.', 'image' => 'https://images.unsplash.com/photo-1541469406036-71229832e06e?w=800&q=80'],
+                        ['name' => 'Affogato', 'price' => '140 THB', 'description' => 'Espresso poured tableside over local vanilla bean ice cream.', 'image' => 'https://images.unsplash.com/photo-1638543284847-3a6bed3e1689?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
@@ -104,7 +104,7 @@ class DemoFeedsSeeder extends Seeder
                 'accent_color' => '#B5483A',
                 'promptpay' => '0823344551',
                 'hero' => [
-                    'image' => 'https://images.unsplash.com/photo-1583468982228-19f19164aee2?w=1200&q=80',
+                    'image' => 'https://images.unsplash.com/photo-1547730899-ba038ec3b91f?w=1200&q=80',
                     'title' => "Niran's Tuk-Tuk Adventures",
                     'location' => 'Banglamphu · Bangkok',
                     'rating' => '4.97 (188)',
@@ -114,10 +114,10 @@ class DemoFeedsSeeder extends Seeder
                 'menu' => [
                     'section_label' => 'TOURS & TRANSFERS',
                     'items' => [
-                        ['name' => 'Old Town Half-Day', 'price' => '1,500 THB', 'description' => '3 hours · Wat Pho, Wat Arun, amulet market, hidden coffee stops.', 'image' => 'https://picsum.photos/seed/oldtown-tour-wat/600/600'],
-                        ['name' => 'Full-Day Bangkok', 'price' => '2,800 THB', 'description' => '6 hours · temples, klongs, Chinatown, sunset rooftop.', 'image' => 'https://picsum.photos/seed/fullday-bangkok-tour/600/600'],
-                        ['name' => 'Night Market & Street Food Crawl', 'price' => '1,800 THB', 'description' => '4 hours · five eat stops, Niran knows the cleanest stalls.', 'image' => 'https://picsum.photos/seed/night-market-street-food/600/600'],
-                        ['name' => 'BKK Airport Transfer', 'price' => '1,200 THB', 'description' => 'Suvarnabhumi → hotel, fixed price, no meter games.', 'image' => 'https://picsum.photos/seed/tuktuk-airport-transfer/600/600'],
+                        ['name' => 'Old Town Half-Day', 'price' => '1,500 THB', 'description' => '3 hours · Wat Pho, Wat Arun, amulet market, hidden coffee stops.', 'image' => 'https://images.unsplash.com/photo-1613672803979-a6edfc5a179b?w=800&q=80'],
+                        ['name' => 'Full-Day Bangkok', 'price' => '2,800 THB', 'description' => '6 hours · temples, klongs, Chinatown, sunset rooftop.', 'image' => 'https://images.unsplash.com/photo-1615619825440-f18cea64b00e?w=800&q=80'],
+                        ['name' => 'Night Market & Street Food Crawl', 'price' => '1,800 THB', 'description' => '4 hours · five eat stops, Niran knows the cleanest stalls.', 'image' => 'https://images.unsplash.com/photo-1774703699692-7c4b3b0198b4?w=800&q=80'],
+                        ['name' => 'BKK Airport Transfer', 'price' => '1,200 THB', 'description' => 'Suvarnabhumi → hotel, fixed price, no meter games.', 'image' => 'https://images.unsplash.com/photo-1583493870655-34bea2fcdefb?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
@@ -156,7 +156,7 @@ class DemoFeedsSeeder extends Seeder
                 'accent_color' => '#2D5A3D',
                 'promptpay' => '0834455667',
                 'hero' => [
-                    'image' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1200&q=80',
+                    'image' => 'https://images.unsplash.com/photo-1741522509438-a120c0bb5e88?w=1200&q=80',
                     'title' => 'Pranee Thai Massage',
                     'location' => 'Sukhumvit Soi 11 · Bangkok',
                     'rating' => '4.93 (276)',
@@ -166,11 +166,11 @@ class DemoFeedsSeeder extends Seeder
                 'menu' => [
                     'section_label' => 'บริการนวด',
                     'items' => [
-                        ['name' => 'นวดแผนไทยโบราณ 60 นาที', 'price' => '600 บาท', 'description' => 'นวดกดจุดด้วยมือเปล่า ไม่ใช้น้ำมัน เน้นแก้ปวดเมื่อย', 'image' => 'https://picsum.photos/seed/traditional-thai-60/600/600'],
-                        ['name' => 'นวดแผนไทย 90 นาที', 'price' => '900 บาท', 'description' => 'แบบเต็มร่างกาย ครูใช้เวลาเต็มที่ทุกจุด', 'image' => 'https://picsum.photos/seed/thai-massage-90min/600/600'],
-                        ['name' => 'นวดน้ำมันอโรมา 60 นาที', 'price' => '800 บาท', 'description' => 'น้ำมันหอมสกัดจากเลม่อนกราสและตะไคร้ ผ่อนคลายลึก', 'image' => 'https://picsum.photos/seed/aroma-oil-60min/600/600'],
-                        ['name' => 'นวดเท้า 60 นาที', 'price' => '500 บาท', 'description' => 'กดจุดสะท้อนเท้า ดีสำหรับคนเดินทั้งวัน', 'image' => 'https://picsum.photos/seed/foot-reflexology-60/600/600'],
-                        ['name' => 'ลูกประคบสมุนไพร 90 นาที', 'price' => '1,200 บาท', 'description' => 'ประคบร้อนด้วยสมุนไพรไทย 12 ชนิด แก้ปวดเรื้อรัง', 'image' => 'https://picsum.photos/seed/herbal-compress/600/600'],
+                        ['name' => 'นวดแผนไทยโบราณ 60 นาที', 'price' => '600 บาท', 'description' => 'นวดกดจุดด้วยมือเปล่า ไม่ใช้น้ำมัน เน้นแก้ปวดเมื่อย', 'image' => 'https://images.unsplash.com/photo-1699523229212-c25a2fadeb12?w=800&q=80'],
+                        ['name' => 'นวดแผนไทย 90 นาที', 'price' => '900 บาท', 'description' => 'แบบเต็มร่างกาย ครูใช้เวลาเต็มที่ทุกจุด', 'image' => 'https://images.unsplash.com/photo-1700882304335-34d47c682a4c?w=800&q=80'],
+                        ['name' => 'นวดน้ำมันอโรมา 60 นาที', 'price' => '800 บาท', 'description' => 'น้ำมันหอมสกัดจากเลม่อนกราสและตะไคร้ ผ่อนคลายลึก', 'image' => 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80'],
+                        ['name' => 'นวดเท้า 60 นาที', 'price' => '500 บาท', 'description' => 'กดจุดสะท้อนเท้า ดีสำหรับคนเดินทั้งวัน', 'image' => 'https://images.unsplash.com/photo-1611073615830-9f76902c10fe?w=800&q=80'],
+                        ['name' => 'ลูกประคบสมุนไพร 90 นาที', 'price' => '1,200 บาท', 'description' => 'ประคบร้อนด้วยสมุนไพรไทย 12 ชนิด แก้ปวดเรื้อรัง', 'image' => 'https://images.unsplash.com/photo-1775133262667-316bd4d9e5b5?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
@@ -209,7 +209,7 @@ class DemoFeedsSeeder extends Seeder
                 'accent_color' => '#4C3A8C',
                 'promptpay' => '0845566778',
                 'hero' => [
-                    'image' => 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1200&q=80',
+                    'image' => 'https://images.unsplash.com/photo-1644027615290-06280cdefd0e?w=1200&q=80',
                     'title' => 'Walking Wat Pho with Kru Vee',
                     'location' => 'Wat Pho · Bangkok',
                     'rating' => '5.0 (94)',
@@ -219,10 +219,10 @@ class DemoFeedsSeeder extends Seeder
                 'menu' => [
                     'section_label' => 'WALKS & TOURS',
                     'items' => [
-                        ['name' => 'Sunrise Wat Pho & Reclining Buddha', 'price' => '1,200 THB', 'description' => '2 hours · 6:30 am start, before the tour buses arrive.', 'image' => 'https://picsum.photos/seed/sunrise-wat-pho/600/600'],
-                        ['name' => 'Grand Palace Half-Day', 'price' => '2,800 THB', 'description' => '4 hours · history of the Chakri dynasty, hidden murals, royal etiquette.', 'image' => 'https://picsum.photos/seed/grand-palace-tour/600/600'],
-                        ['name' => 'Chinatown Stories Walk', 'price' => '1,800 THB', 'description' => '3 hours · gold shops, herbal sellers, immigrant history, tea stop.', 'image' => 'https://picsum.photos/seed/chinatown-walk/600/600'],
-                        ['name' => 'Custom Cultural Walk', 'price' => 'From 2,000 THB', 'description' => 'Tell me what you\'re curious about — I build the route.', 'image' => 'https://picsum.photos/seed/custom-cultural-walk/600/600'],
+                        ['name' => 'Sunrise Wat Pho & Reclining Buddha', 'price' => '1,200 THB', 'description' => '2 hours · 6:30 am start, before the tour buses arrive.', 'image' => 'https://images.unsplash.com/photo-1704391445538-cf5e763234be?w=800&q=80'],
+                        ['name' => 'Grand Palace Half-Day', 'price' => '2,800 THB', 'description' => '4 hours · history of the Chakri dynasty, hidden murals, royal etiquette.', 'image' => 'https://images.unsplash.com/photo-1703508202823-9b3648ca4f18?w=800&q=80'],
+                        ['name' => 'Chinatown Stories Walk', 'price' => '1,800 THB', 'description' => '3 hours · gold shops, herbal sellers, immigrant history, tea stop.', 'image' => 'https://images.unsplash.com/photo-1704312970970-58fbe3652eb4?w=800&q=80'],
+                        ['name' => 'Custom Cultural Walk', 'price' => 'From 2,000 THB', 'description' => 'Tell me what you\'re curious about — I build the route.', 'image' => 'https://images.unsplash.com/photo-1779246364538-52e314e4a9d9?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
@@ -261,7 +261,7 @@ class DemoFeedsSeeder extends Seeder
                 'accent_color' => '#0F5C5C',
                 'promptpay' => '0856677889',
                 'hero' => [
-                    'image' => 'https://images.unsplash.com/photo-1545569310-7e93f7a93234?w=1200&q=80',
+                    'image' => 'https://images.unsplash.com/photo-1768757718450-db173fe507ee?w=1200&q=80',
                     'title' => 'Sailom Klong Boat Tours',
                     'location' => 'ท่าเรือปากเกร็ด · กรุงเทพฯ',
                     'rating' => '4.96 (152)',
@@ -271,10 +271,10 @@ class DemoFeedsSeeder extends Seeder
                 'menu' => [
                     'section_label' => 'เส้นทางเรือ',
                     'items' => [
-                        ['name' => 'คลองบางหลวง 2 ชั่วโมง', 'price' => '1,500 บาท', 'description' => 'ต่อเรือ — ผ่าน 5 วัดและตลาดน้ำเล็กๆ ที่ไม่อยู่ในแผนที่', 'image' => 'https://picsum.photos/seed/klong-bangluang-2hr/600/600'],
-                        ['name' => 'ตลาดน้ำตลิ่งชัน 4 ชั่วโมง', 'price' => '2,500 บาท', 'description' => 'เช้าตรู่ พายกลับตอนสาย แวะกินข้าวบนเรือ', 'image' => 'https://picsum.photos/seed/floating-market-tour/600/600'],
-                        ['name' => 'ทัวร์ถ่ายภาพพระอาทิตย์ขึ้น 3 ชั่วโมง', 'price' => '1,800 บาท', 'description' => 'ออก 5:30 น. หมอกคลองในแสงเช้า ช่างภาพแนะนำ', 'image' => 'https://picsum.photos/seed/sunrise-canal-photo/600/600'],
-                        ['name' => 'เช่าเรือเหมาลำ', 'price' => '800 บาท/ชม.', 'description' => 'บอกเส้นทาง ลุงพา ขั้นต่ำ 2 ชั่วโมง', 'image' => 'https://picsum.photos/seed/private-boat-charter/600/600'],
+                        ['name' => 'คลองบางหลวง 2 ชั่วโมง', 'price' => '1,500 บาท', 'description' => 'ต่อเรือ — ผ่าน 5 วัดและตลาดน้ำเล็กๆ ที่ไม่อยู่ในแผนที่', 'image' => 'https://images.unsplash.com/photo-1768241154452-c13d3026bfdf?w=800&q=80'],
+                        ['name' => 'ตลาดน้ำตลิ่งชัน 4 ชั่วโมง', 'price' => '2,500 บาท', 'description' => 'เช้าตรู่ พายกลับตอนสาย แวะกินข้าวบนเรือ', 'image' => 'https://images.unsplash.com/photo-1590118432058-f2744d6897db?w=800&q=80'],
+                        ['name' => 'ทัวร์ถ่ายภาพพระอาทิตย์ขึ้น 3 ชั่วโมง', 'price' => '1,800 บาท', 'description' => 'ออก 5:30 น. หมอกคลองในแสงเช้า ช่างภาพแนะนำ', 'image' => 'https://images.unsplash.com/photo-1576185322547-f2fc77f11836?w=800&q=80'],
+                        ['name' => 'เช่าเรือเหมาลำ', 'price' => '800 บาท/ชม.', 'description' => 'บอกเส้นทาง ลุงพา ขั้นต่ำ 2 ชั่วโมง', 'image' => 'https://images.unsplash.com/photo-1743781511190-e579f4bad265?w=800&q=80'],
                     ],
                 ],
                 'opening_hours' => [
