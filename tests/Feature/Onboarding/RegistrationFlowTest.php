@@ -18,6 +18,7 @@ it('creates user, vendor and onboarding session atomically on register', functio
         'email' => 'mae@example.test',
         'password' => 'password123',
         'password_confirmation' => 'password123',
+        'locale' => 'th',
     ]);
 
     $response->assertRedirect();
@@ -45,6 +46,7 @@ it('generates a fallback slug for purely non-ASCII names', function () {
         'email' => 'thai@example.test',
         'password' => 'password123',
         'password_confirmation' => 'password123',
+        'locale' => 'th',
     ])->assertRedirect();
 
     $vendor = User::where('email', 'thai@example.test')->first()->vendor;

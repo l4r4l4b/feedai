@@ -8,6 +8,7 @@ use App\Models\OnboardingSession;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\ContentWriter;
+use App\Support\Locale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'locale' => ['required', 'in:'.implode(',', Locale::SUPPORTED)],
         ])->validate();
 
         return DB::transaction(function () use ($input): User {
@@ -44,7 +46,7 @@ class CreateNewUser implements CreatesNewUsers
                 'slug' => $this->generateUniqueSlug($input['name']),
                 'name' => $input['name'],
                 'status' => 'draft',
-                'locale' => 'th',
+                'locale' => $input['locale'],
             ]);
 
             OnboardingSession::create([

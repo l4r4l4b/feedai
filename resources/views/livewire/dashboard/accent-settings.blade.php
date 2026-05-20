@@ -1,11 +1,32 @@
 <div class="space-y-6">
     <header>
-        <flux:heading size="xl" level="1">{{ __('Accent color') }}</flux:heading>
+        <flux:heading size="xl" level="1">{{ __('Brand') }}</flux:heading>
         <flux:text class="mt-1 text-muted">
-            {{ __('Optionally pick a color — it replaces the default black on buttons and CTAs in your feed.') }}
-            {{ __('Navigation, body text and borders stay monochrome.') }}
+            {{ __('Your source language and an optional accent color. Everything else (translations, payouts, payment options) follows from here.') }}
         </flux:text>
     </header>
+
+    <flux:card>
+        <flux:heading size="lg">{{ __('Language') }}</flux:heading>
+        <flux:text class="mt-1 text-muted" size="sm">
+            {{ __('You write your feed in this language. We translate it to the other two automatically. Switching here re-translates every component — usually 30–60 seconds with a queue worker running.') }}
+        </flux:text>
+
+        <form wire:submit="changeLocale" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <flux:field class="flex-1">
+                <flux:label>{{ __('Source language') }}</flux:label>
+                <flux:select wire:model="locale">
+                    @foreach ($localeChoices as $choice)
+                        <flux:select.option value="{{ $choice['value'] }}">{{ $choice['label'] }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:field>
+
+            <flux:button type="submit" variant="primary" class="self-start">
+                {{ __('Save & re-translate') }}
+            </flux:button>
+        </form>
+    </flux:card>
 
     <flux:card>
         <flux:heading size="lg">{{ __('Presets') }}</flux:heading>
