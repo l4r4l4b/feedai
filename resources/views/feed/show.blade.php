@@ -7,6 +7,22 @@
 
 <x-layouts::public :vendor="$vendor">
     <div class="flex flex-col gap-7">
+        {{-- Demo-mode payment receipt — shown on return from the simulated
+             Stripe checkout (?demo_paid=AMOUNT_CENTS in the URL). Real Stripe
+             success flows use the session_id flow handled elsewhere. --}}
+        @if (request('demo_paid'))
+            <div class="flex items-start gap-3 rounded-lg border border-line bg-surface px-4 py-3">
+                <span class="text-2xl" aria-hidden="true">✓</span>
+                <div class="flex-1">
+                    <p class="text-label text-text">Payment received</p>
+                    <p class="text-caption text-muted">
+                        {{ number_format(((int) request('demo_paid')) / 100, 0) }} THB to {{ $vendor['name'] ?? 'the vendor' }} —
+                        demo mode, no real card was charged.
+                    </p>
+                </div>
+            </div>
+        @endif
+
         @foreach ($components as $comp)
             @php($fields = $comp['fields'])
             @php($body = $comp['body'] ?? '')

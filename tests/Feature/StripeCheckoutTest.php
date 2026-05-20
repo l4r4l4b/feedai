@@ -8,6 +8,12 @@ use Stripe\Service\Checkout\CheckoutServiceFactory;
 use Stripe\Service\Checkout\SessionService;
 use Stripe\StripeClient;
 
+// These tests verify the real Stripe call path. Demo mode short-circuits
+// that, so disable it here — dedicated demo cases live further down.
+beforeEach(function () {
+    config()->set('services.stripe.demo_mode', false);
+});
+
 function stripeSessionStub(string $id, string $url): Session
 {
     // Stripe blocks direct `id` assignment on StripeObject — use constructFrom.
@@ -63,6 +69,31 @@ it('creates a pending payment and stripe session for a fixed amount', function (
         ->and($captured->params['line_items'][0]['price_data']['currency'])->toBe('thb')
         ->and($captured->params['line_items'][0]['price_data']['unit_amount'])->toBe(120000)
         ->and($captured->params['metadata']['payment_id'])->toBe((string) $result['payment']->id);
+});
+
+it('short-circuits to a paid demo payment when demo_mode is on', function () {
+    config()->set('services.stripe.demo_mode', true);
+
+    $client = Mockery::mock(StripeClient::class);
+    // No Stripe API call expected at all in demo mode.
+
+    $service = new StripeCheckout($client);
+    $vendor = Vendor::factory()->withStripeConnect()->create();
+
+    $result = $service->fixedAmount(
+        $vendor,
+        amountCents: 50000,
+        currency: 'THB',
+        description: 'Quick pay',
+        successUrl: 'https://feedai.test/feed',
+        cancelUrl: 'https://feedai.test/pay',
+    );
+
+    expect($result['payment']->status)->toBe('paid')
+        ->and($result['payment']->paid_at)->not->toBeNull()
+        ->and($result['payment']->provider_reference)->toStartWith('demo_')
+        ->and($result['session'])->toBeNull()
+        ->and($result['checkout_url'])->toBe('https://feedai.test/feed?demo_paid=50000');
 });
 
 it('handles custom amounts the same way as fixed amounts', function () {

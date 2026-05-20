@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\Vendor;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Stripe\Checkout\Session;
 use Stripe\StripeClient;
@@ -39,6 +40,10 @@ class StripeCheckout
         $this->ensureVendorAcceptsCards($vendor);
 
         $payment = $this->createPendingPayment($vendor, $amountCents, $currency, $description);
+
+        if ($this->isDemoMode($vendor)) {
+            return $this->simulateCheckout($payment, $successUrl);
+        }
 
         $session = $this->stripe->checkout->sessions->create($this->buildSessionParams(
             vendor: $vendor,
@@ -95,6 +100,10 @@ class StripeCheckout
         $payment = $this->createPendingPayment($vendor, $total, $currency, $description, [
             'items' => $items,
         ]);
+
+        if ($this->isDemoMode($vendor)) {
+            return $this->simulateCheckout($payment, $successUrl);
+        }
 
         $lineItems = array_map(fn ($item) => [
             'quantity' => $item['quantity'] ?? 1,
@@ -200,6 +209,44 @@ class StripeCheckout
             'payment_id' => (string) $payment->id,
             'vendor_id' => (string) $payment->vendor_id,
         ];
+    }
+
+    /**
+     * Demo mode short-circuit. Marks the pending payment as paid and returns
+     * a checkout_url that points straight back to the vendor's success page
+     * with a `demo_paid` query flag, so the pay page can render a receipt
+     * card instead of letting the tourist hit Stripe with a fake account.
+     *
+     * @return array{payment: Payment, session: null, checkout_url: string}
+     */
+    protected function simulateCheckout(Payment $payment, string $successUrl): array
+    {
+        $payment->update([
+            'status' => 'paid',
+            'provider_reference' => 'demo_'.Str::lower(Str::random(20)),
+            'metadata' => array_merge($payment->metadata ?? [], ['demo' => true]),
+            'paid_at' => now(),
+        ]);
+
+        $sep = str_contains($successUrl, '?') ? '&' : '?';
+        $url = $successUrl.$sep.'demo_paid='.$payment->amount_cents;
+
+        return [
+            'payment' => $payment->fresh(),
+            'session' => null,
+            'checkout_url' => $url,
+        ];
+    }
+
+    /**
+     * Demo when the platform flag is on OR when the vendor row holds a
+     * demo Stripe account id (acct_demo_…) — both indicate the real Stripe
+     * API can't be called for this checkout.
+     */
+    protected function isDemoMode(Vendor $vendor): bool
+    {
+        return (bool) config('services.stripe.demo_mode')
+            || str_starts_with((string) $vendor->stripe_account_id, 'acct_demo_');
     }
 
     /**
