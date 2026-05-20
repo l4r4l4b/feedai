@@ -3,20 +3,20 @@
 use App\Support\Locale;
 use Illuminate\Http\Request;
 
-it('prefers the feedai_locale cookie over everything else', function () {
+it('prefers the explicit ?lang query over a stale cookie', function () {
     $request = Request::create('/demo?lang=de', 'GET', [], ['feedai_locale' => 'th'], [], [
         'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.9',
     ]);
 
-    expect(Locale::resolve($request, 'en'))->toBe('th');
+    expect(Locale::resolve($request, 'en'))->toBe('de');
 });
 
-it('falls back to the ?lang query when no cookie', function () {
-    $request = Request::create('/demo?lang=de', 'GET', [], [], [], [
+it('uses the cookie when no explicit query is provided', function () {
+    $request = Request::create('/demo', 'GET', [], ['feedai_locale' => 'th'], [], [
         'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.9',
     ]);
 
-    expect(Locale::resolve($request, 'th'))->toBe('de');
+    expect(Locale::resolve($request, 'en'))->toBe('th');
 });
 
 it('falls back to Accept-Language when no cookie or query', function () {

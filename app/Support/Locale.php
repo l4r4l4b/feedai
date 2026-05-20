@@ -9,10 +9,11 @@ use Illuminate\Http\Request;
  * the viewer seeing this feed in" across the public surface (feed, pay,
  * contact). Priority chain:
  *
- *  1. Cookie `feedai_locale` — explicit choice via switcher
- *  2. Query `?lang=` — link sharing / QR codes
- *  3. Accept-Language header — browser default
- *  4. Vendor's source locale — last-resort fallback
+ *  1. Query `?lang=` — explicit override, wins over a stale cookie when a
+ *     vendor shares a localized link or QR code.
+ *  2. Cookie `feedai_locale` — sticky preference from the navbar switcher.
+ *  3. Accept-Language header — browser default.
+ *  4. Vendor's source locale — last-resort fallback.
  *
  * Anything outside the supported set falls through to the next layer.
  */
@@ -25,14 +26,14 @@ class Locale
 
     public static function resolve(Request $request, ?string $vendorLocale = null): string
     {
-        $cookie = (string) $request->cookie(self::COOKIE_NAME, '');
-        if (self::isSupported($cookie)) {
-            return $cookie;
-        }
-
         $query = (string) $request->query('lang', '');
         if (self::isSupported($query)) {
             return $query;
+        }
+
+        $cookie = (string) $request->cookie(self::COOKIE_NAME, '');
+        if (self::isSupported($cookie)) {
+            return $cookie;
         }
 
         // getPreferredLanguage returns $locales[0] when nothing matches —
