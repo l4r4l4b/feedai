@@ -318,6 +318,12 @@ class DemoFeedsSeeder extends Seeder
             ],
         );
 
+        // All demo vendors ship with every payment rail switched on so the
+        // pitch can demo Stripe, PromptPay and stablecoin side by side. In
+        // dev without real Stripe keys, $stripeAccountId is null and the
+        // controller falls back to demo-checkout mode automatically.
+        $stripeAccountId = env('STRIPE_DEMO_ACCOUNT_ID');
+
         Vendor::updateOrCreate(
             ['slug' => $v['slug']],
             [
@@ -327,9 +333,12 @@ class DemoFeedsSeeder extends Seeder
                 'locale' => $v['locale'],
                 'accent_color' => $v['accent_color'] ?? null,
                 'onboarding_completed_at' => now(),
-                'promptpay_phone' => $v['promptpay'] ?? null,
-                'stablecoin_address' => env('DEMO_STABLECOIN_ADDRESS'),
-                'stablecoin_chain' => 'ETH',
+                'stripe_account_id' => $stripeAccountId,
+                'stripe_charges_enabled' => filled($stripeAccountId),
+                'stripe_details_submitted' => filled($stripeAccountId),
+                'promptpay_phone' => $v['promptpay'] ?? env('DEMO_PROMPTPAY_PHONE', '0812345678'),
+                'stablecoin_address' => env('DEMO_STABLECOIN_ADDRESS', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e'),
+                'stablecoin_chain' => env('DEMO_STABLECOIN_CHAIN', 'ETH'),
             ],
         );
 
