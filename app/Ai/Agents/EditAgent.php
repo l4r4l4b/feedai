@@ -257,6 +257,13 @@ class EditAgent implements Agent, Conversational, HasTools
     }
 
     /**
+     * Render component fields verbosely enough that the agent can do
+     * surgical `updateComponent` calls without re-asking the vendor for
+     * data it already has. Strings get clipped at 80 chars; arrays of
+     * structured items are dumped in full (truncated values inside each
+     * item) so the agent can address a specific row by name and rewrite
+     * only the field that changed.
+     *
      * @param  array<string, mixed>  $fields
      */
     private function summarizeFields(array $fields): string
@@ -265,15 +272,73 @@ class EditAgent implements Agent, Conversational, HasTools
 
         foreach ($fields as $key => $value) {
             if (is_string($value)) {
-                $parts[] = "{$key}=".(mb_strlen($value) > 40 ? mb_substr($value, 0, 37).'…' : $value);
+                $parts[] = "{$key}=".(mb_strlen($value) > 80 ? mb_substr($value, 0, 77).'…' : $value);
             } elseif (is_array($value)) {
-                $parts[] = "{$key}=[".count($value).' items]';
+                $parts[] = "{$key}=".$this->renderArrayValue($value);
             } else {
                 $parts[] = $key;
             }
         }
 
         return $parts === [] ? '(empty)' : implode(', ', $parts);
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $value
+     */
+    private function renderArrayValue(array $value): string
+    {
+        if ($value === []) {
+            return '[]';
+        }
+
+        $isList = array_is_list($value);
+
+        if ($isList) {
+            $items = [];
+            foreach ($value as $i => $entry) {
+                if (is_array($entry)) {
+                    $items[] = '#'.($i + 1).' '.$this->renderItemFields($entry);
+                } else {
+                    $items[] = '#'.($i + 1).' '.$this->shortScalar($entry);
+                }
+            }
+
+            return '['.implode(' | ', $items).']';
+        }
+
+        return '{'.$this->renderItemFields($value).'}';
+    }
+
+    /**
+     * @param  array<string, mixed>  $item
+     */
+    private function renderItemFields(array $item): string
+    {
+        $pairs = [];
+        foreach ($item as $k => $v) {
+            $pairs[] = "{$k}=".$this->shortScalar($v);
+        }
+
+        return implode(', ', $pairs);
+    }
+
+    private function shortScalar(mixed $v): string
+    {
+        if (is_string($v)) {
+            return mb_strlen($v) > 60 ? mb_substr($v, 0, 57).'…' : $v;
+        }
+        if (is_bool($v)) {
+            return $v ? 'true' : 'false';
+        }
+        if (is_array($v)) {
+            return '['.count($v).']';
+        }
+        if ($v === null) {
+            return 'null';
+        }
+
+        return (string) $v;
     }
 
     private function buildVendorContext(): string
