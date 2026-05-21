@@ -24,8 +24,12 @@ yarn-error.log
 /.zed
 .DS_Store
 /.playwright-mcp
-/diagnose-*.png
-/fix-*.png
-/verify-*.png
-/dashboard-*.png
-/drawer-*.png
+
+# Agent tooling — skills are user-level installs, not project artefacts.
+# Keep CLAUDE.md / AGENTS.md at the repo root, but skip these subtrees.
+/.claude/skills
+/.cursor
+
+# Throwaway screenshots from local dev — anything matching common patterns.
+/*.png
+!favicon.png
