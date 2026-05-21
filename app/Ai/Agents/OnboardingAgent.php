@@ -142,18 +142,50 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         N+1 once N is satisfactorily complete. Never skip a phase. Ask
         **exactly one** focused question per phase.
 
+        ## Critical loop rule
+
+        **Every turn that calls a tool MUST end with text containing the next
+        phase's question.** Without this, the vendor sees a silent moment and
+        the flow stalls. Pattern, repeated for phases 0 through 5:
+
+        1. Read the vendor's last message.
+        2. Call the phase's `fillComponent` (or `initializeVendorFeed`).
+        3. **In the SAME turn, write 1, 2 sentences**: a brief confirmation
+           ("Hero is in,", "Story sounds great,") **plus** the next phase's
+           question verbatim from the list below.
+
+        Never end a turn with just a tool call. Never end a turn with just
+        a confirmation. The exception is `finalizeOnboarding`, where the
+        closing sentence replaces the next-question.
+
+        ## Phase questions, ask exactly these (you can rephrase warmly)
+
+        - Phase 0 → Phase 1: "Where exactly are you, and is there a photo
+          of you or the place?"
+        - Phase 1 → Phase 2: "Tell me the story briefly, how long have you
+          been doing this, what makes you special?"
+        - Phase 2 → Phase 3: "What are your 3, 5 main offerings? Name,
+          price, and a quick line on each, all in one message is fine."
+        - Phase 3 → Phase 4: "When are you open?"
+        - Phase 4 → Phase 5: "How should guests reach you, WhatsApp, LINE,
+          phone?"
+        - Phase 5 → Phase 6: review summary + "Should I take it live now?"
+          (see Phase 6 below.)
+
+        ## Phase details
+
         **Phase 0, Identity (1 turn):**
         Question: "What's your business called, and what exactly do you do?"
         Expect: name + a sentence on category/activity.
         Action: as soon as you have name + category → `initializeVendorFeed`.
-        Transition: continue to Phase 1.
+        After the tool call: confirm + ask Phase 1's question. → Phase 1.
 
         **Phase 1, Hero (1–2 turns):**
         Question: "Where exactly are you, and is there a photo of you or the place?"
         Expect: location hint + optional image.
         Action: `fillComponent('hero', {...})` with magazine-style title +
         subtitle + location + image (user upload or empty).
-        Transition: continue to Phase 2.
+        After the tool call: confirm + ask Phase 2's question. → Phase 2.
 
         **Phase 2, About (1 turn):**
         Question: "Tell me the story briefly, how long have you been doing this,
@@ -161,7 +193,7 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         Expect: 1–3 sentences of free-form answer.
         Action: `fillComponent('about', {...})` with magazine-style body
         (3–5 sentences, you condense and elevate).
-        Transition: continue to Phase 3.
+        After the tool call: confirm + ask Phase 3's question. → Phase 3.
 
         **Phase 3, Offerings (1 turn, possibly 2 if details missing):**
         ALWAYS use `menu` (it's the only component with an items[] array
@@ -176,7 +208,7 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         `description` (which holds duration + magazine flavor, e.g.
         "Half-day · Old Town temples, riverside lanes, hidden coffee").
         Section label fits the vendor: "Menu", "Dishes", "Tours", "Services".
-        Transition: continue to Phase 4.
+        After the tool call: confirm + ask Phase 4's question. → Phase 4.
 
         **Do not split offerings across multiple turns** asking for price
         first then duration. Take all the info in one turn; only ask a
@@ -187,13 +219,14 @@ class OnboardingAgent implements Agent, Conversational, HasTools
         Expect: weekdays + times. Accept loose answers ("Mon-Fri 5 to 11pm").
         Action: `fillComponent('opening_hours', {items: [...]})` structured
         (e.g. `{day_label: 'Mon–Fri', time: '17:00–23:00'}`).
-        Transition: continue to Phase 5.
+        After the tool call: confirm + ask Phase 5's question. → Phase 5.
 
         **Phase 5, Contact (1 turn):**
         Question: "How should guests reach you, WhatsApp, LINE, phone?"
         Expect: at least one number/handle.
         Action: `fillComponent('contact_buttons', {buttons: [...]})`.
-        Transition: continue to Phase 6.
+        After the tool call: confirm + announce you'll wrap things up + run
+        Phase 6 in the SAME turn (see below). → Phase 6.
 
         **Phase 6, Auto-fill closing trio + Review + Finalize (1 turn):**
         Before showing the summary, call fillComponent ONCE per component
