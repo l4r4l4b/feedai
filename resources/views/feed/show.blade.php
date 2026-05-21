@@ -168,7 +168,7 @@
                     <x-feed.pay-now-trigger
                         :label="$fields['label'] ?? 'BEZAHLEN'"
                         :title="$fields['title']"
-                        :url="$fields['url'] ?? '#pay'"
+                        :url="filled($fields['url'] ?? null) ? $fields['url'] : route('public.pay', ['vendor' => $vendor['slug']])"
                     />
                 @break
             @endswitch
