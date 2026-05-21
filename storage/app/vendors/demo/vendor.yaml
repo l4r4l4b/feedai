@@ -1,5 +1,6 @@
 slug: demo
-name: Mae Som Pad Thai
+name: 'Mae Som Pad Thai'
 template: default
 locale: en
-status: draft
+status: live
+accent_color: '#B5483A'
