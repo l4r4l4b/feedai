@@ -319,10 +319,12 @@ class DemoFeedsSeeder extends Seeder
         );
 
         // All demo vendors ship with every payment rail switched on so the
-        // pitch can demo Stripe, PromptPay and stablecoin side by side. In
-        // dev without real Stripe keys, $stripeAccountId is null and the
-        // controller falls back to demo-checkout mode automatically.
-        $stripeAccountId = env('STRIPE_DEMO_ACCOUNT_ID');
+        // pitch can demo Stripe, PromptPay and stablecoin side by side. Each
+        // vendor gets its own per-slug demo account id, because the column
+        // has a UNIQUE constraint — but every value still starts with
+        // `acct_demo_`, which StripeCheckout::isDemoMode() recognises and
+        // routes to the demo-checkout path (no live Stripe call).
+        $stripeAccountId = 'acct_demo_'.str_replace('-', '_', $v['slug']);
 
         Vendor::updateOrCreate(
             ['slug' => $v['slug']],
