@@ -23,12 +23,22 @@ use Illuminate\Support\Facades\Route;
 use Stripe\StripeClient;
 
 Route::get('/', function (ContentLoader $loader) {
-    // Cards for the "live now" showcase on the marketing page — pulls every
-    // live vendor's hero image + location once per request. Limited to 12
-    // so the section stays a snapshot, not a directory.
+    // Cards for the "live now" showcase on the marketing page. Curated
+    // allowlist so test registrations during a pitch never accidentally
+    // leak onto the public marketing surface; vendors not in this list
+    // still get their own /{slug} URL, they just don't appear here.
+    $featuredSlugs = [
+        'demo',
+        'khao-san-coffee',
+        'niran-tuktuk',
+        'pranee-thai-massage',
+        'kru-vee-walks',
+        'sailom-boats',
+    ];
+
     $liveVendors = Vendor::where('status', 'live')
-        ->orderByDesc('updated_at')
-        ->limit(12)
+        ->whereIn('slug', $featuredSlugs)
+        ->orderByRaw('FIELD(slug, '.implode(',', array_map(fn ($s) => "'".$s."'", $featuredSlugs)).')')
         ->get()
         ->map(function (Vendor $vendor) use ($loader): ?array {
             try {
