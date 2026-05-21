@@ -20,7 +20,7 @@
 
             <iframe
                 x-ref="frame"
-                src="{{ url('/'.$vendorSlug.'?builder=1') }}"
+                src="{{ url('/'.$vendorSlug.'?builder=1&lang='.$vendorLocale) }}"
                 title="Feed Preview"
                 class="min-h-0 w-full flex-1 bg-canvas"
             ></iframe>

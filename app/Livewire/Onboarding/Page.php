@@ -25,6 +25,9 @@ class Page extends Component
     #[Locked]
     public string $vendorSlug;
 
+    #[Locked]
+    public string $vendorLocale = 'en';
+
     public function mount(): mixed
     {
         /** @var User $user */
@@ -42,6 +45,7 @@ class Page extends Component
         }
 
         $this->vendorSlug = $vendor->slug;
+        $this->vendorLocale = $vendor->locale;
 
         return null;
     }

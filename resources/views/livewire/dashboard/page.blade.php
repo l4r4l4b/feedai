@@ -107,9 +107,12 @@
             </div>
         </header>
 
+        {{-- Pin the preview to the vendor's source locale via ?lang=, otherwise
+             the cookie + Accept-Language chain in Locale::resolve() makes the
+             preview flip languages unpredictably between sessions. --}}
         <iframe
             x-ref="frame"
-            src="{{ url('/'.$vendorSlug.'?builder=1') }}"
+            src="{{ url('/'.$vendorSlug.'?builder=1&lang='.$vendorLocale) }}"
             title="Feed preview"
             class="min-h-0 w-full flex-1 bg-canvas"
         ></iframe>

@@ -32,6 +32,9 @@ class Page extends Component
     #[Locked]
     public string $vendorSlug;
 
+    #[Locked]
+    public string $vendorLocale = 'en';
+
     public ?string $editingType = null;
 
     public string $editingYaml = '';
@@ -58,6 +61,7 @@ class Page extends Component
 
         $this->vendorId = $vendor->id;
         $this->vendorSlug = $vendor->slug;
+        $this->vendorLocale = $vendor->locale;
 
         return null;
     }
