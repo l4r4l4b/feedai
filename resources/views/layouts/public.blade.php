@@ -21,7 +21,7 @@
 </head>
 <body
     class="bg-canvas text-text antialiased lg:bg-surface"
-    @if (! empty($vendor['accent_color'])) style="--accent: {{ $vendor['accent_color'] }};" @endif
+    @if (! empty($vendor['accent_color'])) style="--accent: {{ $vendor['accent_color'] }}; --color-accent: {{ $vendor['accent_color'] }};" @endif
 >
     <a id="top" class="sr-only" tabindex="-1">{{ __('Top') }}</a>
 

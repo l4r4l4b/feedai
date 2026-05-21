@@ -22,7 +22,7 @@
                 </flux:select>
             </flux:field>
 
-            <flux:button type="submit" variant="primary" class="self-start">
+            <flux:button type="submit" variant="primary">
                 {{ __('Save & re-translate') }}
             </flux:button>
         </form>
@@ -84,7 +84,7 @@
                 @enderror
             </flux:field>
 
-            <flux:button type="submit" variant="primary" class="self-start">
+            <flux:button type="submit" variant="primary">
                 {{ __('Save') }}
             </flux:button>
         </form>
